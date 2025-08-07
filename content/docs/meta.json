@@ -1,0 +1,16 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "getting-started",
+    "company",
+    "tech-stack",
+    "standards",
+    "best-practices",
+    "roadmap",
+    "troubleshooting",
+    "projects",
+    "learning",
+    "support"
+  ]
+}

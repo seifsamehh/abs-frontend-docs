@@ -1,0 +1,383 @@
+---
+title: Development Standards
+description: Coding standards, conventions, and quality guidelines for ABS frontend development
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 📋 Development Standards
+
+<Callout type="info">
+  These standards ensure consistency, maintainability, and quality across all
+  ABS frontend projects.
+</Callout>
+
+## Code Style & Formatting
+
+### ESLint Configuration
+
+We use ESLint with the following key rules:
+
+```json title=".eslintrc.json"
+{
+  "extends": [
+    "next/core-web-vitals",
+    "@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "prefer-const": "error",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "react-hooks/exhaustive-deps": "error"
+  }
+}
+```
+
+### Prettier Configuration
+
+```json title=".prettierrc"
+{
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "printWidth": 80,
+  "tabWidth": 2,
+  "useTabs": false
+}
+```
+
+## TypeScript Standards
+
+<Cards>
+  <Card
+    title="🔒 Strict Mode"
+    description="Always use TypeScript strict mode"
+  />
+  <Card
+    title="🏷️ Proper Typing"
+    description="Avoid 'any' - use proper types and interfaces"
+  />
+  <Card
+    title="📝 Type Definitions"
+    description="Create reusable type definitions"
+  />
+  <Card
+    title="🔍 Type Guards"
+    description="Use type guards for runtime type checking"
+  />
+</Cards>
+
+### Type Definition Examples
+
+<Tabs items={['Interface', 'Type', 'Enum']}>
+  <Tab value="Interface">
+    ```typescript
+    // User interface example
+    interface User {
+      id: string;
+      name: string;
+      email: string;
+      role: UserRole;
+      createdAt: Date;
+      updatedAt: Date;
+    }
+    ```
+  </Tab>
+  <Tab value="Type">
+    ```typescript
+    // Union type example
+    type Theme = 'light' | 'dark' | 'system';
+    type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
+    
+    // Utility type example
+    type CreateUserRequest = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
+    ```
+  </Tab>
+  <Tab value="Enum">
+    ```typescript
+    // Use const assertions instead of enums when possible
+    const UserRole = {
+      ADMIN: 'admin',
+      USER: 'user',
+      MODERATOR: 'moderator'
+    } as const;
+    
+    type UserRole = typeof UserRole[keyof typeof UserRole];
+    ```
+  </Tab>
+</Tabs>
+
+## React Component Standards
+
+### Component Structure
+
+```tsx
+import { FC, ReactNode } from "react";
+import { cn } from "@/lib/utils";
+
+interface ComponentProps {
+  children: ReactNode;
+  className?: string;
+  variant?: "primary" | "secondary";
+}
+
+export const Component: FC<ComponentProps> = ({
+  children,
+  className,
+  variant = "primary",
+}) => {
+  return (
+    <div className={cn("base-classes", variant, className)}>{children}</div>
+  );
+};
+```
+
+### Naming Conventions
+
+<Callout type="note">
+  Consistency in naming improves code readability and maintainability.
+</Callout>
+
+- **Components**: PascalCase (`UserProfile`, `NavigationMenu`)
+- **Variables/Functions**: camelCase (`userName`, `handleSubmit`)
+- **Constants**: SCREAMING_SNAKE_CASE (`API_BASE_URL`, `MAX_RETRY_ATTEMPTS`)
+- **CSS Classes**: kebab-case (`user-card`, `navigation-item`)
+
+## File Organization
+
+```
+project/
++-- 📄 README.md                    # Project documentation
++-- 📦 package.json                 # Dependencies & scripts
++-- ⚙️  next.config.ts              # Next.js configuration
++-- 🎨 tailwind.config.ts          # Tailwind CSS configuration
++-- 📝 tsconfig.json               # TypeScript configuration
++-- 🔍 eslint.config.mjs           # ESLint rules
++-- 🧩 components.json             # Shadcn/ui configuration
++-- 🎨 postcss.config.mjs          # PostCSS plugins
++-- 🌍 middleware.ts               # Next.js middleware
++-- 📊 metadata.ts                 # Site metadata
+|
++-- 🌐 public/                     # Static assets
+|   +-- 📱 manifest.json           # PWA configuration
+|   +-- 🖼️  assets/                 # Images, logos, icons
+|   +-- 📱 android/                # Android app icons
+|   +-- 🍎 ios/                    # iOS app icons
+|   +-- 🪟 windows11/              # Windows 11 icons
+|
++-- 🗣️  messages/                   # Internationalization
+|   +-- 🇺🇸 en.json                # English translations
+|   +-- 🇸🇦 ar.json                # Arabic translations
+|
++-- 📂 src/                        # Source code
+    +-- 🚦 app/                    # Next.js App Router
+    +-- 🧩 components/             # Shared UI components
+    +-- ⚡ features/               # Feature modules
+    +-- 🪝 hooks/                  # Custom React hooks
+    +-- 🔧 lib/                    # Utilities & helpers
+    +-- 🌐 i18n/                   # i18n configuration
+    +-- 📝 constants/              # Application constants
+```
+
+## CSS & Styling Standards
+
+### Tailwind CSS Guidelines
+
+- **Responsive Design**: Mobile-first approach
+- **Consistent Spacing**: Use Tailwind spacing scale
+- **Color System**: Use design tokens and CSS custom properties
+- **Component Classes**: Create reusable component classes
+
+```css
+/* Component-specific styles */
+.card {
+  @apply rounded-lg border bg-card text-card-foreground shadow-sm;
+}
+
+.card-header {
+  @apply flex flex-col space-y-1.5 p-6;
+}
+```
+
+### CSS Custom Properties
+
+```css
+:root {
+  --primary: 210 40% 98%;
+  --primary-foreground: 210 40% 8%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 210 40% 9%;
+  --border: 210 40% 80%;
+  --input: 210 40% 80%;
+  --ring: 210 40% 75%;
+}
+```
+
+## API Integration Standards
+
+### API Client Structure
+
+```typescript
+// api/client.ts
+class ApiClient {
+  private baseURL = process.env.NEXT_PUBLIC_API_URL;
+
+  async get<T>(endpoint: string): Promise<T> {
+    const response = await fetch(`${this.baseURL}${endpoint}`);
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status}`);
+    }
+    return response.json();
+  }
+}
+
+export const apiClient = new ApiClient();
+```
+
+### Error Handling
+
+```typescript
+// Use Result pattern for error handling
+type Result<T, E = Error> =
+  | { success: true; data: T }
+  | { success: false; error: E };
+
+async function fetchUser(id: string): Promise<Result<User>> {
+  try {
+    const user = await apiClient.get<User>(`/users/${id}`);
+    return { success: true, data: user };
+  } catch (error) {
+    return { success: false, error: error as Error };
+  }
+}
+```
+
+## Testing Standards
+
+<Cards>
+  <Card
+    title="🧪 Unit Tests"
+    description="Test individual components and functions"
+  />
+  <Card
+    title="🔗 Integration Tests"
+    description="Test component interactions"
+  />
+  <Card title="🎭 E2E Tests" description="Test complete user workflows" />
+  <Card title="📊 Coverage" description="Maintain >80% test coverage" />
+</Cards>
+
+### Testing Examples
+
+<Tabs items={['Component Test', 'Hook Test', 'API Test']}>
+  <Tab value="Component Test">
+    ```typescript
+    import { render, screen } from '@testing-library/react';
+    import { Button } from './button';
+
+    describe('Button', () => {
+      it('renders with correct text', () => {
+        render(<Button>Click me</Button>);
+        expect(screen.getByRole('button', { name: 'Click me' })).toBeInTheDocument();
+      });
+    });
+    ```
+
+  </Tab>
+  <Tab value="Hook Test">
+    ```typescript
+    import { renderHook, act } from '@testing-library/react';
+    import { useCounter } from './use-counter';
+
+    describe('useCounter', () => {
+      it('increments counter', () => {
+        const { result } = renderHook(() => useCounter());
+
+        act(() => {
+          result.current.increment();
+        });
+
+        expect(result.current.count).toBe(1);
+      });
+    });
+    ```
+
+  </Tab>
+  <Tab value="API Test">
+    ```typescript
+    import { apiClient } from '@/lib/api';
+    
+    // Mock the fetch function
+    global.fetch = vi.fn();
+
+    describe('API Client', () => {
+      it('fetches user data', async () => {
+        const mockUser = { id: '1', name: 'John' };
+        (fetch as vi.Mock).mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve(mockUser)
+        });
+
+        const user = await apiClient.get('/users/1');
+        expect(user).toEqual(mockUser);
+      });
+    });
+    ```
+
+  </Tab>
+</Tabs>
+
+## Performance Standards
+
+### Core Web Vitals Targets
+
+- **First Contentful Paint (FCP)**: < 1.8s
+- **Largest Contentful Paint (LCP)**: < 2.5s
+- **Cumulative Layout Shift (CLS)**: < 0.1
+- **First Input Delay (FID)**: < 100ms
+
+### Optimization Techniques
+
+- **Code Splitting**: Use dynamic imports
+- **Image Optimization**: Use Next.js Image component
+- **Font Loading**: Optimize web font loading
+- **Bundle Analysis**: Regular bundle size monitoring
+
+## Accessibility Standards
+
+<Callout type="warning">
+  All components must meet WCAG 2.1 AA standards.
+</Callout>
+
+- **Semantic HTML**: Use proper HTML elements
+- **ARIA Labels**: Provide screen reader support
+- **Keyboard Navigation**: Full keyboard accessibility
+- **Color Contrast**: Minimum 4.5:1 contrast ratio
+- **Focus Management**: Proper focus indicators
+
+## Git Standards
+
+### Commit Messages
+
+Follow Conventional Commits specification:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+
+### Branch Naming
+
+- **Features**: `feature/user-authentication`
+- **Bug Fixes**: `fix/login-validation-error`
+- **Hotfixes**: `hotfix/security-patch`
+- **Documentation**: `docs/update-api-guide`

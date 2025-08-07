@@ -1,0 +1,592 @@
+---
+title: Support & Help
+description: Getting help, reporting issues, and contributing to the ABS frontend ecosystem
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 🆘 Support & Help
+
+<Callout type="info">
+  We're here to help! Whether you're stuck on a technical issue, need guidance
+  on best practices, or want to contribute to our frontend ecosystem, this guide
+  will point you in the right direction.
+</Callout>
+
+## Quick Help
+
+### 🚨 Need Immediate Help?
+
+<Cards>
+  <Card
+    title="💬 Whatsapp: #frontend-help"
+    description="Fastest way to get help from the team"
+  />
+  <Card
+    title="👥 Ask a Colleague"
+    description="Pair programming and quick questions"
+  />
+  <Card
+    title="📚 Search Documentation"
+    description="Check existing solutions first"
+  />
+  <Card
+    title="🔍 Search Codebase"
+    description="Look for similar implementations"
+  />
+</Cards>
+
+### 📞 Emergency Contacts
+
+**Production Issues:**
+
+- **On-call Developer:** Check #frontend-oncall Slack channel
+- **Team Lead:** Direct message for critical issues
+- **DevOps Team:** #infrastructure for deployment problems
+
+**Business Hours Support:**
+
+- **Frontend Team:** Available 9 AM - 6 PM UTC+3
+- **Response Time:** Typically within 30 minutes
+- **Escalation:** Automatic after 2 hours for critical issues
+
+---
+
+## Getting Technical Help
+
+### Before Asking for Help
+
+1. **Search First**
+
+   - Check this documentation
+   - Search internal Slack channels
+   - Look through existing GitHub issues
+   - Check Stack Overflow for common issues
+
+2. **Gather Information**
+
+   - Error messages and stack traces
+   - Steps to reproduce the issue
+   - Environment details (Node version, browser, etc.)
+   - What you've already tried
+
+3. **Create a Minimal Example**
+   - Isolate the problem
+   - Remove unnecessary code
+   - Use CodeSandbox or similar tools
+
+### How to Ask Effective Questions
+
+<Tabs items={['Good Example', 'Bad Example', 'Template']}>
+  <Tab value="Good Example">
+    **Subject:** TypeScript error with useQuery hook in UserProfile component
+
+    **Description:**
+    I'm getting a TypeScript error when using TanStack Query in the UserProfile component. The error occurs when trying to access the `user.email` property.
+
+    **Error Message:**
+    ```
+    Property 'email' does not exist on type 'unknown'
+    ```
+
+    **Code:**
+    ```typescript
+    const { data: user } = useQuery({
+      queryKey: ['user', userId],
+      queryFn: () => fetchUser(userId),
+    });
+
+    return <div>{user.email}</div>; // Error here
+    ```
+
+    **Environment:**
+    - Next.js 15.4.5
+    - TypeScript 5.9.2
+    - TanStack Query 5.0.0
+
+    **What I've tried:**
+    - Added type assertion `(user as User).email` - works but feels wrong
+    - Checked TanStack Query docs for proper typing
+
+  </Tab>
+  <Tab value="Bad Example">
+    **Subject:** Help!!!
+
+    **Description:**
+    My code is broken and I don't know why. It was working yesterday but now it's not. Can someone fix this?
+
+    **Code:**
+    [No code provided or very large code dump]
+
+    **What's wrong:**
+    - No clear description of the problem
+    - No error messages
+    - No context about what changed
+    - No information about environment
+    - Demanding rather than asking for help
+
+  </Tab>
+  <Tab value="Template">
+    **Subject:** [Clear, descriptive title]
+
+    **Description:**
+    [Brief description of what you're trying to do]
+
+    **Problem:**
+    [What's not working as expected]
+
+    **Error Messages:**
+    ```
+    [Exact error messages with stack traces]
+    ```
+
+    **Code:**
+    ```typescript
+    [Minimal, reproducible code example]
+    ```
+
+    **Environment:**
+    - [Framework versions]
+    - [Browser/Node version]
+    - [Any relevant system info]
+
+    **What I've tried:**
+    - [List of attempted solutions]
+    - [Resources you've checked]
+
+    **Expected behavior:**
+    [What should happen]
+
+    **Actual behavior:**
+    [What actually happens]
+
+  </Tab>
+</Tabs>
+
+---
+
+## Support Channels
+
+### Internal Channels
+
+<Cards>
+  <Card
+    title="💬 #frontend-help"
+    description="General technical questions and troubleshooting"
+  />
+  <Card
+    title="🎨 #design-system"
+    description="Questions about components and design tokens"
+  />
+  <Card
+    title="🚀 #deployment-issues"
+    description="Build and deployment problems"
+  />
+  <Card
+    title="🧪 #testing-help"
+    description="Unit, integration, and E2E testing support"
+  />
+</Cards>
+
+### Specialized Support
+
+**Performance Issues:**
+
+- Channel: `#performance`
+- Experts: Senior developers with performance expertise
+- Resources: Performance monitoring dashboards
+
+**Security Concerns:**
+
+- Channel: `#security`
+- Escalation: Direct message to security team
+- Process: Follow security incident reporting procedure
+
+**Accessibility Questions:**
+
+- Channel: `#accessibility`
+- Resources: WCAG guidelines and testing tools
+- Experts: Accessibility champions on the team
+
+### Response Time SLAs
+
+| Priority | Channel        | Response Time | Resolution Time |
+| -------- | -------------- | ------------- | --------------- |
+| Critical | Direct message | 15 minutes    | 2 hours         |
+| High     | #frontend-help | 30 minutes    | 4 hours         |
+| Medium   | Any channel    | 2 hours       | 1 day           |
+| Low      | Any channel    | 4 hours       | 3 days          |
+
+---
+
+## Reporting Issues
+
+### Bug Reports
+
+Use our internal issue tracking system to report bugs with this template:
+
+#### Bug Report Template
+
+```markdown
+## Bug Description
+
+[Clear description of the bug]
+
+## Steps to Reproduce
+
+1. [First step]
+2. [Second step]
+3. [Third step]
+
+## Expected Behavior
+
+[What should happen]
+
+## Actual Behavior
+
+[What actually happens]
+
+## Environment
+
+- **Application:** [Which app]
+- **Browser:** [Name and version]
+- **Device:** [Desktop/Mobile/Tablet]
+- **User Role:** [If relevant]
+
+## Screenshots/Videos
+
+[Attach visual evidence if applicable]
+
+## Additional Context
+
+[Any other relevant information]
+
+## Severity
+
+- [ ] Critical (App crashes, security issues)
+- [ ] High (Major feature broken)
+- [ ] Medium (Minor feature issue)
+- [ ] Low (Cosmetic issue)
+```
+
+### Feature Requests
+
+#### Feature Request Template
+
+```markdown
+## Feature Summary
+
+[Brief description of the requested feature]
+
+## Problem Statement
+
+[What problem does this solve?]
+
+## Proposed Solution
+
+[How should this feature work?]
+
+## Alternatives Considered
+
+[Other approaches you've thought about]
+
+## User Stories
+
+- As a [user type], I want [functionality] so that [benefit]
+- As a [user type], I want [functionality] so that [benefit]
+
+## Acceptance Criteria
+
+- [ ] [Specific requirement 1]
+- [ ] [Specific requirement 2]
+- [ ] [Specific requirement 3]
+
+## Design Mockups
+
+[Attach any wireframes or designs if available]
+
+## Business Impact
+
+[How will this benefit users/business?]
+
+## Technical Considerations
+
+[Any technical constraints or requirements]
+```
+
+---
+
+## Contributing & Giving Back
+
+### Ways to Contribute
+
+<Cards>
+  <Card
+    title="📝 Documentation"
+    description="Improve docs, add examples, fix typos"
+  />
+  <Card
+    title="🐛 Bug Fixes"
+    description="Fix issues you encounter or find in backlog"
+  />
+  <Card title="✨ Features" description="Implement new functionality" />
+  <Card
+    title="🎨 Design System"
+    description="Add components or improve existing ones"
+  />
+</Cards>
+
+### Contribution Process
+
+1. **Find or Create Issue**
+
+   - Look for issues labeled "good first issue"
+   - Discuss feature ideas before implementing
+   - Get approval for significant changes
+
+2. **Development Workflow**
+
+   - Fork repository or create feature branch
+   - Follow our coding standards
+   - Write tests for new functionality
+   - Update documentation if needed
+
+3. **Code Review Process**
+
+   - Create pull request with clear description
+   - Link to relevant issues
+   - Be responsive to feedback
+   - Make requested changes promptly
+
+4. **After Merge**
+   - Monitor for any issues
+   - Update documentation if needed
+   - Share knowledge with team
+
+### Code Review Guidelines
+
+**As a Reviewer:**
+
+- Be constructive and helpful
+- Explain the "why" behind suggestions
+- Approve when code meets standards
+- Ask questions to understand decisions
+
+**As an Author:**
+
+- Respond to all feedback
+- Ask for clarification if unclear
+- Be open to suggestions
+- Thank reviewers for their time
+
+---
+
+## Self-Help Resources
+
+### Debugging Guides
+
+<Tabs items={['React Issues', 'TypeScript Errors', 'Build Problems']}>
+  <Tab value="React Issues">
+    **Common React Issues:**
+
+    1. **Component not re-rendering**
+       - Check if state is being mutated directly
+       - Verify dependencies in useEffect
+       - Use React DevTools to inspect state
+
+    2. **Infinite re-renders**
+       - Check useEffect dependencies
+       - Look for object/function dependencies without memoization
+       - Use useCallback/useMemo appropriately
+
+    3. **Props not updating**
+       - Verify parent component is re-rendering
+       - Check if props are being passed correctly
+       - Use React DevTools to trace prop flow
+
+    4. **Event handlers not working**
+       - Check if event propagation is being stopped
+       - Verify event binding is correct
+       - Look for console errors
+
+  </Tab>
+  <Tab value="TypeScript Errors">
+    **Common TypeScript Errors:**
+
+    1. **Type 'unknown' errors**
+       ```typescript
+       // Problem
+       const data = await response.json();
+       console.log(data.name); // Error
+
+       // Solution
+       interface ApiResponse {
+         name: string;
+       }
+       const data = await response.json() as ApiResponse;
+       ```
+
+    2. **Property does not exist errors**
+       ```typescript
+       // Problem
+       const user = { name: 'John' };
+       console.log(user.email); // Error
+
+       // Solution - Update interface
+       interface User {
+         name: string;
+         email?: string; // Optional property
+       }
+       ```
+
+    3. **Cannot find module errors**
+       ```typescript
+       // Problem
+       import { utils } from './utils'; // Error
+
+       // Solution - Check file path and exports
+       import { utils } from './utils/index';
+       // or
+       import utils from './utils';
+       ```
+
+  </Tab>
+  <Tab value="Build Problems">
+    **Common Build Issues:**
+
+    1. **Module not found**
+       - Check import paths
+       - Verify file extensions
+       - Clear node_modules and reinstall
+
+    2. **TypeScript compilation errors**
+       - Run `tsc --noEmit` to check types
+       - Check tsconfig.json settings
+       - Look for circular dependencies
+
+    3. **Environment variable issues**
+       - Verify variable names and prefixes
+       - Check .env file location
+       - Restart development server
+
+    4. **Memory issues**
+       - Increase Node.js memory: `NODE_OPTIONS="--max-old-space-size=4096"`
+       - Check for memory leaks in code
+       - Consider build optimization
+
+  </Tab>
+</Tabs>
+
+### Troubleshooting Tools
+
+**React DevTools:**
+
+- Install browser extension
+- Use to inspect component tree
+- Profile performance issues
+- Debug state and props
+
+**Browser DevTools:**
+
+- Network tab for API issues
+- Console for JavaScript errors
+- Performance tab for optimization
+- Application tab for storage/caching
+
+**VS Code Extensions:**
+
+- ES7+ React/Redux/React-Native snippets
+- TypeScript Importer
+- Error Lens
+- GitLens
+
+---
+
+## Learning & Growth Support
+
+### Mentorship Program
+
+**For Mentees:**
+
+- Matched with senior developers
+- Regular 1-on-1 sessions
+- Goal setting and progress tracking
+- Career development discussions
+
+**For Mentors:**
+
+- Share knowledge and experience
+- Develop leadership skills
+- Contribute to team growth
+- Recognition for contributions
+
+### Study Groups
+
+<Cards>
+  <Card
+    title="📚 React Study Group"
+    description="Weekly sessions on React patterns and best practices"
+  />
+  <Card
+    title="🔧 TypeScript Workshop"
+    description="Monthly deep dives into advanced TypeScript"
+  />
+  <Card
+    title="🎨 Design System Club"
+    description="Discussions on component design and UX"
+  />
+  <Card
+    title="⚡ Performance Club"
+    description="Monthly performance optimization sessions"
+  />
+</Cards>
+
+### Internal Training
+
+**Monthly Tech Talks:**
+
+- Team members present on interesting topics
+- External speakers on relevant subjects
+- Q&A sessions with industry experts
+
+**Quarterly Workshops:**
+
+- Hands-on coding sessions
+- New technology explorations
+- Best practices deep dives
+
+---
+
+## Feedback & Improvement
+
+### Documentation Feedback
+
+Help us improve this documentation:
+
+1. **Found an error?** Report it in #frontend-docs
+2. **Missing information?** Suggest additions
+3. **Unclear explanations?** Let us know what's confusing
+4. **Success stories?** Share how the docs helped you
+
+### Process Improvement
+
+We continuously improve our support processes:
+
+- **Monthly retrospectives** on support quality
+- **Feedback surveys** for help seekers
+- **Process updates** based on common issues
+- **Tool evaluations** for better efficiency
+
+<Callout type="note">
+  Remember: No question is too small or too basic. We'd rather you ask for help
+  early than struggle alone!
+</Callout>
+
+### Contact Information
+
+**Team Leads:**
+
+- Frontend Lead: @seif-eldin-sameh
+- Team Lead: @adham-ahmed

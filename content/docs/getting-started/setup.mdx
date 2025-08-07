@@ -1,0 +1,460 @@
+---
+title: Getting Started
+description: Quick start guide for new team members and contributors
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 🚀 Getting Started
+
+<Callout type="info">
+  Welcome to the ABS frontend team! This guide will help you set up your
+  development environment and make your first contribution.
+</Callout>
+
+## Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+### Required Software
+
+<Cards>
+  <Card
+    title="📦 Node.js"
+    description="Version 18+ (we recommend using nvm for version management)"
+  />
+  <Card
+    title="⚡ npm"
+    description="Our preferred package manager for installs"
+  />
+  <Card title="🔧 Git" description="Version control system" />
+  <Card
+    title="💻 VS Code"
+    description="Recommended IDE with our extension pack"
+  />
+</Cards>
+
+### Installation Steps
+
+<Tabs items={['macOS', 'Windows', 'Linux']}>
+  <Tab value="macOS">
+    ```bash
+    # Install Homebrew (if not already installed)
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    # Install Node.js via nvm
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+    nvm install 18
+    nvm use 18
+
+    # Install npm (comes with Node.js)
+
+    # Install Git (if not already installed)
+    brew install git
+
+    # Install VS Code
+    brew install --cask visual-studio-code
+    ```
+
+  </Tab>
+  <Tab value="Windows">
+    ```powershell
+    # Install Node.js via nvm-windows
+    # Download and install from: https://github.com/coreybutler/nvm-windows
+
+    nvm install 18.0.0
+    nvm use 18.0.0
+
+    # Install npm (comes with Node.js)
+
+    # Install Git
+    # Download from: https://git-scm.com/download/win
+
+    # Install VS Code
+    # Download from: https://code.visualstudio.com/
+
+### Adding New Documentation
+
+1. Create a new `.mdx` file in `content/docs/`
+2. Add frontmatter with title and description
+3. Write content using Markdown and React components
+4. **Write TSDoc comments for every exported function, type, and component in each file.**
+5. **Every feature folder must include a `README.md` file explaining the purpose, structure, and usage of the feature.**
+6. Test locally with `npm run dev`
+7. Submit PR for review
+
+   ```
+
+   ```
+
+  </Tab>
+  <Tab value="Linux">
+    ```bash
+    # Install Node.js via nvm
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+    source ~/.bashrc
+    nvm install 18
+    nvm use 18
+
+    # Install npm (comes with Node.js)
+
+    # Install Git (if not already installed)
+    sudo apt update
+    sudo apt install git
+
+    # Download .deb from: https://code.visualstudio.com/
+    sudo dpkg -i code_*.deb
+    ```
+
+  </Tab>
+</Tabs>
+
+---
+
+## Development Environment Setup
+
+### 1. Clone the Repository
+
+```bash
+# Clone the main repository
+git clone https://github.com/abs/frontend-docs.git
+cd frontend-docs
+
+# Install dependencies
+npm install
+```
+
+Example `.env.local`:
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
+
+### 3. Start Development Server
+
+```bash
+# Start the development server
+npm run dev
+```
+
+Your application should now be running at `http://localhost:3000`!
+
+---
+
+## VS Code Setup
+
+### Recommended Extensions
+
+Install our extension pack for the best development experience:
+
+```json title=".vscode/extensions.json"
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+    "ms-playwright.playwright",
+    "bradlc.vscode-tailwindcss",
+    "unifiedjs.vscode-mdx",
+    "ms-vscode.vscode-json"
+  ]
+}
+```
+
+### Workspace Settings
+
+```json title=".vscode/settings.json"
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.organizeImports": true
+  },
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "emmet.includeLanguages": {
+    "typescript": "html",
+    "typescriptreact": "html"
+  }
+}
+```
+
+---
+
+## Making Your First Contribution
+
+### 1. Find an Issue
+
+Start with beginner-friendly issues:
+
+- Look for `good first issue` labels
+- Check the documentation for missing content
+- Fix typos or improve examples
+- Add missing type definitions
+
+### 2. Create a Branch
+
+```bash
+# Create and switch to a new branch
+git checkout -b feature/add-component-example
+
+# Or for bug fixes
+git checkout -b fix/typo-in-readme
+```
+
+### 3. Make Your Changes
+
+Follow our coding standards:
+
+```typescript
+// Example: Adding a new component documentation
+---
+title: Button Component
+description: Reusable button component with variants and states
+---
+
+import { Button } from '@/components/ui/button';
+
+# Button Component
+
+The Button component provides a consistent way to trigger actions.
+
+## Basic Usage
+
+<Button>Click me</Button>
+
+## Variants
+
+<Button variant="primary">Primary</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="outline">Outline</Button>
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| variant | string | 'primary' | Button style variant |
+| size | string | 'md' | Button size |
+| disabled | boolean | false | Disabled state |
+```
+
+### 4. Test Your Changes
+
+```bash
+# Run the development server
+npm dev
+
+# Check for TypeScript errors
+npm type-check
+
+# Run linting
+npm lint
+
+# Format code
+npm format
+```
+
+### 5. Commit and Push
+
+```bash
+# Stage your changes
+git add .
+
+# Commit with conventional commit format
+git commit -m "docs: add button component documentation"
+
+# Push to your branch
+git push origin feature/add-component-example
+```
+
+### 6. Create Pull Request
+
+1. Go to the repository on GitHub
+2. Click "New Pull Request"
+3. Select your branch
+4. Fill out the PR template
+5. Request review from team members
+
+---
+
+## Development Workflow
+
+### Daily Workflow
+
+1. **Start of Day**
+
+   ```bash
+   # Pull latest changes
+   git checkout main
+   git pull origin main
+
+   # Start development server
+   npm dev
+   ```
+
+2. **Working on Features**
+
+   ```bash
+   # Create feature branch
+   git checkout -b feature/new-feature
+
+   # Make changes and test
+   # Commit regularly with good messages
+   git add .
+   git commit -m "feat: implement new feature"
+   ```
+
+3. **End of Day**
+
+   ```bash
+   # Push your work
+   git push origin feature/new-feature
+
+   # Create PR if ready for review
+   ```
+
+### Code Review Process
+
+<Cards>
+  <Card
+    title="📝 Author Responsibilities"
+    description="Clear description, tests, documentation updates"
+  />
+  <Card
+    title="👀 Reviewer Responsibilities"
+    description="Code quality, functionality, best practices"
+  />
+  <Card
+    title="⚡ Response Time"
+    description="24-48 hours for review, prompt responses to feedback"
+  />
+  <Card
+    title="✅ Approval Process"
+    description="At least one approval from senior developer"
+  />
+</Cards>
+
+---
+
+## Common Tasks
+
+### Adding New Documentation
+
+1. Create a new `README.md` file in each feature
+2. Add a `TSDocs` in each file
+
+### Fixing Bugs
+
+1. Reproduce the issue locally
+2. Create a test case (if missing)
+3. Fix the issue
+4. Verify the test passes
+5. Update documentation if needed
+
+---
+
+## Getting Help
+
+### Quick Support
+
+<Cards>
+  <Card
+    title="💬 Whatsapp"
+    description="#frontend-help for technical questions"
+  />
+  <Card
+    title="👥 Pair Programming"
+    description="Schedule sessions with teammates"
+  />
+  <Card title="📚 Documentation" description="Search existing docs first" />
+  <Card title="🎯 Office Hours" description="Daily 2-3 PM for open questions" />
+</Cards>
+
+### Onboarding Checklist
+
+Use this checklist for your first week:
+
+- [ ] **Day 1**: Environment setup and repository access
+- [ ] **Day 1**: Complete VS Code configuration
+- [ ] **Day 2**: Read through main documentation sections
+- [ ] **Day 2**: Join team Whatsapp channels
+- [ ] **Day 3**: Attend team standup and introduce yourself
+- [ ] **Day 4**: Set up 1-on-1 with your mentor
+- [ ] **Day 5**: Complete a "good first issue"
+- [ ] **Week 1**: Schedule code review session
+- [ ] **Week 1**: Join learning group sessions
+
+### Next Steps
+
+After completing the basics:
+
+1. **Choose a Learning Path**: Focus on areas you want to improve
+2. **Join a Project**: Contribute to active development projects
+3. **Attend Team Events**: Participate in code reviews and tech talks
+4. **Share Knowledge**: Write about what you learn
+5. **Mentor Others**: Help new team members when you're ready
+
+<Callout type="note">
+  Remember: Everyone learns differently and at their own pace. Don't hesitate to
+  ask questions or request help when you need it!
+</Callout>
+
+---
+
+## Useful Commands
+
+### Development
+
+```bash
+# Start development server
+npm dev
+
+# Build for production
+npm build
+
+# Start production server
+npm start
+
+# Type checking
+npm type-check
+
+# Linting
+npm lint
+npm lint --fix
+
+# Testing
+npm test
+npm test --watch
+npm test --coverage
+```
+
+### Git Workflow
+
+```bash
+# Create and switch to new branch
+git checkout -b feature/branch-name
+
+# Stage all changes
+git add .
+
+# Commit with message
+git commit -m "type: description"
+
+# Push to remote
+git push origin branch-name
+
+# Switch branches
+git checkout main
+git checkout other-branch
+
+# Pull latest changes
+git pull origin main
+
+# Merge branch (after PR approval)
+git checkout main
+git merge feature/branch-name
+```
+
+Welcome to the team! 🎉
