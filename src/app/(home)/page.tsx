@@ -11,7 +11,7 @@ export default function HomePage() {
   return (
     <main className="flex flex-col flex-1 justify-center mx-auto px-6 max-w-6xl text-center">
       <div className="mb-8">
-        <h1 className="bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-4 font-bold text-transparent text-4xl">
+        <h1 className="bg-clip-text bg-gradient-to-r from-orange-300 to-orange-600 mb-4 font-bold text-transparent text-4xl">
           ABS Frontend Documentation
         </h1>
         <p className="mx-auto mb-8 max-w-2xl text-fd-muted-foreground text-xl">

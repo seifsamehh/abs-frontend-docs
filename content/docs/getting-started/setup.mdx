@@ -59,6 +59,7 @@ Before you begin, make sure you have the following installed:
     ```
 
   </Tab>
+  
   <Tab value="Windows">
     ```powershell
     # Install Node.js via nvm-windows
@@ -74,27 +75,15 @@ Before you begin, make sure you have the following installed:
 
     # Install VS Code
     # Download from: https://code.visualstudio.com/
-
-### Adding New Documentation
-
-1. Create a new `.mdx` file in `content/docs/`
-2. Add frontmatter with title and description
-3. Write content using Markdown and React components
-4. **Write TSDoc comments for every exported function, type, and component in each file.**
-5. **Every feature folder must include a `README.md` file explaining the purpose, structure, and usage of the feature.**
-6. Test locally with `npm run dev`
-7. Submit PR for review
-
-   ```
-
-   ```
+    ```
 
   </Tab>
+  
   <Tab value="Linux">
     ```bash
     # Install Node.js via nvm
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-    source ~/.bashrc
+    source ~/.bashrc  # or ~/.zshrc if using zsh
     nvm install 18
     nvm use 18
 
@@ -104,8 +93,14 @@ Before you begin, make sure you have the following installed:
     sudo apt update
     sudo apt install git
 
-    # Download .deb from: https://code.visualstudio.com/
+    # Install VS Code
+    # Download .deb package from: https://code.visualstudio.com/
+    # Then install with:
     sudo dpkg -i code_*.deb
+    sudo apt-get install -f  # Fix any dependency issues
+
+    # Alternative: Install via snap
+    # sudo snap install --classic code
     ```
 
   </Tab>
