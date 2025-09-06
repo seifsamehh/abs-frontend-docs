@@ -9,7 +9,8 @@ import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
  */
 export const baseOptions: BaseLayoutProps = {
   nav: {
-    title: "ABS Frontend Docs",
+    title: "Frontend Development Guide",
+    url: "/",
   },
   // see https://fumadocs.dev/docs/ui/navigation/links
   links: [
@@ -18,5 +19,19 @@ export const baseOptions: BaseLayoutProps = {
       url: "/docs",
       active: "nested-url",
     },
+    {
+      text: "GitHub",
+      url: "https://github.com/ABS-Courier",
+      external: true,
+    },
   ],
+  // Enable search toggle
+  searchToggle: {
+    enabled: true,
+  },
+  // Enable theme switch
+  themeSwitch: {
+    enabled: true,
+    mode: "light-dark-system",
+  },
 };

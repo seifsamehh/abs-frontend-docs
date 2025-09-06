@@ -1,0 +1,687 @@
+---
+title: "Best Practices by Scenario"
+description: "Practical guidance for common development scenarios with beginner-friendly examples"
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+
+# Best Practices by Scenario
+
+This guide provides step-by-step guidance for common development scenarios. Each scenario includes examples of what to do and what to avoid.
+
+## 🎯 **Scenario 1: Adding a New Component**
+
+### **Step-by-Step Process**
+
+<Steps>
+  <Step>
+    **Plan the Component** - What will it do? - What props will it need? - Will
+    it have state? - How will it be styled?
+  </Step>
+
+  <Step>
+    **Create the File Structure** ``` components/ ├── Button/ │ ├── Button.tsx │
+    ├── Button.test.tsx │ ├── Button.stories.tsx │ └── index.ts ```
+  </Step>
+
+  <Step>
+    **Write the Component** Start simple and add complexity gradually.
+  </Step>
+
+  <Step>
+    **Add Tests** Test the component's behavior, not implementation details.
+  </Step>
+
+  <Step>**Document Usage** Add JSDoc comments and Storybook stories.</Step>
+</Steps>
+
+### **✅ Good Example: Simple Button Component**
+
+```typescript
+// components/Button/Button.tsx
+import { FC, ButtonHTMLAttributes } from "react";
+import { cn } from "@/lib/utils";
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary" | "danger";
+  size?: "sm" | "md" | "lg";
+  loading?: boolean;
+}
+
+/**
+ * A reusable button component with multiple variants and sizes
+ *
+ * @param variant - The visual style of the button
+ * @param size - The size of the button
+ * @param loading - Whether the button is in a loading state
+ * @param children - The content inside the button
+ */
+export const Button: FC<ButtonProps> = ({
+  variant = "primary",
+  size = "md",
+  loading = false,
+  className,
+  children,
+  disabled,
+  ...props
+}) => {
+  return (
+    <button
+      className={cn(
+        "inline-flex items-center justify-center rounded-md font-medium transition-colors",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2",
+        {
+          // Variants
+          "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500":
+            variant === "primary",
+          "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500":
+            variant === "secondary",
+          "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500":
+            variant === "danger",
+
+          // Sizes
+          "px-2 py-1 text-sm": size === "sm",
+          "px-4 py-2 text-base": size === "md",
+          "px-6 py-3 text-lg": size === "lg",
+
+          // States
+          "opacity-50 cursor-not-allowed": disabled || loading,
+        },
+        className
+      )}
+      disabled={disabled || loading}
+      {...props}
+    >
+      {loading && (
+        <svg
+          className="animate-spin -ml-1 mr-2 h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          />
+        </svg>
+      )}
+      {children}
+    </button>
+  );
+};
+```
+
+### **❌ Bad Example: Over-Engineered Button**
+
+```typescript
+// ❌ Over-engineered with unnecessary complexity
+interface ButtonState {
+  isHovered: boolean;
+  isFocused: boolean;
+  isPressed: boolean;
+}
+
+interface ButtonTheme {
+  colors: {
+    primary: string;
+    secondary: string;
+    danger: string;
+  };
+  sizes: {
+    sm: { padding: string; fontSize: string };
+    md: { padding: string; fontSize: string };
+    lg: { padding: string; fontSize: string };
+  };
+}
+
+class ButtonManager {
+  private state: ButtonState;
+  private theme: ButtonTheme;
+
+  constructor(theme: ButtonTheme) {
+    this.theme = theme;
+    this.state = { isHovered: false, isFocused: false, isPressed: false };
+  }
+
+  // ... 50+ lines of unnecessary complexity
+}
+```
+
+## 🐛 **Scenario 2: Fixing a Bug**
+
+### **Step-by-Step Process**
+
+<Steps>
+  <Step>
+    **Reproduce the Bug** - Can you make it happen consistently? - What steps
+    trigger it? - What's the expected vs actual behavior?
+  </Step>
+
+  <Step>
+    **Investigate the Root Cause** - Check browser console for errors - Use
+    debugging tools - Look at network requests - Check component state
+  </Step>
+
+  <Step>
+    **Write a Test First** Write a test that reproduces the bug, then fix it.
+  </Step>
+
+  <Step>**Fix the Bug** Make the minimal change needed to fix the issue.</Step>
+
+  <Step>
+    **Verify the Fix** - Test the fix thoroughly - Ensure no regressions -
+    Update tests if needed
+  </Step>
+</Steps>
+
+### **✅ Good Example: Fixing a State Update Bug**
+
+```typescript
+// ❌ Bug: State not updating correctly
+const [count, setCount] = useState(0);
+
+const handleIncrement = () => {
+  setCount(count + 1); // This might not work if called multiple times quickly
+  setCount(count + 1);
+};
+
+// ✅ Fix: Use functional updates
+const handleIncrement = () => {
+  setCount((prevCount) => prevCount + 1);
+  setCount((prevCount) => prevCount + 1);
+};
+
+// ✅ Even better: Use a single update
+const handleIncrement = () => {
+  setCount((prevCount) => prevCount + 2);
+};
+```
+
+### **❌ Bad Example: Over-Complicated Bug Fix**
+
+```typescript
+// ❌ Over-engineered solution
+class StateManager {
+  private state: Map<string, any> = new Map();
+  private listeners: Set<Function> = new Set();
+
+  updateState(key: string, updater: (prev: any) => any) {
+    const currentValue = this.state.get(key);
+    const newValue = updater(currentValue);
+    this.state.set(key, newValue);
+    this.notifyListeners();
+  }
+
+  // ... 100+ lines of unnecessary complexity
+}
+```
+
+## 🔄 **Scenario 3: Refactoring Existing Code**
+
+### **Step-by-Step Process**
+
+<Steps>
+  <Step>
+    **Understand the Current Code** - What does it do? - How is it used? - What
+    are the pain points?
+  </Step>
+
+  <Step>**Write Tests First** Ensure existing functionality is preserved.</Step>
+
+  <Step>**Make Small Changes** Refactor in small, incremental steps.</Step>
+
+  <Step>**Test After Each Change** Ensure nothing breaks.</Step>
+
+  <Step>**Clean Up** Remove dead code and update documentation.</Step>
+</Steps>
+
+### **✅ Good Example: Refactoring a Complex Function**
+
+```typescript
+// ❌ Before: Complex function doing too much
+function processUserData(users: any[]) {
+  const result = [];
+
+  for (let i = 0; i < users.length; i++) {
+    const user = users[i];
+
+    if (user && user.email && user.name) {
+      const processedUser = {
+        id: user.id || Math.random().toString(36).substr(2, 9),
+        email: user.email.toLowerCase().trim(),
+        name: user.name.trim(),
+        age: user.age || 0,
+        isActive: user.isActive !== false,
+        createdAt: user.createdAt || new Date().toISOString(),
+        lastLogin: user.lastLogin || null,
+      };
+
+      if (processedUser.age >= 18) {
+        result.push(processedUser);
+      }
+    }
+  }
+
+  return result.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// ✅ After: Broken into smaller, focused functions
+interface User {
+  id?: string;
+  email?: string;
+  name?: string;
+  age?: number;
+  isActive?: boolean;
+  createdAt?: string;
+  lastLogin?: string | null;
+}
+
+interface ProcessedUser {
+  id: string;
+  email: string;
+  name: string;
+  age: number;
+  isActive: boolean;
+  createdAt: string;
+  lastLogin: string | null;
+}
+
+function isValidUser(user: any): user is User {
+  return user && user.email && user.name;
+}
+
+function generateId(): string {
+  return Math.random().toString(36).substr(2, 9);
+}
+
+function processUser(user: User): ProcessedUser {
+  return {
+    id: user.id || generateId(),
+    email: user.email.toLowerCase().trim(),
+    name: user.name.trim(),
+    age: user.age || 0,
+    isActive: user.isActive !== false,
+    createdAt: user.createdAt || new Date().toISOString(),
+    lastLogin: user.lastLogin || null,
+  };
+}
+
+function isAdult(user: ProcessedUser): boolean {
+  return user.age >= 18;
+}
+
+function sortByName(users: ProcessedUser[]): ProcessedUser[] {
+  return users.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function processUserData(users: any[]): ProcessedUser[] {
+  return users
+    .filter(isValidUser)
+    .map(processUser)
+    .filter(isAdult)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+```
+
+## 🧪 **Scenario 4: Adding Tests**
+
+### **Step-by-Step Process**
+
+<Steps>
+  <Step>
+    **Identify What to Test** - User interactions - Edge cases - Error
+    conditions - Business logic
+  </Step>
+
+  <Step>**Write Test Cases** Use the AAA pattern: Arrange, Act, Assert</Step>
+
+  <Step>
+    **Test Behavior, Not Implementation** Focus on what the code does, not how
+    it does it.
+  </Step>
+
+  <Step>**Keep Tests Simple** One test should verify one thing.</Step>
+
+  <Step>**Maintain Tests** Update tests when requirements change.</Step>
+</Steps>
+
+### **✅ Good Example: Testing a Component**
+
+```typescript
+// Button.test.tsx
+import { render, screen, fireEvent } from "@testing-library/react";
+import { Button } from "./Button";
+
+describe("Button", () => {
+  it("renders with default props", () => {
+    render(<Button>Click me</Button>);
+
+    const button = screen.getByRole("button", { name: /click me/i });
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveClass("bg-blue-600"); // primary variant
+  });
+
+  it("applies correct variant classes", () => {
+    render(<Button variant="danger">Delete</Button>);
+
+    const button = screen.getByRole("button");
+    expect(button).toHaveClass("bg-red-600");
+  });
+
+  it("handles click events", () => {
+    const handleClick = jest.fn();
+    render(<Button onClick={handleClick}>Click me</Button>);
+
+    fireEvent.click(screen.getByRole("button"));
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("shows loading state", () => {
+    render(<Button loading>Loading</Button>);
+
+    const button = screen.getByRole("button");
+    expect(button).toBeDisabled();
+    expect(screen.getByRole("button")).toHaveClass("opacity-50");
+  });
+
+  it("is disabled when disabled prop is true", () => {
+    render(<Button disabled>Disabled</Button>);
+
+    const button = screen.getByRole("button");
+    expect(button).toBeDisabled();
+  });
+});
+```
+
+### **❌ Bad Example: Testing Implementation Details**
+
+```typescript
+// ❌ Testing implementation details
+it("calls setState with correct parameters", () => {
+  const wrapper = mount(<Button />);
+  const instance = wrapper.instance();
+
+  instance.setState({ loading: true });
+  expect(instance.state.loading).toBe(true);
+});
+```
+
+## ⚡ **Scenario 5: Performance Optimization**
+
+### **Step-by-Step Process**
+
+<Steps>
+  <Step>**Measure First** Use profiling tools to identify bottlenecks.</Step>
+
+  <Step>
+    **Identify the Problem** - Unnecessary re-renders? - Heavy computations? -
+    Large bundle size?
+  </Step>
+
+  <Step>
+    **Choose the Right Solution** - React.memo for components - useMemo for
+    expensive calculations - useCallback for functions - Code splitting for
+    bundles
+  </Step>
+
+  <Step>**Test the Improvement** Measure before and after.</Step>
+
+  <Step>**Don't Over-Optimize** Only optimize what's actually slow.</Step>
+</Steps>
+
+### **✅ Good Example: Optimizing a List Component**
+
+```typescript
+// ❌ Before: Re-renders on every parent update
+const UserList = ({ users, onUserSelect }) => {
+  return (
+    <div>
+      {users.map((user) => (
+        <UserItem
+          key={user.id}
+          user={user}
+          onClick={() => onUserSelect(user.id)}
+        />
+      ))}
+    </div>
+  );
+};
+
+// ✅ After: Optimized with React.memo and useCallback
+const UserItem = React.memo(({ user, onClick }) => {
+  return (
+    <div onClick={onClick}>
+      <h3>{user.name}</h3>
+      <p>{user.email}</p>
+    </div>
+  );
+});
+
+const UserList = ({ users, onUserSelect }) => {
+  const handleUserClick = useCallback(
+    (userId) => {
+      onUserSelect(userId);
+    },
+    [onUserSelect]
+  );
+
+  return (
+    <div>
+      {users.map((user) => (
+        <UserItem key={user.id} user={user} onClick={handleUserClick} />
+      ))}
+    </div>
+  );
+};
+```
+
+### **❌ Bad Example: Premature Optimization**
+
+```typescript
+// ❌ Over-optimizing everything
+const UserList = React.memo(({ users, onUserSelect }) => {
+  const memoizedUsers = useMemo(() => users, [users]);
+  const memoizedOnUserSelect = useCallback(onUserSelect, [onUserSelect]);
+
+  return (
+    <div>
+      {memoizedUsers.map((user) => (
+        <UserItem key={user.id} user={user} onClick={memoizedOnUserSelect} />
+      ))}
+    </div>
+  );
+});
+```
+
+## 🎨 **Scenario 6: Styling Components**
+
+### **Step-by-Step Process**
+
+<Steps>
+  <Step>
+    **Choose the Right Approach** - Tailwind for utility classes - CSS modules
+    for component-specific styles - Styled-components for dynamic styles
+  </Step>
+
+  <Step>
+    **Follow Design System** Use consistent spacing, colors, and typography.
+  </Step>
+
+  <Step>**Make it Responsive** Test on different screen sizes.</Step>
+
+  <Step>
+    **Consider Accessibility** Ensure proper contrast and focus states.
+  </Step>
+
+  <Step>**Keep it Maintainable** Use consistent naming and organization.</Step>
+</Steps>
+
+### **✅ Good Example: Responsive Card Component**
+
+```typescript
+const Card = ({ title, children, variant = "default" }) => {
+  return (
+    <div
+      className={cn(
+        "rounded-lg border bg-white shadow-sm",
+        "p-4 sm:p-6", // Responsive padding
+        "hover:shadow-md transition-shadow", // Hover effects
+        "focus-within:ring-2 focus-within:ring-blue-500", // Focus states
+        {
+          "border-gray-200": variant === "default",
+          "border-blue-200 bg-blue-50": variant === "highlighted",
+          "border-red-200 bg-red-50": variant === "error",
+        }
+      )}
+    >
+      <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+      <div className="text-gray-600">{children}</div>
+    </div>
+  );
+};
+```
+
+## 🚀 **Scenario 7: Adding New Features**
+
+### **Step-by-Step Process**
+
+<Steps>
+  <Step>
+    **Understand Requirements** - What exactly needs to be built? - What are the
+    acceptance criteria? - Are there any constraints?
+  </Step>
+
+  <Step>
+    **Plan the Implementation** - Break down into smaller tasks - Identify
+    dependencies - Consider edge cases
+  </Step>
+
+  <Step>
+    **Start with the API** Design the interface first, then implement.
+  </Step>
+
+  <Step>**Build Incrementally** Get basic functionality working first.</Step>
+
+  <Step>
+    **Test and Refine** Test thoroughly and iterate based on feedback.
+  </Step>
+</Steps>
+
+### **✅ Good Example: Adding a Search Feature**
+
+```typescript
+// 1. Define the interface
+interface SearchProps {
+  onSearch: (query: string) => void;
+  placeholder?: string;
+  className?: string;
+}
+
+// 2. Implement the component
+const Search = ({
+  onSearch,
+  placeholder = "Search...",
+  className,
+}: SearchProps) => {
+  const [query, setQuery] = useState("");
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    onSearch(query);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className={cn("relative", className)}>
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={placeholder}
+        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      />
+      <button
+        type="submit"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1"
+      >
+        <SearchIcon className="h-5 w-5 text-gray-400" />
+      </button>
+    </form>
+  );
+};
+
+// 3. Use the component
+const UserList = () => {
+  const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+
+  const handleSearch = useCallback(
+    (query: string) => {
+      const filtered = users.filter(
+        (user) =>
+          user.name.toLowerCase().includes(query.toLowerCase()) ||
+          user.email.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    },
+    [users]
+  );
+
+  return (
+    <div>
+      <Search onSearch={handleSearch} placeholder="Search users..." />
+      {/* Render filtered users */}
+    </div>
+  );
+};
+```
+
+## 📚 **Quick Reference**
+
+<Cards>
+  <Card
+    title="🎯 Component Creation"
+    description="Plan → Create → Test → Document"
+    href="/docs/best-practices/scenarios#scenario-1-adding-a-new-component"
+  />
+  <Card
+    title="🐛 Bug Fixing"
+    description="Reproduce → Investigate → Test → Fix → Verify"
+    href="/docs/best-practices/scenarios#scenario-2-fixing-a-bug"
+  />
+  <Card
+    title="🔄 Refactoring"
+    description="Understand → Test → Change → Test → Clean"
+    href="/docs/best-practices/scenarios#scenario-3-refactoring-existing-code"
+  />
+  <Card
+    title="🧪 Testing"
+    description="Identify → Write → Test → Maintain"
+    href="/docs/best-practices/scenarios#scenario-4-adding-tests"
+  />
+  <Card
+    title="⚡ Performance"
+    description="Measure → Identify → Choose → Test → Don't Over-optimize"
+    href="/docs/best-practices/scenarios#scenario-5-performance-optimization"
+  />
+  <Card
+    title="🎨 Styling"
+    description="Choose → Follow → Responsive → Accessible → Maintainable"
+    href="/docs/best-practices/scenarios#scenario-6-styling-components"
+  />
+</Cards>
+
+<Callout type="tip">
+  Remember: Start simple, add complexity gradually, and always test your
+  changes. It's better to have working simple code than broken complex code.
+</Callout>

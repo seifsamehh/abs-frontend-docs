@@ -1,0 +1,492 @@
+---
+title: Component Library Overview
+description: Comprehensive guide to our UI component library and design system
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 🧩 Component Library
+
+<Callout type="info">
+  Our component library is built on Shadcn/ui and provides a comprehensive set
+  of accessible, customizable components for building consistent user interfaces
+  across all ABS applications.
+</Callout>
+
+## 🎯 Design System Principles
+
+<Cards>
+  <Card
+    title="♿ Accessibility First"
+    description="All components meet WCAG 2.1 AA standards"
+  />
+  <Card
+    title="🎨 Consistent Design"
+    description="Unified visual language across all applications"
+  />
+  <Card
+    title="🔧 Highly Customizable"
+    description="Easy to customize and extend for specific needs"
+  />
+  <Card
+    title="📱 Responsive"
+    description="Mobile-first design that works on all devices"
+  />
+</Cards>
+
+## 🏗️ Component Categories
+
+Our component library is organized into the following categories:
+
+### 🎨 **UI Components**
+
+- **Buttons** - Primary, secondary, and variant buttons
+- **Inputs** - Text inputs, textareas, and form controls
+- **Cards** - Content containers with headers and footers
+- **Badges** - Status indicators and labels
+- **Avatars** - User profile images and initials
+
+### 📐 **Layout Components**
+
+- **Containers** - Responsive content wrappers
+- **Grids** - Flexible grid layouts
+- **Spacers** - Consistent spacing utilities
+- **Dividers** - Visual content separators
+
+### 📝 **Form Components**
+
+- **Form Fields** - Input validation and error states
+- **Selects** - Dropdown and multi-select components
+- **Checkboxes** - Boolean input controls
+- **Radio Groups** - Single-choice input controls
+- **Date Pickers** - Calendar and date selection
+
+### 📊 **Data Display**
+
+- **Tables** - Sortable and filterable data tables
+- **Lists** - Ordered and unordered content lists
+- **Charts** - Data visualization components
+- **Progress Bars** - Loading and completion indicators
+
+### 💬 **Feedback Components**
+
+- **Alerts** - Success, warning, and error messages
+- **Toasts** - Temporary notification messages
+- **Modals** - Overlay dialogs and confirmations
+- **Tooltips** - Contextual help and information
+
+### 🧭 **Navigation Components**
+
+- **Menus** - Dropdown and context menus
+- **Breadcrumbs** - Hierarchical navigation paths
+- **Tabs** - Content organization and switching
+- **Pagination** - Page navigation controls
+
+### 🎭 **Overlay Components**
+
+- **Popovers** - Floating content containers
+- **Dropdowns** - Contextual action menus
+- **Drawers** - Slide-out panels and sidebars
+- **Backdrops** - Modal and overlay backgrounds
+
+### 📱 **Mobile Components**
+
+- **Touch Targets** - Mobile-optimized interactive elements
+- **Swipe Gestures** - Touch-based interactions
+- **Pull-to-Refresh** - Mobile data refresh patterns
+- **Bottom Sheets** - Mobile-friendly modal alternatives
+
+## 🛠️ Installation & Setup
+
+### Using the CLI
+
+```bash
+# Install a specific component
+npx shadcn-ui@latest add button
+
+# Install multiple components
+npx shadcn-ui@latest add button input card
+
+# Install all components
+npx shadcn-ui@latest add
+```
+
+### Manual Installation
+
+```tsx
+// Import and use components
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+export function MyComponent() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Welcome</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="Enter your name" />
+        <Button>Submit</Button>
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+## 🎨 Theming & Customization
+
+### CSS Variables
+
+Our design system uses CSS custom properties for consistent theming:
+
+```css
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --primary: 32 97% 46%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 32 97% 46%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 32 97% 46%;
+  --radius: 0.5rem;
+}
+```
+
+### Dark Mode Support
+
+All components automatically support dark mode:
+
+```tsx
+import { ThemeProvider } from "@/components/theme-provider";
+
+export function App() {
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      {/* Your app content */}
+    </ThemeProvider>
+  );
+}
+```
+
+## 📱 Responsive Design
+
+### Breakpoint System
+
+Our components use Tailwind's responsive breakpoints:
+
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  <Card>Mobile: 1 column</Card>
+  <Card>Tablet: 2 columns</Card>
+  <Card>Desktop: 3 columns</Card>
+</div>
+```
+
+### Mobile-First Approach
+
+All components are designed mobile-first and scale up:
+
+- **Mobile**: Base styles (no prefix)
+- **Tablet**: `md:` prefix (768px+)
+- **Desktop**: `lg:` prefix (1024px+)
+- **Large Desktop**: `xl:` prefix (1280px+)
+
+## ♿ Accessibility Features
+
+### Built-in Accessibility
+
+All components include:
+
+- **Semantic HTML** - Proper HTML elements and structure
+- **ARIA Attributes** - Screen reader support
+- **Keyboard Navigation** - Full keyboard accessibility
+- **Focus Management** - Visible focus indicators
+- **Color Contrast** - WCAG AA compliant colors
+
+### Example: Accessible Button
+
+```tsx
+<Button
+  variant="primary"
+  size="md"
+  disabled={false}
+  aria-label="Submit form"
+  onClick={handleSubmit}
+>
+  Submit
+</Button>
+```
+
+## 🧪 Testing Components
+
+### Component Testing
+
+```tsx
+import { render, screen, fireEvent } from "@testing-library/react";
+import { Button } from "./button";
+
+describe("Button", () => {
+  it("renders with correct text", () => {
+    render(<Button>Click me</Button>);
+    expect(
+      screen.getByRole("button", { name: "Click me" })
+    ).toBeInTheDocument();
+  });
+
+  it("calls onClick when clicked", () => {
+    const handleClick = vi.fn();
+    render(<Button onClick={handleClick}>Click me</Button>);
+
+    fireEvent.click(screen.getByRole("button"));
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("is disabled when disabled prop is true", () => {
+    render(<Button disabled>Click me</Button>);
+    expect(screen.getByRole("button")).toBeDisabled();
+  });
+});
+```
+
+### Accessibility Testing
+
+```tsx
+import { axe, toHaveNoViolations } from "jest-axe";
+
+expect.extend(toHaveNoViolations);
+
+it("should not have accessibility violations", async () => {
+  const { container } = render(<Button>Click me</Button>);
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
+```
+
+## 🔧 Customization Patterns
+
+### Extending Components
+
+```tsx
+import { Button, ButtonProps } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+interface CustomButtonProps extends ButtonProps {
+  loading?: boolean;
+}
+
+export const CustomButton = ({
+  loading = false,
+  children,
+  className,
+  ...props
+}: CustomButtonProps) => {
+  return (
+    <Button
+      className={cn("relative", className)}
+      disabled={loading || props.disabled}
+      {...props}
+    >
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+        </div>
+      )}
+      <span className={cn(loading && "opacity-0")}>{children}</span>
+    </Button>
+  );
+};
+```
+
+### Creating Variants
+
+```tsx
+import { cva, type VariantProps } from "class-variance-authority";
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "underline-offset-4 hover:underline text-primary",
+      },
+      size: {
+        default: "h-10 py-2 px-4",
+        sm: "h-9 px-3 rounded-md",
+        lg: "h-11 px-8 rounded-md",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+```
+
+## 📚 Component Documentation
+
+### Storybook Integration
+
+We use Storybook for component documentation and testing:
+
+```bash
+# Start Storybook
+npm run storybook
+
+# Build Storybook
+npm run build-storybook
+```
+
+### Writing Stories
+
+```tsx
+import type { Meta, StoryObj } from "@storybook/react";
+import { Button } from "./button";
+
+const meta: Meta<typeof Button> = {
+  title: "Components/Button",
+  component: Button,
+  parameters: {
+    layout: "centered",
+  },
+  tags: ["autodocs"],
+  argTypes: {
+    variant: {
+      control: { type: "select" },
+      options: [
+        "default",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link",
+      ],
+    },
+    size: {
+      control: { type: "select" },
+      options: ["default", "sm", "lg", "icon"],
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    children: "Button",
+  },
+};
+
+export const Primary: Story = {
+  args: {
+    variant: "default",
+    children: "Primary Button",
+  },
+};
+```
+
+## 🚀 Performance Optimization
+
+### Lazy Loading
+
+```tsx
+import { lazy, Suspense } from "react";
+
+const HeavyComponent = lazy(() => import("./heavy-component"));
+
+export function App() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HeavyComponent />
+    </Suspense>
+  );
+}
+```
+
+### Memoization
+
+```tsx
+import { memo } from "react";
+
+export const ExpensiveComponent = memo(({ data }: { data: any[] }) => {
+  const processedData = useMemo(() => {
+    return data.map((item) => ({
+      ...item,
+      processed: true,
+    }));
+  }, [data]);
+
+  return (
+    <div>
+      {processedData.map((item) => (
+        <div key={item.id}>{item.name}</div>
+      ))}
+    </div>
+  );
+});
+```
+
+## 🎯 Best Practices
+
+<Callout type="tip">
+  Follow these best practices when working with our component library:
+</Callout>
+
+1. **Use Semantic HTML** - Choose the right HTML element for the job
+2. **Compose Components** - Build complex UIs by combining simple components
+3. **Keep Components Focused** - Each component should have a single responsibility
+4. **Test Thoroughly** - Write tests for both functionality and accessibility
+5. **Document Usage** - Provide clear examples and API documentation
+6. **Optimize Performance** - Use memoization and lazy loading when appropriate
+7. **Maintain Consistency** - Follow established patterns and conventions
+
+## 🔄 Contributing
+
+### Adding New Components
+
+1. **Design Review** - Ensure the component fits our design system
+2. **Implementation** - Build the component following our patterns
+3. **Testing** - Add comprehensive tests and accessibility checks
+4. **Documentation** - Create Storybook stories and usage examples
+5. **Review** - Submit for code review and feedback
+
+### Component Guidelines
+
+- Follow the established naming conventions
+- Include proper TypeScript types
+- Add comprehensive JSDoc comments
+- Ensure accessibility compliance
+- Write unit and integration tests
+- Create Storybook stories
+- Update the component index
+
+<Callout type="note">
+  Need help with a specific component? Check the individual component pages or
+  reach out to the design system team.
+</Callout>

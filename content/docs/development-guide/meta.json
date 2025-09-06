@@ -1,0 +1,11 @@
+{
+  "title": "Development Guide",
+  "pages": [
+    "overview",
+    "coding-standards",
+    "project-structure",
+    "performance",
+    "accessibility",
+    "git-workflow"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "title": "Patterns",
+  "pages": [
+    "overview",
+    "state-management",
+    "data-fetching",
+    "error-handling",
+    "routing",
+    "forms",
+    "authentication"
+  ]
+}

@@ -1,3 +1,20 @@
-@import 'tailwindcss';
-@import 'fumadocs-ui/css/neutral.css';
-@import 'fumadocs-ui/css/preset.css';
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+
+/* Custom Orange Theme */
+:root {
+  --primary: 32 97% 46%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 32 97% 46%;
+  --accent: 32 97% 46%;
+  --accent-foreground: 0 0% 100%;
+}
+
+.dark {
+  --primary: 32 97% 46%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 32 97% 46%;
+  --accent: 32 97% 46%;
+  --accent-foreground: 0 0% 100%;
+}

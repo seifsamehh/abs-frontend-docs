@@ -2,22 +2,22 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: "Frontend Development Guide",
   description:
-    "Comprehensive frontend development documentation for ABS teams - your single source of truth for modern frontend development.",
+    "Complete guide for frontend development at ABS - from setup to deployment. Modern React, Next.js, TypeScript, and best practices.",
 };
 
 export default function HomePage() {
   return (
     <main className="flex flex-col flex-1 justify-center mx-auto px-6 max-w-6xl text-center">
       <div className="mb-8">
-        <h1 className="bg-clip-text bg-gradient-to-r from-orange-300 to-orange-600 mb-4 font-bold text-transparent text-4xl">
-          ABS Frontend Documentation
+        <h1 className="bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600 mb-4 font-bold text-transparent text-4xl">
+          Frontend Development Guide
         </h1>
         <p className="mx-auto mb-8 max-w-2xl text-fd-muted-foreground text-xl">
-          Comprehensive frontend development guidelines, standards, and best
-          practices for ABS teams. Your single source of truth for modern
-          frontend development.
+          Complete guide for frontend development at ABS. From environment setup
+          to production deployment, learn modern React, Next.js, TypeScript, and
+          industry best practices.
         </p>
       </div>
 
@@ -33,22 +33,22 @@ export default function HomePage() {
         </Link>
 
         <Link
-          href="/docs/standards/overview"
+          href="/docs/development-guide/overview"
           className="bg-card hover:bg-accent p-6 border rounded-lg transition-colors"
         >
-          <h3 className="mb-2 font-semibold">📋 Standards</h3>
+          <h3 className="mb-2 font-semibold">📖 Development Guide</h3>
           <p className="text-muted-foreground text-sm">
-            Coding standards and development guidelines
+            Coding standards, patterns, and best practices
           </p>
         </Link>
 
         <Link
-          href="/docs/best-practices/overview"
+          href="/docs/components/overview"
           className="bg-card hover:bg-accent p-6 border rounded-lg transition-colors"
         >
-          <h3 className="mb-2 font-semibold">✨ Best Practices</h3>
+          <h3 className="mb-2 font-semibold">🧩 Components</h3>
           <p className="text-muted-foreground text-sm">
-            Industry-leading practices and patterns
+            UI component library and design system
           </p>
         </Link>
 
@@ -63,22 +63,22 @@ export default function HomePage() {
         </Link>
 
         <Link
-          href="/docs/troubleshooting/overview"
+          href="/docs/testing/overview"
           className="bg-card hover:bg-accent p-6 border rounded-lg transition-colors"
         >
-          <h3 className="mb-2 font-semibold">🔧 Troubleshooting</h3>
+          <h3 className="mb-2 font-semibold">🧪 Testing</h3>
           <p className="text-muted-foreground text-sm">
-            Common problems and proven solutions
+            Testing strategies, tools, and best practices
           </p>
         </Link>
 
         <Link
-          href="/docs/support/overview"
+          href="/docs/deployment/overview"
           className="bg-card hover:bg-accent p-6 border rounded-lg transition-colors"
         >
-          <h3 className="mb-2 font-semibold">🆘 Support</h3>
+          <h3 className="mb-2 font-semibold">🚀 Deployment</h3>
           <p className="text-muted-foreground text-sm">
-            Get help from the team and community
+            Build processes, CI/CD, and production deployment
           </p>
         </Link>
       </div>
@@ -91,10 +91,10 @@ export default function HomePage() {
           View Full Documentation
         </Link>
         <Link
-          href="/docs/company/overview"
+          href="/docs/resources/overview"
           className="inline-flex justify-center items-center bg-background hover:bg-accent px-6 py-3 border border-input rounded-md transition-colors"
         >
-          About ABS
+          Resources & Learning
         </Link>
       </div>
     </main>

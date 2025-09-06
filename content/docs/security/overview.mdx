@@ -1,0 +1,564 @@
+---
+title: "Security Guidelines"
+description: "Comprehensive security guidelines for frontend development"
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+
+# Security Guidelines
+
+Security is everyone's responsibility. This guide covers essential security practices for frontend development.
+
+## 🚨 **Critical Security Principles**
+
+### **Never Trust User Input**
+
+<Callout type="warn">
+  **Rule #1:** Always validate and sanitize user input. Never trust data from
+  the client.
+</Callout>
+
+```typescript
+// ❌ Dangerous: No validation
+function processUserData(data: any) {
+  return {
+    name: data.name,
+    email: data.email,
+    age: data.age,
+  };
+}
+
+// ✅ Secure: Validate and sanitize
+function processUserData(data: any) {
+  // Validate required fields
+  if (!data.name || typeof data.name !== "string") {
+    throw new Error("Invalid name");
+  }
+
+  // Sanitize input
+  const name = data.name.trim().slice(0, 100);
+  const email = data.email?.trim().toLowerCase();
+
+  // Validate email format
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new Error("Invalid email format");
+  }
+
+  return {
+    name,
+    email,
+    age: Math.max(0, Math.min(120, parseInt(data.age) || 0)),
+  };
+}
+```
+
+### **Use HTTPS Everywhere**
+
+```typescript
+// ✅ Always use HTTPS in production
+const API_BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://api.yourapp.com"
+    : "http://localhost:3000";
+
+// ✅ Validate HTTPS in production
+if (
+  process.env.NODE_ENV === "production" &&
+  !window.location.protocol.includes("https")
+) {
+  window.location.href = window.location.href.replace("http:", "https:");
+}
+```
+
+## 🔐 **Authentication & Authorization**
+
+### **Secure Token Handling**
+
+```typescript
+// ❌ Dangerous: Storing tokens in localStorage
+localStorage.setItem("token", token);
+
+// ✅ Secure: Use httpOnly cookies (server-side)
+// For client-side, use secure storage
+class SecureStorage {
+  private static readonly TOKEN_KEY = "auth_token";
+
+  static setToken(token: string): void {
+    // Use sessionStorage for temporary storage
+    sessionStorage.setItem(this.TOKEN_KEY, token);
+  }
+
+  static getToken(): string | null {
+    return sessionStorage.getItem(this.TOKEN_KEY);
+  }
+
+  static removeToken(): void {
+    sessionStorage.removeItem(this.TOKEN_KEY);
+  }
+}
+```
+
+### **JWT Token Validation**
+
+```typescript
+// ✅ Validate JWT tokens
+function validateToken(token: string): boolean {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const now = Math.floor(Date.now() / 1000);
+
+    // Check expiration
+    if (payload.exp < now) {
+      return false;
+    }
+
+    // Check issuer
+    if (payload.iss !== "your-app") {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+```
+
+### **Role-Based Access Control**
+
+```typescript
+// ✅ Implement RBAC
+interface User {
+  id: string;
+  email: string;
+  role: "admin" | "user" | "guest";
+  permissions: string[];
+}
+
+function hasPermission(user: User, permission: string): boolean {
+  return user.permissions.includes(permission) || user.role === "admin";
+}
+
+function canAccess(user: User, resource: string): boolean {
+  const permissions = {
+    users: "read:users",
+    settings: "write:settings",
+    admin: "admin:access",
+  };
+
+  return hasPermission(user, permissions[resource]);
+}
+```
+
+## 🛡️ **Input Validation & Sanitization**
+
+### **XSS Prevention**
+
+```typescript
+// ❌ Dangerous: Direct HTML injection
+function displayUserContent(content: string) {
+  return <div dangerouslySetInnerHTML={{ __html: content }} />;
+}
+
+// ✅ Secure: Sanitize HTML
+import DOMPurify from "dompurify";
+
+function displayUserContent(content: string) {
+  const sanitized = DOMPurify.sanitize(content);
+  return <div dangerouslySetInnerHTML={{ __html: sanitized }} />;
+}
+
+// ✅ Even better: Use text content
+function displayUserContent(content: string) {
+  return <div>{content}</div>;
+}
+```
+
+### **SQL Injection Prevention**
+
+```typescript
+// ❌ Dangerous: String concatenation
+const query = `SELECT * FROM users WHERE id = ${userId}`;
+
+// ✅ Secure: Use parameterized queries
+const query = "SELECT * FROM users WHERE id = ?";
+const result = await db.query(query, [userId]);
+```
+
+### **CSRF Protection**
+
+```typescript
+// ✅ Include CSRF token in forms
+function ContactForm() {
+  const [csrfToken, setCsrfToken] = useState("");
+
+  useEffect(() => {
+    // Get CSRF token from server
+    fetch("/api/csrf-token")
+      .then((res) => res.json())
+      .then((data) => setCsrfToken(data.token));
+  }, []);
+
+  return (
+    <form action="/api/contact" method="POST">
+      <input type="hidden" name="csrf_token" value={csrfToken} />
+      {/* form fields */}
+    </form>
+  );
+}
+```
+
+## 🔒 **Data Protection**
+
+### **Sensitive Data Handling**
+
+```typescript
+// ❌ Dangerous: Logging sensitive data
+console.log("User data:", { password: user.password, ssn: user.ssn });
+
+// ✅ Secure: Mask sensitive data
+function maskSensitiveData(data: any): any {
+  const sensitive = ["password", "ssn", "creditCard", "token"];
+  const masked = { ...data };
+
+  sensitive.forEach((field) => {
+    if (masked[field]) {
+      masked[field] = "***";
+    }
+  });
+
+  return masked;
+}
+
+console.log("User data:", maskSensitiveData(user));
+```
+
+### **Data Encryption**
+
+```typescript
+// ✅ Encrypt sensitive data before storage
+import CryptoJS from "crypto-js";
+
+const SECRET_KEY = process.env.REACT_APP_ENCRYPTION_KEY;
+
+function encryptData(data: string): string {
+  return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
+}
+
+function decryptData(encryptedData: string): string {
+  const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
+  return bytes.toString(CryptoJS.enc.Utf8);
+}
+```
+
+## 🌐 **Network Security**
+
+### **CORS Configuration**
+
+```typescript
+// ✅ Proper CORS setup
+const corsOptions = {
+  origin:
+    process.env.NODE_ENV === "production"
+      ? ["https://yourapp.com", "https://www.yourapp.com"]
+      : ["http://localhost:3000"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+```
+
+### **Content Security Policy**
+
+```html
+<!-- ✅ Implement CSP -->
+<meta
+  http-equiv="Content-Security-Policy"
+  content="default-src 'self'; 
+               script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; 
+               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+               font-src 'self' https://fonts.gstatic.com; 
+               img-src 'self' data: https:; 
+               connect-src 'self' https://api.yourapp.com;"
+/>
+```
+
+### **Secure Headers**
+
+```typescript
+// ✅ Set security headers
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  res.setHeader(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains"
+  );
+  next();
+});
+```
+
+## 🔍 **Dependency Security**
+
+### **Vulnerability Scanning**
+
+```bash
+# ✅ Regular security audits
+npm audit
+npm audit fix
+
+# ✅ Use security tools
+npm install -g npm-check-updates
+ncu -u
+npm update
+```
+
+### **Dependency Management**
+
+```json
+// ✅ Pin exact versions for security
+{
+  "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "eslint-plugin-security": "^1.7.1"
+  }
+}
+```
+
+### **Security Linting**
+
+```javascript
+// .eslintrc.js
+module.exports = {
+  extends: ["plugin:security/recommended"],
+  plugins: ["security"],
+  rules: {
+    "security/detect-object-injection": "error",
+    "security/detect-non-literal-regexp": "error",
+    "security/detect-unsafe-regex": "error",
+  },
+};
+```
+
+## 🚨 **Error Handling & Logging**
+
+### **Secure Error Messages**
+
+```typescript
+// ❌ Dangerous: Expose internal details
+function handleError(error: Error) {
+  return {
+    message: `Database error: ${error.message}`,
+    stack: error.stack,
+    query: error.query,
+  };
+}
+
+// ✅ Secure: Generic error messages
+function handleError(error: Error) {
+  console.error("Internal error:", error); // Log internally
+
+  return {
+    message: "An error occurred. Please try again.",
+    code: "INTERNAL_ERROR",
+  };
+}
+```
+
+### **Secure Logging**
+
+```typescript
+// ✅ Log security events
+function logSecurityEvent(event: string, details: any) {
+  const logEntry = {
+    timestamp: new Date().toISOString(),
+    event,
+    details: maskSensitiveData(details),
+    ip: req.ip,
+    userAgent: req.get("User-Agent"),
+  };
+
+  // Send to security monitoring system
+  securityLogger.log(logEntry);
+}
+```
+
+## 🔐 **Environment Security**
+
+### **Environment Variables**
+
+```typescript
+// ✅ Secure environment variable handling
+const config = {
+  apiUrl: process.env.REACT_APP_API_URL,
+  apiKey: process.env.REACT_APP_API_KEY,
+  // Never expose sensitive server-side variables
+  databaseUrl: process.env.DATABASE_URL, // Server-side only
+  jwtSecret: process.env.JWT_SECRET, // Server-side only
+};
+
+// ✅ Validate required environment variables
+function validateConfig() {
+  const required = ["REACT_APP_API_URL", "REACT_APP_API_KEY"];
+
+  required.forEach((key) => {
+    if (!process.env[key]) {
+      throw new Error(`Missing required environment variable: ${key}`);
+    }
+  });
+}
+```
+
+### **Secrets Management**
+
+```typescript
+// ✅ Use environment-specific configs
+const config = {
+  development: {
+    apiUrl: "http://localhost:3000",
+    debug: true,
+  },
+  production: {
+    apiUrl: "https://api.yourapp.com",
+    debug: false,
+  },
+};
+
+const currentConfig = config[process.env.NODE_ENV] || config.development;
+```
+
+## 🧪 **Security Testing**
+
+### **Automated Security Tests**
+
+```typescript
+// ✅ Security test examples
+describe("Security Tests", () => {
+  it("should not expose sensitive data in error messages", () => {
+    const error = handleError(new Error("Database connection failed"));
+    expect(error.message).not.toContain("Database");
+    expect(error.stack).toBeUndefined();
+  });
+
+  it("should validate user input", () => {
+    const maliciousInput = '<script>alert("xss")</script>';
+    const result = sanitizeInput(maliciousInput);
+    expect(result).not.toContain("<script>");
+  });
+
+  it("should require authentication for protected routes", async () => {
+    const response = await request(app).get("/api/protected").expect(401);
+  });
+});
+```
+
+### **Security Checklist**
+
+```markdown
+## Pre-Deployment Security Checklist
+
+### Authentication & Authorization
+
+- [ ] All routes are properly protected
+- [ ] JWT tokens are validated
+- [ ] Role-based access control implemented
+- [ ] Session management is secure
+
+### Input Validation
+
+- [ ] All user input is validated
+- [ ] XSS protection implemented
+- [ ] SQL injection prevention
+- [ ] CSRF protection enabled
+
+### Data Protection
+
+- [ ] Sensitive data is encrypted
+- [ ] No sensitive data in logs
+- [ ] Secure data transmission (HTTPS)
+- [ ] Proper data retention policies
+
+### Dependencies
+
+- [ ] All dependencies are up to date
+- [ ] No known vulnerabilities
+- [ ] Security scanning completed
+- [ ] Unused dependencies removed
+
+### Configuration
+
+- [ ] Environment variables secured
+- [ ] CORS properly configured
+- [ ] Security headers set
+- [ ] Error handling secure
+```
+
+## 📚 **Security Resources**
+
+<Cards>
+  <Card
+    title="🔒 OWASP Top 10"
+    description="Most critical web application security risks"
+    href="https://owasp.org/www-project-top-ten/"
+    external
+  />
+  <Card
+    title="🛡️ Security Headers"
+    description="HTTP security headers guide"
+    href="https://securityheaders.com/"
+    external
+  />
+  <Card
+    title="🔍 Security Testing"
+    description="Tools and techniques for security testing"
+    href="/docs/testing/security"
+  />
+  <Card
+    title="❓ Security FAQ"
+    description="Common security questions and answers"
+    href="/docs/troubleshooting/security"
+  />
+</Cards>
+
+## 🚨 **Incident Response**
+
+### **Security Incident Process**
+
+<Steps>
+  <Step>
+    **Immediate Response** - Assess the severity - Isolate affected systems -
+    Notify security team - Document the incident
+  </Step>
+
+  <Step>
+    **Investigation** - Determine root cause - Assess impact - Collect evidence
+    - Identify affected users
+  </Step>
+
+  <Step>
+    **Containment** - Patch vulnerabilities - Reset compromised credentials -
+    Update security measures - Monitor for further issues
+  </Step>
+
+  <Step>
+    **Recovery** - Restore normal operations - Communicate with users - Update
+    security policies - Conduct post-mortem
+  </Step>
+</Steps>
+
+### **Emergency Contacts**
+
+- **Security Team Lead:** security@company.com
+- **IT Security:** it-security@company.com
+- **Emergency Hotline:** +1-XXX-XXX-XXXX
+
+<Callout type="warn">
+  **Remember:** Security is not a one-time setup but an ongoing process. Regular
+  audits, updates, and training are essential for maintaining security.
+</Callout>

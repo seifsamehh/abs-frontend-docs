@@ -1,0 +1,11 @@
+{
+  "title": "Deployment",
+  "pages": [
+    "overview",
+    "build-process",
+    "environment-setup",
+    "ci-cd",
+    "monitoring",
+    "troubleshooting"
+  ]
+}

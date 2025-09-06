@@ -180,97 +180,147 @@ Install our extension pack for the best development experience:
 
 ## Making Your First Contribution
 
-### 1. Find an Issue
+### 1. Get Assigned to a Task
 
-Start with beginner-friendly issues:
+As a new team member, you'll typically start with:
 
-- Look for `good first issue` labels
-- Check the documentation for missing content
-- Fix typos or improve examples
-- Add missing type definitions
+- **Small bug fixes** - Get familiar with the codebase
+- **Documentation updates** - Learn the project structure
+- **UI improvements** - Work on existing components
+- **Feature additions** - Build on existing functionality
 
-### 2. Create a Branch
+Your team lead or mentor will assign you appropriate tasks based on your experience level.
+
+### 2. Understand the Task
+
+Before starting work:
+
+- **Read the task description** thoroughly
+- **Ask questions** if anything is unclear
+- **Review related code** to understand the context
+- **Check existing tests** to understand expected behavior
+- **Discuss approach** with your mentor or team lead
+
+### 3. Set Up Your Development Environment
 
 ```bash
-# Create and switch to a new branch
-git checkout -b feature/add-component-example
+# Pull latest changes
+git checkout main
+git pull origin main
 
-# Or for bug fixes
-git checkout -b fix/typo-in-readme
+# Create a feature branch
+git checkout -b feature/your-task-name
+
+# Install dependencies (if needed)
+npm install
+
+# Start development server
+npm run dev
 ```
 
-### 3. Make Your Changes
+### 4. Make Your Changes
 
-Follow our coding standards:
+Follow our development standards:
 
 ```typescript
-// Example: Adding a new component documentation
----
-title: Button Component
-description: Reusable button component with variants and states
----
+// Example: Adding a new component
+import { FC } from "react";
+import { cn } from "@/lib/utils";
 
-import { Button } from '@/components/ui/button';
+interface ButtonProps {
+  children: React.ReactNode;
+  variant?: "primary" | "secondary";
+  size?: "sm" | "md" | "lg";
+  disabled?: boolean;
+  onClick?: () => void;
+}
 
-# Button Component
-
-The Button component provides a consistent way to trigger actions.
-
-## Basic Usage
-
-<Button>Click me</Button>
-
-## Variants
-
-<Button variant="primary">Primary</Button>
-<Button variant="secondary">Secondary</Button>
-<Button variant="outline">Outline</Button>
-
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| variant | string | 'primary' | Button style variant |
-| size | string | 'md' | Button size |
-| disabled | boolean | false | Disabled state |
+export const Button: FC<ButtonProps> = ({
+  children,
+  variant = "primary",
+  size = "md",
+  disabled = false,
+  onClick,
+}) => {
+  return (
+    <button
+      className={cn("rounded-md font-medium transition-colors", {
+        "bg-blue-600 text-white hover:bg-blue-700": variant === "primary",
+        "bg-gray-200 text-gray-900 hover:bg-gray-300": variant === "secondary",
+        "px-2 py-1 text-sm": size === "sm",
+        "px-4 py-2 text-base": size === "md",
+        "px-6 py-3 text-lg": size === "lg",
+        "opacity-50 cursor-not-allowed": disabled,
+      })}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
 ```
 
-### 4. Test Your Changes
+### 5. Test Your Changes
 
 ```bash
 # Run the development server
-npm dev
+npm run dev
 
 # Check for TypeScript errors
-npm type-check
+npm run type-check
 
 # Run linting
-npm lint
+npm run lint
+
+# Run tests
+npm run test
 
 # Format code
-npm format
+npm run format
 ```
 
-### 5. Commit and Push
+### 6. Commit Your Changes
 
 ```bash
 # Stage your changes
 git add .
 
 # Commit with conventional commit format
-git commit -m "docs: add button component documentation"
+git commit -m "feat: add new button component with variants"
 
 # Push to your branch
-git push origin feature/add-component-example
+git push origin feature/your-task-name
 ```
 
-### 6. Create Pull Request
+### 7. Create Pull Request
 
 1. Go to the repository on GitHub
 2. Click "New Pull Request"
 3. Select your branch
-4. Fill out the PR template
-5. Request review from team members
+4. Fill out the PR template with:
+   - **Description** of what you changed
+   - **Screenshots** if UI changes
+   - **Testing notes** if applicable
+   - **Any questions** for reviewers
+5. Request review from your mentor or team lead
+
+### 8. Address Feedback
+
+- **Respond to comments** promptly
+- **Make requested changes** carefully
+- **Ask for clarification** if needed
+- **Test changes** after each update
+- **Update your PR** with new commits
+
+### 9. Celebrate Your First Contribution! 🎉
+
+Once your PR is approved and merged:
+
+- **Update your local main branch**
+- **Delete your feature branch**
+- **Document any learnings** for future reference
+- **Ask for your next task** from your team lead
 
 ---
 
@@ -335,18 +385,194 @@ git push origin feature/add-component-example
 
 ## Common Tasks
 
-### Adding New Documentation
+### 🆕 Implementing New Features
 
-1. Create a new `README.md` file in each feature
-2. Add a `TSDocs` in each file
+1. **Plan & Design**
 
-### Fixing Bugs
+   - Create feature branch from `main`
+   - Write technical specification
+   - Design component architecture
+   - Identify dependencies and APIs
 
-1. Reproduce the issue locally
-2. Create a test case (if missing)
-3. Fix the issue
-4. Verify the test passes
-5. Update documentation if needed
+2. **Development**
+
+   - Write unit tests first (TDD approach)
+   - Implement feature incrementally
+   - Follow coding standards and patterns
+   - Add proper TypeScript types
+
+3. **Testing & Review**
+
+   - Run all tests locally
+   - Test in different browsers/devices
+   - Create pull request with detailed description
+   - Address code review feedback
+
+4. **Deployment**
+   - Merge to `main` after approval
+   - Monitor deployment and user feedback
+   - Update documentation
+
+### 🔧 Refactoring Code
+
+1. **Assessment**
+
+   - Identify code smells and technical debt
+   - Analyze impact and dependencies
+   - Plan refactoring strategy
+
+2. **Implementation**
+
+   - Create feature branch for refactoring
+   - Make small, incremental changes
+   - Maintain existing functionality
+   - Update tests as needed
+
+3. **Validation**
+   - Run comprehensive test suite
+   - Verify no regression in functionality
+   - Performance testing if applicable
+   - Code review and approval
+
+### 📝 Adding Documentation
+
+1. **Content Creation**
+
+   - Create new `.mdx` files in appropriate sections
+   - Follow documentation standards and templates
+   - Include code examples and screenshots
+   - Add proper frontmatter metadata
+
+2. **Integration**
+   - Update navigation in `meta.json` files
+   - Add cross-references and links
+   - Test documentation locally
+   - Review with team members
+
+### ✏️ Editing & Updating
+
+1. **Content Updates**
+
+   - Identify outdated information
+   - Update code examples and screenshots
+   - Revise procedures and workflows
+   - Check for broken links
+
+2. **Version Control**
+   - Create branch for documentation updates
+   - Make atomic commits for each change
+   - Test changes locally
+   - Submit pull request with clear description
+
+### 🐛 Fixing Bugs
+
+1. **Investigation**
+
+   - Reproduce the issue locally
+   - Identify root cause and scope
+   - Check existing issues and discussions
+   - Create test case (if missing)
+
+2. **Resolution**
+
+   - Implement fix with minimal changes
+   - Add or update tests
+   - Verify fix resolves the issue
+   - Update documentation if needed
+
+3. **Deployment**
+   - Test fix in staging environment
+   - Create pull request with detailed description
+   - Monitor fix in production
+   - Close related issues
+
+### 🎨 UI/UX Improvements
+
+1. **Design Review**
+
+   - Analyze current user experience
+   - Identify improvement opportunities
+   - Create mockups or wireframes
+   - Get design approval
+
+2. **Implementation**
+
+   - Update components and styles
+   - Ensure responsive design
+   - Test accessibility compliance
+   - Validate across browsers
+
+3. **Testing**
+   - User acceptance testing
+   - Performance impact assessment
+   - Cross-browser compatibility
+   - Mobile device testing
+
+### ⚡ Performance Optimization
+
+1. **Analysis**
+
+   - Profile application performance
+   - Identify bottlenecks and slow queries
+   - Measure Core Web Vitals
+   - Set performance budgets
+
+2. **Optimization**
+
+   - Implement code splitting
+   - Optimize images and assets
+   - Improve database queries
+   - Add caching strategies
+
+3. **Validation**
+   - Measure performance improvements
+   - Run Lighthouse audits
+   - Test on slow connections
+   - Monitor production metrics
+
+### 🔒 Security Updates
+
+1. **Assessment**
+
+   - Review security advisories
+   - Audit dependencies for vulnerabilities
+   - Check for security best practices
+   - Identify potential attack vectors
+
+2. **Implementation**
+
+   - Update vulnerable dependencies
+   - Implement security headers
+   - Add input validation and sanitization
+   - Review authentication and authorization
+
+3. **Testing**
+   - Run security scans
+   - Penetration testing if needed
+   - Review with security team
+   - Monitor for security issues
+
+### 🧪 Testing Tasks
+
+1. **Test Development**
+
+   - Write unit tests for new features
+   - Create integration tests
+   - Add end-to-end test scenarios
+   - Update test documentation
+
+2. **Test Maintenance**
+
+   - Fix failing tests
+   - Update outdated test data
+   - Improve test coverage
+   - Optimize test performance
+
+3. **Test Execution**
+   - Run test suites locally
+   - Debug test failures
+   - Monitor CI/CD test results
+   - Report test issues
 
 ---
 
@@ -369,17 +595,88 @@ git push origin feature/add-component-example
 
 ### Onboarding Checklist
 
-Use this checklist for your first week:
+Use this checklist for your first two weeks:
 
-- [ ] **Day 1**: Environment setup and repository access
-- [ ] **Day 1**: Complete VS Code configuration
-- [ ] **Day 2**: Read through main documentation sections
-- [ ] **Day 2**: Join team Whatsapp channels
-- [ ] **Day 3**: Attend team standup and introduce yourself
-- [ ] **Day 4**: Set up 1-on-1 with your mentor
-- [ ] **Day 5**: Complete a "good first issue"
-- [ ] **Week 1**: Schedule code review session
-- [ ] **Week 1**: Join learning group sessions
+#### **Week 1: Foundation & Setup**
+
+**Day 1: Environment & Access**
+
+- [ ] **Environment setup** - Complete development environment configuration
+- [ ] **Repository access** - Get access to all necessary repositories
+- [ ] **VS Code configuration** - Install recommended extensions and settings
+- [ ] **Team communication** - Join Slack/WhatsApp channels and introduce yourself
+- [ ] **Account setup** - Set up accounts for project management tools (Jira, Linear, etc.)
+
+**Day 2: Documentation & Learning**
+
+- [ ] **Read main documentation** - Go through all documentation sections
+- [ ] **Review codebase structure** - Understand project organization and architecture
+- [ ] **Study coding standards** - Read development guide and best practices
+- [ ] **Explore tech stack** - Familiarize yourself with our technology choices
+- [ ] **Set up learning goals** - Define what you want to focus on learning
+
+**Day 3: Team Integration**
+
+- [ ] **Attend team standup** - Join daily standup and introduce yourself
+- [ ] **Meet your mentor** - Have initial meeting with assigned mentor
+- [ ] **Review current projects** - Understand active projects and their status
+- [ ] **Ask questions** - Don't hesitate to ask about anything unclear
+- [ ] **Shadow a team member** - Observe how experienced developers work
+
+**Day 4: First Task Assignment**
+
+- [ ] **Get first task** - Receive your first assigned task from team lead
+- [ ] **Task discussion** - Review task requirements with your mentor
+- [ ] **Plan approach** - Break down the task into manageable steps
+- [ ] **Set up development branch** - Create feature branch for your work
+- [ ] **Start implementation** - Begin working on your first task
+
+**Day 5: First Contribution**
+
+- [ ] **Complete first task** - Finish your assigned task
+- [ ] **Test thoroughly** - Run all tests and verify functionality
+- [ ] **Code review preparation** - Prepare your code for review
+- [ ] **Create pull request** - Submit your first PR with detailed description
+- [ ] **Celebrate milestone** - Acknowledge your first contribution! 🎉
+
+#### **Week 2: Deep Dive & Integration**
+
+**Day 6-7: Advanced Learning**
+
+- [ ] **Study component library** - Learn our design system and components
+- [ ] **Review testing strategies** - Understand our testing approach
+- [ ] **Explore deployment process** - Learn how we deploy applications
+- [ ] **Study performance guidelines** - Understand optimization practices
+- [ ] **Review accessibility standards** - Learn WCAG compliance requirements
+
+**Day 8-9: Project Integration**
+
+- [ ] **Join project meetings** - Attend project planning and review sessions
+- [ ] **Contribute to discussions** - Share ideas and ask questions
+- [ ] **Take on more complex tasks** - Work on slightly more challenging assignments
+- [ ] **Pair programming** - Work alongside experienced team members
+- [ ] **Code review participation** - Review others' code and learn from feedback
+
+**Day 10: Reflection & Planning**
+
+- [ ] **Week 1 reflection** - Review what you've learned and accomplished
+- [ ] **Identify knowledge gaps** - Determine areas that need more focus
+- [ ] **Set learning goals** - Plan what to focus on in the coming weeks
+- [ ] **Schedule regular check-ins** - Set up recurring meetings with mentor
+- [ ] **Plan next steps** - Discuss career development and growth opportunities
+
+#### **Ongoing: Continuous Learning**
+
+**Week 2+**
+
+- [ ] **Regular 1-on-1s** - Weekly meetings with your mentor
+- [ ] **Team meetings** - Attend all relevant team and project meetings
+- [ ] **Learning sessions** - Join team learning groups and tech talks
+- [ ] **Code review sessions** - Participate in code review processes
+- [ ] **Documentation updates** - Contribute to improving team documentation
+- [ ] **Mentor others** - Start helping newer team members when ready
+- [ ] **Share knowledge** - Present learnings to the team
+- [ ] **Career development** - Discuss growth opportunities and career path
 
 ### Next Steps
 

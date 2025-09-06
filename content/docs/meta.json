@@ -1,16 +1,18 @@
 {
-  "title": "Documentation",
+  "title": "Frontend Documentation",
   "pages": [
     "index",
     "getting-started",
-    "company",
+    "development-guide",
     "tech-stack",
-    "standards",
-    "best-practices",
-    "roadmap",
+    "components",
+    "patterns",
+    "testing",
+    "deployment",
     "troubleshooting",
-    "projects",
-    "learning",
-    "support"
+    "resources",
+    "standards",
+    "team",
+    "security"
   ]
 }
