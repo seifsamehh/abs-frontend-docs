@@ -217,6 +217,58 @@ return user.profile.settings.notifications.email;
 - "This function is doing too many things - consider breaking it into smaller functions"
 - "Add a test case for when the user input is empty"
 
+## 📝 **PR Title Guidelines**
+
+### **Format**
+```
+<type>: <brief description> (<issue number>)
+```
+
+### **Examples**
+- `feat: add user authentication system (#123)`
+- `fix: resolve login validation error (#456)`
+- `docs: update API documentation (#789)`
+- `refactor: improve component structure (#101)`
+- `perf: optimize dashboard loading time (#234)`
+- `test: add unit tests for user service (#567)`
+
+### **Types**
+- **`feat`** - New features or functionality
+- **`fix`** - Bug fixes and issue resolutions
+- **`docs`** - Documentation changes and updates
+- **`style`** - Code style changes (formatting, whitespace, etc.)
+- **`refactor`** - Code refactoring without functional changes
+- **`test`** - Adding or updating tests
+- **`chore`** - Maintenance tasks, dependencies, build changes
+- **`perf`** - Performance improvements
+- **`ci`** - Continuous integration changes
+- **`build`** - Build system or external dependencies changes
+
+### **Best Practices**
+- **Keep titles under 50 characters** for better readability
+- **Use present tense** ("add" not "added")
+- **Be specific but concise** - describe what, not how
+- **Include issue number** when applicable for traceability
+- **Use lowercase** for consistency with commit messages
+- **Avoid ending with periods** - titles are not sentences
+- **Use imperative mood** - "Add feature" not "Adding feature"
+
+### **Common Patterns**
+```markdown
+# Good Examples
+feat: add dark mode toggle (#123)
+fix: resolve memory leak in dashboard (#456)
+docs: update setup instructions (#789)
+refactor: extract user validation logic (#101)
+perf: optimize image loading (#234)
+
+# Avoid These
+Added new feature (#123)                    # Wrong tense
+FEAT: Add new feature (#123)                # Wrong case
+feat: add new feature that does something (#123)  # Too long
+feat: add new feature. (#123)               # Unnecessary period
+```
+
 ## 📝 **PR Description Template**
 
 Use this template for all pull requests:
