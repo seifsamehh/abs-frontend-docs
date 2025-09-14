@@ -1,0 +1,12 @@
+{
+  "title": "AI Tools",
+  "description": "Guidelines and best practices for using AI tools in frontend development",
+  "pages": [
+    "overview",
+    "quick-start",
+    "best-practices",
+    "code-standards",
+    "prompt-template",
+    "security-policy"
+  ]
+}

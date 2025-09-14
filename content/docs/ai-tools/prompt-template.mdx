@@ -1,0 +1,231 @@
+---
+title: "Prompt Template"
+---
+
+# 📋 AI Prompt Template
+
+This is the complete template you can copy and paste into any AI tool to ensure consistent code generation.
+
+## 🎯 Complete Template
+
+Copy everything below this line and paste it into your AI tool:
+
+---
+
+```
+# Frontend Development Rules for AI Tools
+
+## Project Structure
+- Use feature-based organization in `features/` directory
+- Keep `app/` routes minimal, delegate logic to features
+- No cross-feature imports - use `index.ts` re-exports
+- No logic in UI components - use hooks/services
+
+## Naming Conventions
+- Components: PascalCase (UserCard.tsx)
+- Hooks: useCamelCase
+- Files: kebab-case (user-profile.tsx)
+- Types: PascalCase + suffix (UserType, UserProps)
+- Constants: UPPER_SNAKE_CASE
+
+## Code Standards
+- TypeScript strict mode - no `any` types
+- Zod validation for all external inputs
+- Tailwind + shadcn/ui for styling
+- Absolute imports (@/features/...)
+- Server components by default, "use client" only when needed
+
+## Testing
+- Jest + React Testing Library for unit tests
+- Include tests with all AI-generated code
+- Minimum 80% coverage for business logic
+- Accessibility testing with axe
+
+## Performance
+- Use next/image and next/font
+- Avoid unnecessary re-renders
+- Animate transform + opacity only
+- Use next/dynamic for large modules
+
+## Security
+- Validate all external inputs with Zod
+- Never rely on client-only auth checks
+- Sanitize any HTML content
+- Use secure token storage (httpOnly cookies)
+
+## Accessibility
+- Semantic HTML elements
+- Proper ARIA attributes
+- Keyboard navigation support
+- Focus management
+- Screen reader compatibility
+
+## Code Quality
+- Single responsibility principle
+- Small, composable components
+- Early returns for better readability
+- Proper error handling
+- Comprehensive documentation
+
+## Required Elements
+Every AI-generated code must include:
+- TypeScript types and interfaces
+- Zod validation schemas
+- Comprehensive unit tests
+- TSDoc documentation
+- Accessibility attributes
+- Error handling
+- Performance optimizations
+```
+
+---
+
+## 🚀 How to Use This Template
+
+### Step 1: Copy the Template
+
+1. Select all text between the "---" markers above
+2. Copy it to your clipboard
+3. Paste it into your AI tool (Cursor AI, ChatGPT, GitHub Copilot, etc.)
+
+### Step 2: Add Your Specific Requirements
+
+After pasting the template, add your specific requirements:
+
+```
+[Paste the template above]
+
+Create a UserProfile component that:
+- Displays user information (name, email, avatar)
+- Has edit functionality with form validation
+- Uses the existing UserCard component pattern
+- Includes proper accessibility attributes
+- Has comprehensive tests covering all functionality
+- Follows our project structure in features/users/
+```
+
+### Step 3: Generate and Review
+
+1. Let the AI generate the code
+2. Review the generated code thoroughly
+3. Test it immediately
+4. Make any necessary adjustments
+
+## 📝 Template Variations
+
+### For Component Generation
+
+```
+[Paste template above]
+
+Create a [ComponentName] component that:
+- [Specific functionality]
+- [Props and state requirements]
+- [Styling requirements]
+- [Accessibility requirements]
+- [Testing requirements]
+- [Integration requirements]
+```
+
+### For Custom Hooks
+
+```
+[Paste template above]
+
+Create a custom hook called use[HookName] that:
+- [Specific functionality]
+- [Return values]
+- [Parameters]
+- [Error handling]
+- [Performance considerations]
+- [Testing requirements]
+```
+
+### For Service Functions
+
+```
+[Paste template above]
+
+Create a service function for [ServiceName] that:
+- [API integration requirements]
+- [Data transformation needs]
+- [Error handling requirements]
+- [Caching requirements]
+- [Validation requirements]
+- [Testing requirements]
+```
+
+### For Test Files
+
+```
+[Paste template above]
+
+Create comprehensive tests for [Component/FunctionName] that:
+- [Test scenarios to cover]
+- [Edge cases to test]
+- [Accessibility tests]
+- [Performance tests]
+- [Integration tests]
+- [Mock requirements]
+```
+
+## 🔧 Customization Tips
+
+### Add Project Context
+
+- Include relevant existing patterns
+- Mention specific libraries or frameworks
+- Reference similar components in your codebase
+- Include any specific business requirements
+
+### Specify Requirements
+
+- Be specific about functionality
+- Include performance requirements
+- Mention accessibility needs
+- Specify testing requirements
+- Include documentation needs
+
+### Include Examples
+
+- Reference existing code patterns
+- Show expected input/output
+- Include usage examples
+- Reference design mockups or requirements
+
+## ⚠️ Important Notes
+
+### Security Considerations
+
+- Never include sensitive data in prompts
+- Use placeholder data instead of real data
+- Avoid including API keys or passwords
+- Sanitize any generated code before use
+
+### Quality Assurance
+
+- Always review AI-generated code
+- Test thoroughly before committing
+- Ensure code follows team standards
+- Add proper documentation and comments
+
+### Performance
+
+- Check for unnecessary re-renders
+- Verify proper memoization usage
+- Ensure efficient data fetching
+- Test performance impact
+
+---
+
+## 💡 Pro Tips
+
+1. **Be Specific** - The more specific your requirements, the better the AI output
+2. **Use Examples** - Reference existing code patterns when possible
+3. **Iterate** - Start with basic implementation, then refine
+4. **Test Immediately** - Run tests as soon as code is generated
+5. **Review Thoroughly** - Don't assume AI-generated code is perfect
+6. **Learn Patterns** - Use AI to understand patterns, not just generate code
+7. **Document Changes** - Add comments explaining complex AI-generated logic
+
+Remember: This template is your starting point. Customize it based on your specific needs and project requirements!

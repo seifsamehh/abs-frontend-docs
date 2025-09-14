@@ -1,0 +1,322 @@
+---
+title: "Code Standards"
+---
+
+# 📐 Code Standards for AI Tools
+
+This document outlines the specific code standards that AI tools should follow when generating code for our frontend projects.
+
+## 🏗️ Project Structure
+
+### Feature-Based Organization
+
+```
+features/
+  users/
+    components/           # UI components
+    hooks/               # Custom hooks
+    services/            # API calls and business logic
+    validations/         # Zod schemas
+    types/               # TypeScript types
+    utils/               # Utility functions
+    index.ts             # Public exports
+    README.md            # Feature documentation
+```
+
+### File Naming Conventions
+
+- **Components:** `UserCard.tsx`, `UserProfile.tsx`
+- **Hooks:** `useUserData.ts`, `useAuth.ts`
+- **Services:** `user-service.ts`, `auth-service.ts`
+- **Types:** `user-types.ts`, `auth-types.ts`
+- **Utils:** `user-utils.ts`, `date-utils.ts`
+- **Pages:** `user-profile.tsx`, `login-page.tsx`
+
+## 🎨 Component Standards
+
+### Component Structure
+
+```typescript
+// types.ts
+export interface UserCardProps {
+  user: User;
+  onEdit?: (user: User) => void;
+  onDelete?: (user: User) => void;
+}
+
+// UserCard.tsx
+import { UserCardProps } from "./types";
+
+/**
+ * UserCard component displays user information with action buttons
+ * @param user - User object containing user data
+ * @param onEdit - Optional callback when edit button is clicked
+ * @param onDelete - Optional callback when delete button is clicked
+ */
+export const UserCard: React.FC<UserCardProps> = ({
+  user,
+  onEdit,
+  onDelete,
+}) => {
+  // Component implementation
+};
+```
+
+### Required Props
+
+- **TypeScript interfaces** for all props
+- **Optional props** clearly marked with `?`
+- **Default values** for optional props
+- **JSDoc comments** for all props
+
+### Component Requirements
+
+- **Single responsibility** - One component, one purpose
+- **Composable** - Easy to combine with other components
+- **Accessible** - Proper ARIA attributes and keyboard navigation
+- **Testable** - Easy to test with React Testing Library
+- **Performant** - Optimized for re-renders
+
+## 🎣 Custom Hooks Standards
+
+### Hook Structure
+
+```typescript
+// useUserData.ts
+import { useState, useEffect } from "react";
+import { useGetUsersQuery } from "../services/user-service";
+
+interface UseUserDataReturn {
+  users: User[];
+  loading: boolean;
+  error: string | null;
+  refetch: () => void;
+}
+
+/**
+ * Custom hook for managing user data
+ * @returns Object containing users, loading state, error, and refetch function
+ */
+export const useUserData = (): UseUserDataReturn => {
+  // Hook implementation
+};
+```
+
+### Hook Requirements
+
+- **Clear return type** - Explicit interface for return values
+- **Error handling** - Proper error states and handling
+- **Loading states** - Clear loading indicators
+- **Cleanup** - Proper cleanup of side effects
+- **Documentation** - JSDoc comments explaining usage
+
+## 🔧 Service Functions Standards
+
+### Service Structure
+
+```typescript
+// user-service.ts
+import { z } from "zod";
+
+const UserSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1),
+  email: z.string().email(),
+});
+
+export type User = z.infer<typeof UserSchema>;
+
+export const userService = {
+  async getUsers(): Promise<User[]> {
+    // Implementation
+  },
+
+  async createUser(userData: Omit<User, "id">): Promise<User> {
+    // Implementation
+  },
+};
+```
+
+### Service Requirements
+
+- **Zod validation** - All external data validated
+- **TypeScript types** - Proper typing for all functions
+- **Error handling** - Comprehensive error handling
+- **API integration** - Proper RTK Query integration
+- **Caching** - Appropriate caching strategies
+
+## 🧪 Testing Standards
+
+### Test Structure
+
+```typescript
+// UserCard.test.tsx
+import { render, screen, fireEvent } from "@testing-library/react";
+import { UserCard } from "./UserCard";
+
+describe("UserCard", () => {
+  const mockUser = {
+    id: "1",
+    name: "John Doe",
+    email: "john@example.com",
+  };
+
+  it("renders user information correctly", () => {
+    render(<UserCard user={mockUser} />);
+
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
+    expect(screen.getByText("john@example.com")).toBeInTheDocument();
+  });
+
+  it("calls onEdit when edit button is clicked", () => {
+    const mockOnEdit = jest.fn();
+    render(<UserCard user={mockUser} onEdit={mockOnEdit} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
+    expect(mockOnEdit).toHaveBeenCalledWith(mockUser);
+  });
+});
+```
+
+### Test Requirements
+
+- **Unit tests** - Test individual components and functions
+- **Integration tests** - Test component interactions
+- **Accessibility tests** - Test with axe-core
+- **Edge cases** - Test error states and edge cases
+- **Mocking** - Proper mocking of dependencies
+
+## 🎨 Styling Standards
+
+### Tailwind Classes
+
+```typescript
+// Order: layout → spacing → typography → colors → effects
+<div className="flex flex-col gap-4 p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+  <h2 className="text-xl font-semibold text-gray-900">User Profile</h2>
+  <p className="text-sm text-gray-600">User information</p>
+</div>
+```
+
+### Styling Requirements
+
+- **Tailwind CSS** - Use Tailwind for all styling
+- **Responsive design** - Mobile-first approach
+- **Dark mode** - Support dark mode with `dark:` classes
+- **Consistent spacing** - Use design system spacing
+- **No inline styles** - Avoid inline styles
+
+## 🔒 Security Standards
+
+### Input Validation
+
+```typescript
+// validation.ts
+import { z } from "zod";
+
+export const UserFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+export type UserFormData = z.infer<typeof UserFormSchema>;
+```
+
+### Security Requirements
+
+- **Zod validation** - All external inputs validated
+- **XSS prevention** - Sanitize any HTML content
+- **CSRF protection** - Proper CSRF tokens
+- **Secure storage** - Use httpOnly cookies for tokens
+- **Input sanitization** - Sanitize all user inputs
+
+## ♿ Accessibility Standards
+
+### ARIA Attributes
+
+```typescript
+<button
+  aria-label="Edit user profile"
+  aria-expanded={isOpen}
+  aria-controls="user-menu"
+  onClick={handleClick}
+>
+  Edit
+</button>
+```
+
+### Accessibility Requirements
+
+- **Semantic HTML** - Use proper HTML elements
+- **ARIA attributes** - Proper ARIA labels and roles
+- **Keyboard navigation** - Full keyboard support
+- **Focus management** - Proper focus handling
+- **Screen reader support** - Test with screen readers
+
+## 📊 Performance Standards
+
+### Optimization Techniques
+
+```typescript
+// Memoization
+const UserCard = React.memo(({ user, onEdit }) => {
+  // Component implementation
+});
+
+// Lazy loading
+const LazyComponent = React.lazy(() => import("./HeavyComponent"));
+
+// Dynamic imports
+const handleClick = async () => {
+  const { heavyFunction } = await import("./heavy-utils");
+  heavyFunction();
+};
+```
+
+### Performance Requirements
+
+- **Memoization** - Use React.memo and useMemo appropriately
+- **Lazy loading** - Lazy load heavy components
+- **Code splitting** - Split code at route level
+- **Image optimization** - Use next/image
+- **Bundle optimization** - Keep bundles small
+
+## 📝 Documentation Standards
+
+### JSDoc Comments
+
+```typescript
+/**
+ * Custom hook for managing user authentication state
+ * @param options - Configuration options for the hook
+ * @param options.redirectOnLogin - Whether to redirect after successful login
+ * @param options.redirectOnLogout - Whether to redirect after logout
+ * @returns Object containing auth state and methods
+ */
+export const useAuth = (options?: AuthOptions) => {
+  // Implementation
+};
+```
+
+### Documentation Requirements
+
+- **JSDoc comments** - Document all public functions
+- **README files** - Feature-level documentation
+- **Type definitions** - Clear type documentation
+- **Usage examples** - Include usage examples
+- **API documentation** - Document all API endpoints
+
+---
+
+## 🎯 Remember
+
+These standards ensure that AI-generated code:
+
+- **Follows team conventions** and best practices
+- **Maintains code quality** and consistency
+- **Includes proper testing** and documentation
+- **Meets security requirements** and accessibility standards
+- **Performs well** and is maintainable
+
+Use these standards as a reference when reviewing AI-generated code and as a guide for creating effective AI prompts!

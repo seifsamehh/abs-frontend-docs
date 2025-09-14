@@ -2,6 +2,12 @@
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
 
+/* Content sources for Tailwind CSS v4 */
+@source "../**/*.{js,ts,jsx,tsx,mdx}";
+@source "../../content/**/*.{js,ts,jsx,tsx,mdx}";
+@source "../../mdx-components.tsx";
+@source "../../node_modules/fumadocs-ui/dist/**/*.js";
+
 /* Custom Orange Theme */
 :root {
   --primary: 32 97% 46%;

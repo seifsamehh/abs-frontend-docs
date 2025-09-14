@@ -1,6 +1,6 @@
 ---
 title: Resources Overview
-description: Learning materials, tools, and resources for frontend development
+description: Learning materials, development tools, and support resources for frontend development
 ---
 
 import { Card, Cards } from "fumadocs-ui/components/card";
@@ -10,101 +10,111 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 # 📚 Resources
 
 <Callout type="info">
-  This section provides comprehensive resources for frontend development,
-  including learning materials, tools, project information, and support
-  channels. Use these resources to enhance your skills and stay up-to-date with
-  the latest technologies.
+  Comprehensive resources for frontend development including learning materials,
+  tools, and support channels. Use these resources to enhance your skills and
+  stay up-to-date with the latest technologies.
 </Callout>
 
 ## 🎯 Quick Access
 
 <Cards>
   <Card
-    title="📦 Active Projects"
-    href="/docs/resources/projects"
-    description="Current projects, status, and contribution opportunities"
-  />
-  <Card
     title="🎓 Learning Paths"
     href="/docs/resources/learning"
-    description="Structured learning materials and skill development"
+    description="Structured learning materials and skill development guides"
   />
   <Card
     title="🛠️ Development Tools"
     href="/docs/resources/tools"
-    description="Recommended tools, extensions, and utilities"
+    description="Recommended tools, extensions, and utilities for productivity"
   />
   <Card
     title="💬 Support & Help"
-    href="/docs/resources/support"
-    description="Get help from the team and community"
+    href="/docs/support/overview"
+    description="Get help from the team and community resources"
+  />
+  <Card
+    title="📦 Active Projects"
+    href="/docs/projects/overview"
+    description="Current projects, status, and contribution opportunities"
   />
 </Cards>
 
-## 🏗️ Project Information
+## 🎓 Learning & Skill Development
 
-### Current Projects
+### Learning Paths by Experience Level
 
-<Cards>
-  <Card
-    title="🌐 ABS Website"
-    description="Main corporate website - Active development"
-    href="/docs/resources/projects#abs-website"
-  />
-  <Card
-    title="👥 Employee Portal"
-    description="Internal tools and dashboards - Ongoing"
-    href="/docs/resources/projects#employee-portal"
-  />
-  <Card
-    title="🔐 Client Portal"
-    description="Customer portal for shipping management - Testing phase"
-    href="https://dev.portal.absegy.com/en/auth/signin"
-    external
-  />
-  <Card
-    title="📱 Mobile App"
-    description="Customer mobile application - Planning phase"
-    href="/docs/resources/projects#mobile-app"
-  />
-  <Card
-    title="🎨 Design System"
-    description="Component library and design tokens - Active"
-    href="/docs/resources/projects#design-system"
-  />
-</Cards>
-
-### Project Status Dashboard
-
-| Project         | Status         | Team Size    | Last Update | Next Milestone |
-| --------------- | -------------- | ------------ | ----------- | -------------- |
-| ABS Website     | 🟢 Active      | 2 developers | 2 days ago  | Q1 2025        |
-| Employee Portal | 🟡 In Progress | 3 developers | 1 week ago  | Q2 2025        |
-| Client Portal   | 🟠 Testing     | 2 developers | 3 days ago  | Q1 2025        |
-| Mobile App      | 🔴 Planning    | 1 developer  | 2 weeks ago | Q3 2025        |
-| Design System   | 🟢 Active      | 1 developer  | 3 days ago  | Q1 2025        |
-
-## 🎓 Learning Resources
-
-### Skill Development Paths
-
-<Tabs items={["Beginner", "Intermediate", "Advanced"]}>
+<Tabs items={["Beginner", "Intermediate", "Advanced", "Leadership"]}>
   <Tab value="Beginner">
-    - **HTML & CSS Fundamentals** - Web development basics - **JavaScript
-    Essentials** - Programming fundamentals - **React Basics** - Component-based
-    development - **Git & Version Control** - Collaboration tools -
-    **Development Environment** - Tools and setup
+    **Foundation Skills (0-6 months)**
+    
+    - **HTML & CSS Fundamentals** - Semantic markup and styling
+    - **JavaScript Essentials** - Programming fundamentals and ES6+
+    - **React Basics** - Components, state, and props
+    - **Git & Version Control** - Basic commands and collaboration
+    - **Development Environment** - VS Code, browser dev tools
+
+    **Recommended Timeline:** 3-6 months with 10-15 hours/week
+
+    **Key Resources:**
+    - [MDN Web Docs](https://developer.mozilla.org/en-US/) - Comprehensive web standards reference
+    - [React Official Tutorial](https://react.dev/learn) - Interactive React learning
+    - [Git Handbook](https://guides.github.com/introduction/git-handbook/) - Git basics
+
   </Tab>
   <Tab value="Intermediate">
-    - **TypeScript** - Type-safe JavaScript - **Next.js** - Full-stack React
-    framework - **State Management** - Redux, Context API - **Testing** - Unit,
-    integration, E2E testing - **Performance** - Optimization techniques
+    **Professional Development (6-18 months)**
+
+    - **TypeScript** - Type-safe JavaScript development
+    - **Next.js** - Full-stack React framework and SSR
+    - **State Management** - Redux Toolkit, Context API, TanStack Query
+    - **Testing** - Unit, integration, and E2E testing strategies
+    - **Performance** - Optimization techniques and monitoring
+
+    **Recommended Timeline:** 6-12 months with consistent practice
+
+    **Key Resources:**
+    - [TypeScript Handbook](https://www.typescriptlang.org/docs/) - Official TypeScript guide
+    - [Next.js Documentation](https://nextjs.org/docs) - Complete Next.js reference
+    - [Testing Library](https://testing-library.com/) - Best practices for testing
+
   </Tab>
   <Tab value="Advanced">
-    - **Architecture Patterns** - Scalable application design - **Performance
-    Engineering** - Advanced optimization - **Accessibility** - Inclusive design
-    practices - **DevOps** - CI/CD and deployment - **Leadership** - Team
-    management and mentoring
+    **Expertise & Specialization (18+ months)**
+
+    - **Architecture Patterns** - Scalable application design principles
+    - **Performance Engineering** - Advanced optimization and monitoring
+    - **Accessibility** - WCAG compliance and inclusive design
+    - **Security** - Frontend security best practices
+    - **DevOps** - CI/CD, deployment, and infrastructure
+
+    **Focus Areas:**
+    - Choose specialization (Performance, A11y, Architecture)
+    - Contribute to open source projects
+    - Mentor junior developers
+    - Lead technical decisions
+
+    **Key Resources:**
+    - [Web.dev](https://web.dev/) - Google's web development best practices
+    - [A11y Project](https://www.a11yproject.com/) - Accessibility resources
+    - [Frontend Masters](https://frontendmasters.com/) - Advanced courses
+
+  </Tab>
+  <Tab value="Leadership">
+    **Technical Leadership (2+ years)**
+
+    - **Team Management** - Leading development teams effectively
+    - **Technical Strategy** - Long-term technical planning
+    - **Code Review** - Mentoring through code review process
+    - **Architecture Decisions** - Making scalable technical choices
+    - **Communication** - Technical writing and presentation skills
+
+    **Leadership Skills:**
+    - Project planning and estimation
+    - Cross-functional collaboration
+    - Technical mentoring and coaching
+    - Process improvement and optimization
+
   </Tab>
 </Tabs>
 
@@ -112,308 +122,382 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
 <Cards>
   <Card
-    title="📖 Official Documentation"
-    description="React, Next.js, TypeScript, and other official docs"
-    href="https://react.dev"
+    title="📖 Essential Books"
+    description="Must-read books for frontend developers"
   />
   <Card
     title="🎥 Video Courses"
-    description="Udemy, Frontend Masters, and YouTube channels"
-    href="/docs/resources/learning#video-courses"
+    description="Structured learning through video content"
   />
   <Card
-    title="📚 Books"
-    description="Essential books for frontend development"
-    href="/docs/resources/learning#books"
+    title="📝 Blogs & Articles"
+    description="Stay updated with industry insights"
   />
-  <Card
-    title="🌐 Online Resources"
-    description="Blogs, tutorials, and community resources"
-    href="/docs/resources/learning#online-resources"
-  />
+  <Card title="🎙️ Podcasts" description="Learn while commuting or exercising" />
 </Cards>
+
+#### Essential Books
+
+- **"Clean Code" by Robert Martin** - Writing maintainable code
+- **"You Don't Know JS" series** - Deep JavaScript understanding
+- **"Refactoring" by Martin Fowler** - Improving code design
+- **"Design Systems" by Alla Kholmatova** - Component-based design
+- **"Web Performance in Action" by Jeremy Wagner** - Optimization techniques
+
+#### Video Learning Platforms
+
+- **[Frontend Masters](https://frontendmasters.com/)** - In-depth courses by experts
+- **[Egghead.io](https://egghead.io/)** - Concise, focused lessons
+- **[Pluralsight](https://www.pluralsight.com/)** - Comprehensive tech training
+- **[YouTube Channels](https://www.youtube.com/)** - Free educational content
+
+#### Must-Follow Blogs
+
+- **[CSS Tricks](https://css-tricks.com/)** - CSS techniques and tutorials
+- **[Smashing Magazine](https://www.smashingmagazine.com/)** - UX and development
+- **[A List Apart](https://alistapart.com/)** - Web standards and best practices
+- **[Dev.to](https://dev.to/)** - Developer community articles
 
 ## 🛠️ Development Tools
 
-### Essential Tools
+### Essential Development Setup
 
 <Cards>
   <Card
     title="💻 Code Editor"
-    description="VS Code with recommended extensions"
-    href="/docs/resources/tools#code-editor"
+    description="VS Code with essential extensions and configuration"
   />
   <Card
-    title="🔧 Development Tools"
-    description="Browser dev tools, debugging, and profiling"
-    href="/docs/resources/tools#development-tools"
+    title="🌐 Browsers"
+    description="Modern browsers with developer tools"
   />
   <Card
     title="📦 Package Managers"
-    description="npm, yarn, pnpm, and package management"
-    href="/docs/resources/tools#package-managers"
+    description="npm, yarn, pnpm comparison and recommendations"
   />
   <Card
-    title="🎨 Design Tools"
-    description="Figma, design systems, and prototyping"
-    href="/docs/resources/tools#design-tools"
+    title="🔧 Command Line"
+    description="Terminal setup and productivity tools"
   />
 </Cards>
 
-### VS Code Extensions
+### VS Code Extensions Starter Pack
 
 ```json
 {
   "recommendations": [
-    "bradlc.vscode-tailwindcss",
+    // Essential
     "esbenp.prettier-vscode",
-    "ms-vscode.vscode-typescript-next",
-    "ms-playwright.playwright",
-    "unifiedjs.vscode-mdx",
-    "ms-vscode.vscode-json",
     "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-typescript-next",
+    "ms-vscode.vscode-eslint",
+
+    // React & Next.js
+    "ms-vscode.vscode-react-native",
+    "unifiedjs.vscode-mdx",
+
+    // Productivity
     "formulahendry.auto-rename-tag",
     "christian-kohler.path-intellisense",
-    "ms-vscode.vscode-eslint"
+    "ms-vscode.vscode-json",
+    "ms-playwright.playwright",
+
+    // Git & Collaboration
+    "eamodio.gitlens",
+    "github.vscode-pull-request-github",
+
+    // Testing & Quality
+    "vitest.explorer",
+    "ms-vscode.test-adapter-converter"
   ]
 }
 ```
 
-### Browser Extensions
+### Browser Extensions for Development
 
 <Cards>
   <Card
-    title="🔍 React Developer Tools"
-    description="Debug React components and state"
+    title="🔍 React DevTools"
+    description="Debug React components, hooks, and performance"
   />
   <Card
     title="🎨 Tailwind CSS IntelliSense"
-    description="Autocomplete for Tailwind classes"
+    description="Autocomplete and documentation for Tailwind classes"
   />
   <Card
     title="♿ axe DevTools"
-    description="Accessibility testing and auditing"
+    description="Automated accessibility testing and auditing"
   />
-  <Card title="📊 Lighthouse" description="Performance and SEO auditing" />
+  <Card
+    title="📊 Web Vitals"
+    description="Real-time Core Web Vitals monitoring"
+  />
 </Cards>
 
-## 💬 Support & Community
+### Design & Prototyping Tools
 
-### Internal Support
+- **[Figma](https://www.figma.com/)** - Collaborative design and prototyping
+- **[Sketch](https://www.sketch.com/)** - Vector design tool for macOS
+- **[Adobe XD](https://www.adobe.com/products/xd.html)** - UI/UX design and prototyping
+- **[Framer](https://www.framer.com/)** - Advanced prototyping with code
+- **[Storybook](https://storybook.js.org/)** - Component development environment
+
+### Testing & Quality Tools
+
+<Tabs items={["Testing", "Performance", "Accessibility", "Code Quality"]}>
+  <Tab value="Testing">
+    **Unit & Integration Testing:**
+    - [Vitest](https://vitest.dev/) - Fast unit testing framework
+    - [Testing Library](https://testing-library.com/) - Simple testing utilities
+    - [MSW](https://mswjs.io/) - Mock Service Worker for API testing
+
+    **End-to-End Testing:**
+    - [Playwright](https://playwright.dev/) - Cross-browser testing
+    - [Cypress](https://www.cypress.io/) - Developer-friendly E2E testing
+    - [Puppeteer](https://pptr.dev/) - Chrome automation for testing
+
+  </Tab>
+  <Tab value="Performance">
+    **Analysis Tools:**
+    - [Lighthouse](https://developers.google.com/web/tools/lighthouse) - Performance auditing
+    - [WebPageTest](https://www.webpagetest.org/) - Detailed performance testing
+    - [Chrome DevTools](https://developer.chrome.com/docs/devtools/) - Performance profiling
+
+    **Monitoring Services:**
+    - [Core Web Vitals](https://web.dev/vitals/) - User experience metrics
+    - [GTmetrix](https://gtmetrix.com/) - Website speed testing
+    - [Pingdom](https://www.pingdom.com/) - Website monitoring
+
+  </Tab>
+  <Tab value="Accessibility">
+    **Testing Tools:**
+    - [axe-core](https://github.com/dequelabs/axe-core) - Automated accessibility testing
+    - [WAVE](https://wave.webaim.org/) - Web accessibility evaluation
+    - [Colour Contrast Analyser](https://www.tpgi.com/color-contrast-checker/) - Color contrast testing
+
+    **Screen Readers:**
+    - [NVDA](https://www.nvaccess.org/) - Free screen reader for Windows
+    - [VoiceOver](https://www.apple.com/accessibility/vision/) - Built-in macOS screen reader
+    - [JAWS](https://www.freedomscientific.com/products/software/jaws/) - Professional screen reader
+
+  </Tab>
+  <Tab value="Code Quality">
+    **Linting & Formatting:**
+    - [ESLint](https://eslint.org/) - JavaScript linting utility
+    - [Prettier](https://prettier.io/) - Code formatting tool
+    - [Husky](https://typicode.github.io/husky/) - Git hooks for quality gates
+
+    **Static Analysis:**
+    - [SonarQube](https://www.sonarqube.org/) - Code quality platform
+    - [CodeClimate](https://codeclimate.com/) - Automated code review
+    - [Snyk](https://snyk.io/) - Security vulnerability scanning
+
+  </Tab>
+</Tabs>
+
+## 💬 Community & Support
+
+### Internal Support Channels
 
 <Cards>
   <Card
     title="💬 Team Chat"
-    description="Slack channels for real-time communication"
-    href="/docs/resources/support#team-chat"
+    description="Quick questions and real-time collaboration"
   />
   <Card
     title="📅 Office Hours"
-    description="Scheduled time for questions and help"
-    href="/docs/resources/support#office-hours"
+    description="Scheduled time for help and mentoring"
   />
   <Card
     title="👥 Pair Programming"
     description="Collaborative coding sessions"
-    href="/docs/resources/support#pair-programming"
   />
   <Card
-    title="📚 Knowledge Base"
-    description="Internal documentation and FAQs"
-    href="/docs/resources/support#knowledge-base"
+    title="📚 Knowledge Sharing"
+    description="Team presentations and learning sessions"
   />
 </Cards>
 
 ### External Communities
 
-<Cards>
-  <Card
-    title="🌐 React Community"
-    description="Official React community and forums"
-    href="https://react.dev/community"
-  />
-  <Card
-    title="💬 Discord Servers"
-    description="Frontend development Discord communities"
-    href="/docs/resources/support#discord"
-  />
-  <Card
-    title="📱 Twitter/X"
-    description="Follow frontend developers and stay updated"
-    href="/docs/resources/support#twitter"
-  />
-  <Card
-    title="📺 YouTube Channels"
-    description="Educational content and tutorials"
-    href="/docs/resources/support#youtube"
-  />
-</Cards>
+**Discord Communities:**
 
-## 🎯 Skill Assessment
+- **[Reactiflux](https://www.reactiflux.com/)** - React community discord
+- **[Frontend Developers](https://discord.gg/frontend)** - General frontend community
+- **[The Programmer's Hangout](https://theprogrammershangout.com/)** - Programming community
 
-### Self-Assessment Checklist
+**Reddit Communities:**
 
-<Cards>
-  <Card
-    title="🟢 Beginner Level"
-    description="Can build basic websites and simple React components"
-  />
-  <Card
-    title="🟡 Intermediate Level"
-    description="Can build complex applications with state management"
-  />
-  <Card
-    title="🔴 Advanced Level"
-    description="Can architect scalable applications and mentor others"
-  />
-</Cards>
+- **[r/reactjs](https://www.reddit.com/r/reactjs/)** - React discussions
+- **[r/Frontend](https://www.reddit.com/r/Frontend/)** - Frontend development
+- **[r/webdev](https://www.reddit.com/r/webdev/)** - Web development community
 
-### Assessment Criteria
+**Twitter/X Communities:**
 
-- **Technical Skills** - Knowledge of technologies and tools
-- **Problem Solving** - Ability to debug and solve complex issues
-- **Code Quality** - Writing clean, maintainable code
-- **Collaboration** - Working effectively in a team
-- **Learning** - Continuous learning and skill development
+- Follow [@reactjs](https://twitter.com/reactjs), [@nextjs](https://twitter.com/nextjs)
+- Join conversations with hashtags: #React, #NextJS, #TypeScript, #WebDev
 
-## 📊 Progress Tracking
+### Conferences & Events
 
-### Learning Goals
+**Major Conferences:**
 
-Set and track your learning goals:
+- **[React Conf](https://conf.reactjs.org/)** - Official React conference
+- **[Next.js Conf](https://nextjs.org/conf)** - Annual Next.js conference
+- **[Frontend Focus](https://frontendfoc.us/)** - Frontend development conference
+- **[CSS Day](https://cssday.nl/)** - CSS-focused conference
 
-1. **Short-term (1-3 months)**
+**Local Meetups:**
 
-   - Learn new technology or framework
-   - Complete specific project
-   - Improve specific skill
+- Find local JavaScript/React meetups in your area
+- Attend virtual meetups and webinars
+- Consider speaking at meetups to share knowledge
 
-2. **Medium-term (3-6 months)**
+## 📊 Skill Assessment & Growth
 
-   - Master current tech stack
-   - Contribute to open source
-   - Lead a project
+### Self-Assessment Framework
 
-3. **Long-term (6-12 months)**
-   - Become team lead
-   - Mentor junior developers
-   - Speak at conferences
+<Tabs items={["Technical Skills", "Soft Skills", "Leadership", "Growth Plan"]}>
+  <Tab value="Technical Skills">
+    **Rate yourself (1-5 scale) on:**
 
-### Progress Metrics
+    **Frontend Fundamentals:**
+    - HTML semantics and accessibility
+    - CSS layout and responsive design
+    - JavaScript ES6+ features
+    - Browser APIs and web standards
 
-- **Code Quality** - Linting, testing, documentation
-- **Performance** - Application speed and optimization
-- **Accessibility** - WCAG compliance and inclusive design
-- **Collaboration** - Code reviews, mentoring, knowledge sharing
+    **React Ecosystem:**
+    - Component design and composition
+    - State management patterns
+    - Performance optimization
+    - Testing strategies
 
-## 🔄 Continuous Learning
+    **Tools & Workflow:**
+    - Git workflow and collaboration
+    - Build tools and bundlers
+    - Development environment setup
+    - Debugging and profiling
 
-### Learning Strategies
+  </Tab>
+  <Tab value="Soft Skills">
+    **Communication & Collaboration:**
+    - Clear technical communication
+    - Code review participation
+    - Documentation writing
+    - Knowledge sharing
 
-<Callout type="tip">
-  Effective learning strategies for frontend development:
-</Callout>
+    **Problem Solving:**
+    - Breaking down complex problems
+    - Research and learning ability
+    - Debugging systematic approach
+    - Creative solution finding
 
-1. **Hands-on Practice** - Build projects to apply knowledge
-2. **Code Reviews** - Learn from others' code and feedback
-3. **Teaching Others** - Explain concepts to solidify understanding
-4. **Stay Updated** - Follow industry news and trends
-5. **Join Communities** - Participate in discussions and events
+    **Professional Growth:**
+    - Time management and priorities
+    - Continuous learning mindset
+    - Feedback reception and application
+    - Goal setting and achievement
 
-### Recommended Learning Schedule
+  </Tab>
+  <Tab value="Leadership">
+    **Technical Leadership:**
+    - Architecture decision making
+    - Code review quality and mentoring
+    - Technical standard setting
+    - Cross-team collaboration
 
-- **Daily (30 minutes)**: Read articles, watch tutorials
-- **Weekly (2-3 hours)**: Work on side projects, practice coding
-- **Monthly (1 day)**: Attend meetups, conferences, or workshops
-- **Quarterly (1 week)**: Deep dive into new technology or skill
+    **People Leadership:**
+    - Mentoring junior developers
+    - Project planning and coordination
+    - Conflict resolution
+    - Team culture building
 
-## 🎉 Recognition & Rewards
+    **Strategic Thinking:**
+    - Long-term technical planning
+    - Technology evaluation and adoption
+    - Process improvement initiatives
+    - Business impact understanding
 
-### Achievement System
+  </Tab>
+  <Tab value="Growth Plan">
+    **Goal Setting Framework:**
 
-<Cards>
-  <Card
-    title="🏆 Code Quality Champion"
-    description="Consistently high code quality and reviews"
-  />
-  <Card
-    title="🚀 Performance Optimizer"
-    description="Significant performance improvements"
-  />
-  <Card
-    title="♿ Accessibility Advocate"
-    description="Promoting inclusive design practices"
-  />
-  <Card
-    title="👥 Team Player"
-    description="Excellent collaboration and mentoring"
-  />
-</Cards>
+    1. **Current State Assessment**
+       - Identify strengths and growth areas
+       - Get feedback from peers and managers
+       - Review past projects and contributions
 
-### Career Development
+    2. **Target State Definition**
+       - Define specific, measurable goals
+       - Set realistic timelines
+       - Identify required skills and experiences
 
-- **Regular 1-on-1s** - Discuss goals and career progression
-- **Skill Assessments** - Regular evaluation of technical skills
-- **Mentorship Program** - Pair with senior developers
-- **Conference Attendance** - Attend industry events and conferences
-- **Certification Support** - Financial support for relevant certifications
+    3. **Learning Plan Creation**
+       - Choose learning resources and methods
+       - Schedule regular practice time
+       - Find opportunities to apply new skills
 
-## 📝 Feedback & Suggestions
+    4. **Progress Tracking**
+       - Regular self-assessment (monthly)
+       - Seek feedback from mentors
+       - Adjust plan based on progress
 
-### How to Contribute
+  </Tab>
+</Tabs>
+
+### Career Development Paths
 
 <Cards>
   <Card
-    title="💡 Suggest Improvements"
-    description="Share ideas for better processes and tools"
-    href="/docs/resources/feedback#suggestions"
+    title="🎯 Individual Contributor"
+    description="Senior/Staff/Principal Engineer focusing on technical excellence"
   />
   <Card
-    title="🐛 Report Issues"
-    description="Report bugs and problems you encounter"
-    href="/docs/resources/feedback#bug-reports"
+    title="👥 Engineering Management"
+    description="Team Lead/Engineering Manager focusing on people and process"
   />
   <Card
-    title="📚 Share Resources"
-    description="Recommend useful learning materials"
-    href="/docs/resources/feedback#resource-sharing"
+    title="🏗️ Technical Leadership"
+    description="Architect/Tech Lead focusing on system design and strategy"
   />
   <Card
-    title="🎯 Request Features"
-    description="Request new features or improvements"
-    href="/docs/resources/feedback#feature-requests"
+    title="🚀 Product & Business"
+    description="Product Engineer/CTO focusing on business impact"
   />
 </Cards>
 
-### Feedback Channels
-
-- **Slack** - Quick questions and discussions
-- **Email** - Formal feedback and suggestions
-- **1-on-1s** - Personal development discussions
-- **Team Meetings** - Group feedback and brainstorming
-- **Anonymous Surveys** - Honest feedback without attribution
-
-## 🎯 Next Steps
-
-<Callout type="note">
-  Ready to get started? Choose your path based on your current level and goals.
-</Callout>
+## 🎯 Action Items
 
 ### For New Team Members
 
-1. **[Complete Onboarding](/docs/getting-started/setup)** - Set up your environment
-2. **[Join a Project](/docs/resources/projects)** - Start contributing to active projects
-3. **[Set Learning Goals](/docs/resources/learning)** - Define your development path
-4. **[Connect with Team](/docs/resources/support)** - Build relationships and get support
+<Callout type="tip">
+  Start with the basics and build a strong foundation before moving to advanced
+  topics.
+</Callout>
+
+1. **Week 1-2**: Complete environment setup and basic React tutorial
+2. **Week 3-4**: Read through development standards and best practices
+3. **Month 2**: Start contributing to projects with mentorship
+4. **Month 3**: Take on more complex features independently
+5. **Month 4+**: Begin specializing in areas of interest
 
 ### For Experienced Developers
 
-1. **[Explore Advanced Topics](/docs/patterns/overview)** - Deep dive into complex patterns
-2. **[Mentor Others](/docs/resources/support#mentoring)** - Share your knowledge
-3. **[Lead Projects](/docs/resources/projects#leadership)** - Take on leadership roles
-4. **[Contribute to Standards](/docs/development-guide/overview)** - Help improve our practices
+1. **Identify specialization areas** (Performance, Accessibility, Architecture)
+2. **Set up mentoring relationships** with junior developers
+3. **Contribute to team standards** and process improvements
+4. **Stay current with technology** through continuous learning
+5. **Share knowledge** through presentations and documentation
 
-<Callout type="tip">
-  Remember: Learning is a journey, not a destination. Stay curious, keep
-  practicing, and don't hesitate to ask for help when you need it!
+### For Team Leads
+
+1. **Assess team skill levels** and identify growth opportunities
+2. **Create learning plans** for team members
+3. **Establish knowledge sharing** practices and schedules
+4. **Monitor industry trends** and evaluate new technologies
+5. **Foster learning culture** through recognition and support
+
+<Callout type="note">
+  Remember: Learning is a continuous journey. Focus on consistent progress
+  rather than perfection, and don't hesitate to ask for help when you need it!
 </Callout>

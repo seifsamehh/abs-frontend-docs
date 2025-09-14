@@ -3,16 +3,17 @@
   "pages": [
     "index",
     "getting-started",
-    "development-guide",
+    "development",
     "tech-stack",
     "components",
     "patterns",
     "testing",
     "deployment",
-    "troubleshooting",
+    "ai-tools",
+    "projects",
     "resources",
-    "standards",
-    "team",
+    "support",
+    "troubleshooting",
     "security"
   ]
 }

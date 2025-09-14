@@ -1,0 +1,11 @@
+{
+  "title": "Development",
+  "description": "Comprehensive development guide covering standards, best practices, and workflows",
+  "pages": [
+    "overview",
+    "standards",
+    "best-practices",
+    "code-review",
+    "workflows"
+  ]
+}
