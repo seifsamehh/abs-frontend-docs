@@ -2,12 +2,23 @@ import "@/app/global.css";
 import { RootProvider } from "fumadocs-ui/provider";
 import { Geist } from "next/font/google";
 import type { ReactNode } from "react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { NewYearCelebration } from "@/components/new-year-celebration";
 
 const geist = Geist({
   subsets: ["latin"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#171717" },
+  ],
+};
 
 export const metadata: Metadata = {
   title: {

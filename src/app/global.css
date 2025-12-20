@@ -12,11 +12,6 @@
 
 /* Fumadocs Theme Variables (Tailwind CSS v4) */
 @theme {
-  /* Layout Configuration - Wider layout for better readability */
-  --fd-layout-width: 95rem;
-  --fd-sidebar-width: 17rem;
-  --fd-toc-width: 17rem;
-
   /* Light Mode - Fumadocs Variables */
   --color-fd-background: hsl(0, 0%, 100%);
   --color-fd-foreground: hsl(240, 4%, 18%);
@@ -781,58 +776,13 @@ aside#nd-sidebar a[data-active="true"] {
   font-weight: 500;
 }
 
-/* ===== DOCS LAYOUT - COMPACT SPACING ===== */
-/* Override Fumadocs default spacing for tighter layout */
-
-/* Main docs layout container */
-#nd-docs-layout {
-  --fd-sidebar-width: 17rem !important;
-  --fd-toc-width: 17rem !important;
-}
-
-/* Main content wrapper - reduce left margin */
-#nd-docs-layout > main,
-[id="nd-docs-layout"] > main {
-  padding-left: 2rem !important;
-  padding-right: 1.5rem !important;
-}
+/* ===== DOCS LAYOUT - LET FUMADOCS HANDLE GRID ===== */
+/* Minimal overrides - don't break the grid system */
 
 /* Article/page content area */
 article,
 [class*="prose"] {
-  max-width: 58rem !important;
-}
-
-/* Page wrapper */
-[class*="Page"] > div:first-child,
-main > article {
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-}
-
-/* Reduce Fumadocs default container padding */
-.fd-container {
-  padding-left: 1.5rem !important;
-  padding-right: 1.5rem !important;
-}
-
-/* Sidebar container - slightly wider */
-#nd-sidebar {
-  width: 17rem !important;
-}
-
-/* TOC container - wider for better readability */
-aside[class*="toc"],
-nav[aria-label="Table of Contents"],
-[data-toc] {
-  width: 17rem !important;
-  min-width: 17rem !important;
-}
-
-/* Content between sidebar and TOC - maximize space */
-#nd-docs-layout > main > div {
-  max-width: none !important;
-  width: 100% !important;
+  max-width: min(58rem, 100%);
 }
 
 /* ===== TOC (Table of Contents) STYLING ===== */
@@ -986,6 +936,144 @@ footer {
 .prose img {
   border-radius: 0.625rem;
   border: 1px solid hsl(var(--border));
+}
+
+/* ===== RESPONSIVE STYLES ===== */
+
+/* Global overflow prevention */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Mobile: 0-639px */
+@media (max-width: 639px) {
+  /* Article content */
+  article,
+  [class*="prose"] {
+    max-width: 100% !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  /* Cards grid - single column on mobile */
+  .prose .grid.grid-cols-2,
+  [class*="Cards"],
+  .fd-cards {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* Table horizontal scroll */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  /* Code blocks horizontal scroll */
+  pre {
+    max-width: 100%;
+    overflow-x: auto;
+    font-size: 0.8125rem !important;
+  }
+
+  /* Inline code wrapping */
+  code {
+    word-break: break-word;
+  }
+
+  /* Heading sizes on mobile */
+  .prose h1 {
+    font-size: 1.75rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .prose h3 {
+    font-size: 1.25rem !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Search dialog mobile */
+  [data-search-dialog] {
+    width: calc(100vw - 2rem) !important;
+    max-width: calc(100vw - 2rem) !important;
+    margin: 1rem !important;
+  }
+
+  /* Callouts on mobile */
+  [data-callout] {
+    padding: 0.75rem 1rem !important;
+    margin: 1rem 0 !important;
+  }
+
+  /* Images responsive */
+  .prose img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Blockquote mobile */
+  blockquote {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0.75rem !important;
+  }
+
+  /* Feature grid single column on mobile */
+  .feature-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Sandpack/Playground responsiveness */
+  [class*="sp-stack"],
+  [class*="sp-layout"] {
+    flex-direction: column !important;
+  }
+
+  [class*="sp-editor"],
+  [class*="sp-preview"] {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Step indicators on mobile */
+  [data-steps] {
+    padding-left: 1.5rem;
+  }
+
+  [data-steps] > *::before {
+    left: -1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.6875rem;
+  }
+
+  [data-steps]::before {
+    left: 0.6875rem;
+  }
+}
+
+/* Tablet: 640px-1023px */
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* Cards grid - 2 columns on tablet */
+  .prose .grid.grid-cols-2,
+  [class*="Cards"],
+  .fd-cards {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Desktop: 1024px+ - Let Fumadocs handle the grid */
+@media (min-width: 1024px) {
+  /* No CSS variable overrides - let Fumadocs handle the layout */
 }
 
 /* ===== PRINT STYLES ===== */

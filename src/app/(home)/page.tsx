@@ -67,7 +67,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 hero-gradient" />
-        <div className="relative mx-auto px-6 py-24 max-w-6xl text-center">
+        <div className="relative mx-auto px-4 sm:px-6 py-16 sm:py-24 max-w-6xl text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-fd-muted/50 mb-6 px-4 py-1.5 border border-fd-border rounded-full">
             <span className="relative flex w-2 h-2">
@@ -122,13 +122,13 @@ export default function HomePage() {
           </div>
 
           {/* Stats */}
-          <div className="gap-8 grid grid-cols-2 sm:grid-cols-4 mx-auto mt-16 max-w-3xl">
+          <div className="gap-4 sm:gap-8 grid grid-cols-2 sm:grid-cols-4 mx-auto mt-12 sm:mt-16 max-w-3xl">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="font-bold text-fd-foreground text-3xl">
+                <div className="font-bold text-fd-foreground text-2xl sm:text-3xl">
                   {stat.value}
                 </div>
-                <div className="text-fd-muted-foreground text-sm">
+                <div className="text-fd-muted-foreground text-xs sm:text-sm">
                   {stat.label}
                 </div>
               </div>
@@ -138,7 +138,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Grid */}
-      <section className="mx-auto px-6 py-20 max-w-6xl">
+      <section className="mx-auto px-4 sm:px-6 py-16 sm:py-20 max-w-6xl">
         <div className="mb-12 text-center">
           <h2 className="mb-4 font-bold text-fd-foreground text-3xl tracking-tight">
             Everything You Need
@@ -190,7 +190,7 @@ export default function HomePage() {
 
       {/* Tech Stack Preview */}
       <section className="bg-fd-muted/30 border-fd-border border-t">
-        <div className="mx-auto px-6 py-20 max-w-6xl">
+        <div className="mx-auto px-4 sm:px-6 py-16 sm:py-20 max-w-6xl">
           <div className="mb-12 text-center">
             <h2 className="mb-4 font-bold text-fd-foreground text-3xl tracking-tight">
               Our Tech Stack
@@ -234,7 +234,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="mx-auto px-6 py-20 max-w-6xl">
+      <section className="mx-auto px-4 sm:px-6 py-16 sm:py-20 max-w-6xl">
         <div className="relative bg-gradient-to-br from-primary/10 via-transparent to-accent/10 p-8 sm:p-12 border border-fd-border rounded-2xl overflow-hidden text-center">
           <h2 className="mb-4 font-bold text-fd-foreground text-2xl sm:text-3xl">
             Ready to Start Building?
