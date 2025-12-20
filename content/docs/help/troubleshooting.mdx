@@ -1,0 +1,427 @@
+---
+title: Troubleshooting Guide
+description: Common frontend problems and their proven solutions
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# Troubleshooting Guide
+
+<Callout type="info">
+  This guide documents common frontend problems we encounter and their proven
+  solutions. Learn from our experience to avoid common pitfalls.
+</Callout>
+
+## Performance Issues
+
+### Slow Page Load Times
+
+**Symptoms:**
+
+- High First Contentful Paint (FCP) times
+- Poor Lighthouse scores
+- User complaints about slow loading
+
+**Solutions:**
+
+<Tabs items={['Code Splitting', 'Image Optimization', 'Bundle Analysis']}>
+  <Tab value="Code Splitting">
+    ```typescript
+    // Use dynamic imports for code splitting
+    import dynamic from 'next/dynamic';
+
+    const DashboardChart = dynamic(() => import('./DashboardChart'), {
+      ssr: false,
+      loading: () => <div>Loading chart...</div>
+    });
+
+    // Route-based code splitting with React.lazy
+    const LazyComponent = lazy(() => import('./LazyComponent'));
+    ```
+
+</Tab>
+  <Tab value="Image Optimization">
+    ```tsx
+    import Image from 'next/image';
+
+    // Always use Next.js Image component
+    <Image
+      src="/hero-image.jpg"
+      alt="Hero Image"
+      width={800}
+      height={400}
+      priority // For above-the-fold images
+      placeholder="blur"
+      blurDataURL="data:image/jpeg;base64,..."
+    />
+    ```
+
+</Tab>
+  <Tab value="Bundle Analysis">
+    ```bash
+    # Install bundle analyzer
+    pnpm add -D @next/bundle-analyzer
+
+    # In next.config.js
+    const withBundleAnalyzer = require('@next/bundle-analyzer')({
+      enabled: process.env.ANALYZE === 'true'
+    });
+
+    # Run analysis
+    ANALYZE=true pnpm build
+    ```
+
+</Tab>
+</Tabs>
+
+### Memory Leaks
+
+**Symptoms:**
+
+- Increasing memory usage over time
+- Browser tab crashes
+- Slow interactions after extended use
+
+**Solutions:**
+
+```typescript
+// 1. Cleanup subscriptions and timers
+useEffect(() => {
+  const timer = setInterval(() => {
+    // Timer logic
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, []);
+
+// 2. Cleanup event listeners
+useEffect(() => {
+  const handleScroll = () => {
+    /* scroll logic */
+  };
+  window.addEventListener("scroll", handleScroll);
+
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
+// 3. Use AbortController for API calls
+useEffect(() => {
+  const controller = new AbortController();
+
+  fetch("/api/data", { signal: controller.signal })
+    .then((res) => res.json())
+    .then(setData);
+
+  return () => controller.abort();
+}, []);
+```
+
+---
+
+## State Management Issues
+
+### Prop Drilling
+
+**Problem:** Passing props through multiple component levels.
+
+<Tabs items={['Context API', 'Redux Toolkit', 'Component Composition']}>
+  <Tab value="Context API">
+    ```typescript
+    // Create focused context
+    const UserContext = createContext<User | null>(null);
+
+    // Provider component
+    export function UserProvider({ children }: { children: React.ReactNode }) {
+      const [user, setUser] = useState<User | null>(null);
+
+      return (
+        <UserContext.Provider value={user}>
+          {children}
+        </UserContext.Provider>
+      );
+    }
+
+    // Custom hook for consuming
+    export function useUser() {
+      const context = useContext(UserContext);
+      if (context === undefined) {
+        throw new Error('useUser must be used within UserProvider');
+      }
+      return context;
+    }
+    ```
+
+</Tab>
+  <Tab value="Redux Toolkit">
+    ```typescript
+    // Use Redux for complex global state
+    import { createSlice } from '@reduxjs/toolkit';
+
+    const userSlice = createSlice({
+      name: 'user',
+      initialState: { data: null, loading: false },
+      reducers: {
+        setUser: (state, action) => {
+          state.data = action.payload;
+        },
+      },
+    });
+    ```
+
+</Tab>
+  <Tab value="Component Composition">
+    ```tsx
+    // Use composition to avoid drilling
+    function Dashboard() {
+      const user = useUser();
+      
+      return (
+        <Layout>
+          <Header user={user} />
+          <Sidebar>
+            <UserProfile user={user} />
+          </Sidebar>
+          <Content>
+            <UserDashboard user={user} />
+          </Content>
+        </Layout>
+      );
+    }
+    ```
+</Tab>
+</Tabs>
+
+### Stale State in Closures
+
+**Problem:** Event handlers capturing stale state values.
+
+```typescript
+// ❌ Problem: count is always 0 in the handler
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const handler = () => {
+      console.log(count); // Always 0!
+    };
+    window.addEventListener("click", handler);
+    return () => window.removeEventListener("click", handler);
+  }, []); // Empty deps = stale closure
+}
+
+// ✅ Solution 1: Include dependency
+useEffect(() => {
+  const handler = () => console.log(count);
+  window.addEventListener("click", handler);
+  return () => window.removeEventListener("click", handler);
+}, [count]); // Re-subscribe when count changes
+
+// ✅ Solution 2: Use ref for latest value
+const countRef = useRef(count);
+useEffect(() => {
+  countRef.current = count;
+}, [count]);
+```
+
+---
+
+## Data Fetching Issues
+
+### Race Conditions
+
+**Problem:** Multiple requests causing inconsistent state.
+
+```typescript
+// ✅ Using TanStack Query (recommended)
+const { data } = useQuery({
+  queryKey: ["user", userId],
+  queryFn: () => fetchUser(userId),
+  // Automatic deduplication and caching
+});
+
+// ✅ Manual AbortController approach
+useEffect(() => {
+  const controller = new AbortController();
+  let cancelled = false;
+
+  async function fetchData() {
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        signal: controller.signal,
+      });
+      const data = await response.json();
+      if (!cancelled) setUser(data);
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        setError(error);
+      }
+    }
+  }
+
+  fetchData();
+  return () => {
+    cancelled = true;
+    controller.abort();
+  };
+}, [userId]);
+```
+
+### Infinite Re-renders
+
+**Problem:** Data fetching causing render loops.
+
+```typescript
+// ❌ Problem: Object reference changes each render
+useEffect(() => {
+  fetchData(options); // options = { limit: 10 } recreated each render
+}, [options]); // Triggers infinite loop
+
+// ✅ Solution: Memoize or use primitive deps
+const memoizedOptions = useMemo(() => ({ limit: 10 }), []);
+useEffect(() => {
+  fetchData(memoizedOptions);
+}, [memoizedOptions]);
+
+// ✅ Better: Use individual primitives
+useEffect(() => {
+  fetchData({ limit, offset });
+}, [limit, offset]);
+```
+
+---
+
+## Testing Issues
+
+### Tests Failing Intermittently
+
+**Common Causes:**
+
+- Async operations not properly awaited
+- Test isolation issues
+- Timer-dependent code
+
+```typescript
+// ✅ Proper async testing
+it("should load user data", async () => {
+  render(<UserProfile userId="123" />);
+
+  // Wait for element to appear
+  await waitFor(() => {
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
+  });
+});
+
+// ✅ Mock timers for time-dependent tests
+it("should debounce search", async () => {
+  vi.useFakeTimers();
+
+  render(<SearchInput />);
+  await userEvent.type(screen.getByRole("textbox"), "test");
+
+  // Fast-forward debounce timer
+  vi.advanceTimersByTime(300);
+
+  await waitFor(() => {
+    expect(mockSearch).toHaveBeenCalledWith("test");
+  });
+
+  vi.useRealTimers();
+});
+```
+
+### Mocking Not Working
+
+```typescript
+// ✅ Proper module mocking
+vi.mock("@/lib/api", () => ({
+  fetchUser: vi.fn(),
+}));
+
+// Import AFTER mocking
+import { fetchUser } from "@/lib/api";
+
+beforeEach(() => {
+  vi.mocked(fetchUser).mockResolvedValue({ id: "1", name: "Test" });
+});
+
+afterEach(() => {
+  vi.clearAllMocks();
+});
+```
+
+---
+
+## Deployment Issues
+
+### Build Failures
+
+**Common Causes and Solutions:**
+
+| Error              | Cause                          | Solution                                                       |
+| ------------------ | ------------------------------ | -------------------------------------------------------------- |
+| `Type error`       | TypeScript compilation failure | Fix type errors locally first                                  |
+| `Module not found` | Missing dependency             | Check `package.json`, run `pnpm install`                       |
+| `Out of memory`    | Large build                    | Increase Node memory: `NODE_OPTIONS=--max_old_space_size=4096` |
+| `ESLint errors`    | Code quality issues            | Run `pnpm lint --fix` locally                                  |
+
+### Environment Variables Missing
+
+```typescript
+// ✅ Validate env vars at build time
+// src/lib/env.ts
+import { z } from "zod";
+
+const envSchema = z.object({
+  DATABASE_URL: z.string().url(),
+  NEXTAUTH_SECRET: z.string().min(32),
+  NEXT_PUBLIC_API_URL: z.string().url(),
+});
+
+// Throws at build time if invalid
+export const env = envSchema.parse(process.env);
+```
+
+### Hydration Mismatches
+
+**Common Causes:**
+
+- Server/client rendering different content
+- Using browser-only APIs during SSR
+
+```typescript
+// ❌ Problem: window is undefined on server
+function Component() {
+  const width = window.innerWidth; // Crashes on server!
+}
+
+// ✅ Solution 1: useEffect
+function Component() {
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+  }, []);
+}
+
+// ✅ Solution 2: Dynamic import with ssr: false
+const ClientOnlyComponent = dynamic(() => import("./ClientOnlyComponent"), {
+  ssr: false,
+});
+```
+
+---
+
+## Quick Diagnosis Checklist
+
+<Callout type="warn">
+  Before diving deep, run through this quick checklist:
+</Callout>
+
+1. **Clear caches:** `rm -rf .next node_modules/.cache`
+2. **Reinstall dependencies:** `rm -rf node_modules && pnpm install`
+3. **Check Node version:** `node -v` (should match `.nvmrc`)
+4. **Check for TypeScript errors:** `pnpm tsc --noEmit`
+5. **Check for lint errors:** `pnpm lint`
+6. **Review recent changes:** `git diff HEAD~5`

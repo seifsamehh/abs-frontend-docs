@@ -112,7 +112,7 @@ See our [Support Guide](http://localhost:3000/docs/support/overview) for detaile
 
 ## 🛠️ Built With
 
-- **[Next.js 15](https://nextjs.org/)** - React framework with App Router
+- **[Next.js 16](https://nextjs.org/)** - React framework with App Router
 - **[Fumadocs](https://fumadocs.dev/)** - Documentation framework
 - **[TypeScript](https://www.typescriptlang.org/)** - Type safety and better DX
 - **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first styling

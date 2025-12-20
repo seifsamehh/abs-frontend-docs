@@ -1,0 +1,420 @@
+---
+title: Component Library
+description: UI component API reference and design system documentation
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 🧩 Component Library
+
+<Callout type="info">
+  Our component library is built on Shadcn/ui and provides accessible,
+  customizable components for building consistent user interfaces across all ABS
+  applications.
+</Callout>
+
+## Design System Principles
+
+<Cards>
+  <Card
+    title="♿ Accessibility First"
+    description="All components meet WCAG 2.1 AA standards"
+  />
+  <Card
+    title="🎨 Consistent Design"
+    description="Unified visual language across applications"
+  />
+  <Card
+    title="🔧 Highly Customizable"
+    description="Easy to extend with variants and custom styles"
+  />
+  <Card
+    title="📱 Responsive"
+    description="Mobile-first design that works on all devices"
+  />
+</Cards>
+
+## Component Categories
+
+### 🎨 UI Components
+
+| Component  | Description                       | Import                   |
+| ---------- | --------------------------------- | ------------------------ |
+| **Button** | Interactive buttons with variants | `@/components/ui/button` |
+| **Input**  | Text input fields                 | `@/components/ui/input`  |
+| **Card**   | Content containers                | `@/components/ui/card`   |
+| **Badge**  | Status indicators                 | `@/components/ui/badge`  |
+| **Avatar** | User profile images               | `@/components/ui/avatar` |
+
+### 📐 Layout Components
+
+| Component     | Description                | Import                          |
+| ------------- | -------------------------- | ------------------------------- |
+| **Container** | Responsive content wrapper | `@/components/layout/container` |
+| **Grid**      | Flexible grid layouts      | Use Tailwind grid utilities     |
+| **Separator** | Visual content dividers    | `@/components/ui/separator`     |
+
+### 📝 Form Components
+
+| Component       | Description                  | Import                        |
+| --------------- | ---------------------------- | ----------------------------- |
+| **Form**        | Form wrapper with validation | `@/components/ui/form`        |
+| **Select**      | Dropdown selection           | `@/components/ui/select`      |
+| **Checkbox**    | Boolean inputs               | `@/components/ui/checkbox`    |
+| **Radio Group** | Single-choice inputs         | `@/components/ui/radio-group` |
+| **Switch**      | Toggle switches              | `@/components/ui/switch`      |
+| **Textarea**    | Multi-line text input        | `@/components/ui/textarea`    |
+
+### 💬 Feedback Components
+
+| Component    | Description             | Import                     |
+| ------------ | ----------------------- | -------------------------- |
+| **Alert**    | Static messages         | `@/components/ui/alert`    |
+| **Toast**    | Temporary notifications | `@/components/ui/toast`    |
+| **Dialog**   | Modal dialogs           | `@/components/ui/dialog`   |
+| **Tooltip**  | Contextual help         | `@/components/ui/tooltip`  |
+| **Progress** | Progress indicators     | `@/components/ui/progress` |
+| **Skeleton** | Loading placeholders    | `@/components/ui/skeleton` |
+
+### 🧭 Navigation Components
+
+| Component           | Description        | Import                            |
+| ------------------- | ------------------ | --------------------------------- |
+| **Navigation Menu** | Main navigation    | `@/components/ui/navigation-menu` |
+| **Breadcrumb**      | Location indicator | `@/components/ui/breadcrumb`      |
+| **Tabs**            | Content switching  | `@/components/ui/tabs`            |
+| **Pagination**      | Page navigation    | `@/components/ui/pagination`      |
+| **Dropdown Menu**   | Action menus       | `@/components/ui/dropdown-menu`   |
+
+### 📊 Data Display
+
+| Component       | Description         | Import                           |
+| --------------- | ------------------- | -------------------------------- |
+| **Table**       | Data tables         | `@/components/ui/table`          |
+| **Data Table**  | Advanced tables     | `@/components/shared/data-table` |
+| **Accordion**   | Collapsible content | `@/components/ui/accordion`      |
+| **Collapsible** | Show/hide content   | `@/components/ui/collapsible`    |
+
+## Component API Reference
+
+### Button
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+// Variants
+<Button variant="default">Default</Button>
+<Button variant="destructive">Destructive</Button>
+<Button variant="outline">Outline</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="link">Link</Button>
+
+// Sizes
+<Button size="default">Default</Button>
+<Button size="sm">Small</Button>
+<Button size="lg">Large</Button>
+<Button size="icon"><Icon /></Button>
+
+// States
+<Button disabled>Disabled</Button>
+<Button asChild>
+  <Link href="/page">As Link</Link>
+</Button>
+```
+
+**Props:**
+
+| Prop       | Type                                                                          | Default     | Description                    |
+| ---------- | ----------------------------------------------------------------------------- | ----------- | ------------------------------ |
+| `variant`  | `"default" \| "destructive" \| "outline" \| "secondary" \| "ghost" \| "link"` | `"default"` | Button style variant           |
+| `size`     | `"default" \| "sm" \| "lg" \| "icon"`                                         | `"default"` | Button size                    |
+| `disabled` | `boolean`                                                                     | `false`     | Disable the button             |
+| `asChild`  | `boolean`                                                                     | `false`     | Merge props onto child element |
+
+### Input
+
+```tsx
+import { Input } from "@/components/ui/input";
+
+// Basic
+<Input type="text" placeholder="Enter text..." />
+
+// With label
+<div className="space-y-2">
+  <Label htmlFor="email">Email</Label>
+  <Input id="email" type="email" placeholder="you@example.com" />
+</div>
+
+// With icon
+<div className="relative">
+  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+  <Input className="pl-9" placeholder="Search..." />
+</div>
+```
+
+**Props:**
+
+| Prop          | Type      | Default  | Description            |
+| ------------- | --------- | -------- | ---------------------- |
+| `type`        | `string`  | `"text"` | Input type             |
+| `placeholder` | `string`  | -        | Placeholder text       |
+| `disabled`    | `boolean` | `false`  | Disable the input      |
+| `className`   | `string`  | -        | Additional CSS classes |
+
+### Card
+
+```tsx
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+
+<Card>
+  <CardHeader>
+    <CardTitle>Card Title</CardTitle>
+    <CardDescription>Card description goes here.</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p>Card content</p>
+  </CardContent>
+  <CardFooter>
+    <Button>Action</Button>
+  </CardFooter>
+</Card>;
+```
+
+### Dialog
+
+```tsx
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+<Dialog>
+  <DialogTrigger asChild>
+    <Button>Open Dialog</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Dialog Title</DialogTitle>
+      <DialogDescription>
+        Description of what this dialog is for.
+      </DialogDescription>
+    </DialogHeader>
+    <div className="py-4">{/* Dialog body content */}</div>
+    <DialogFooter>
+      <Button variant="outline">Cancel</Button>
+      <Button>Confirm</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>;
+```
+
+### Form with Validation
+
+```tsx
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+const schema = z.object({
+  email: z.string().email(),
+  name: z.string().min(2),
+});
+
+function MyForm() {
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: { email: "", name: "" },
+  });
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>Your email address.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
+  );
+}
+```
+
+### Data Table
+
+```tsx
+import { DataTable } from "@/components/shared/data-table";
+import { ColumnDef } from "@tanstack/react-table";
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+const columns: ColumnDef<User>[] = [
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "role",
+    header: "Role",
+    cell: ({ row }) => <Badge>{row.getValue("role")}</Badge>,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <DropdownMenu>{/* Actions menu */}</DropdownMenu>,
+  },
+];
+
+<DataTable columns={columns} data={users} searchKey="name" pagination />;
+```
+
+## Design Tokens
+
+### Colors
+
+```css
+/* Light mode */
+--background: 0 0% 100%;
+--foreground: 222.2 84% 4.9%;
+--primary: 222.2 47.4% 11.2%;
+--primary-foreground: 210 40% 98%;
+--secondary: 210 40% 96.1%;
+--muted: 210 40% 96.1%;
+--muted-foreground: 215.4 16.3% 46.9%;
+--destructive: 0 84.2% 60.2%;
+--border: 214.3 31.8% 91.4%;
+```
+
+### Spacing Scale
+
+| Token     | Value         | Usage              |
+| --------- | ------------- | ------------------ |
+| `space-1` | 0.25rem (4px) | Tight spacing      |
+| `space-2` | 0.5rem (8px)  | Component internal |
+| `space-4` | 1rem (16px)   | Default gap        |
+| `space-6` | 1.5rem (24px) | Section spacing    |
+| `space-8` | 2rem (32px)   | Large gaps         |
+
+### Typography
+
+| Token       | Size     | Weight | Usage            |
+| ----------- | -------- | ------ | ---------------- |
+| `text-xs`   | 0.75rem  | 400    | Labels, captions |
+| `text-sm`   | 0.875rem | 400    | Secondary text   |
+| `text-base` | 1rem     | 400    | Body text        |
+| `text-lg`   | 1.125rem | 500    | Subheadings      |
+| `text-xl`   | 1.25rem  | 600    | Headings         |
+| `text-2xl`  | 1.5rem   | 700    | Page titles      |
+
+### Border Radius
+
+| Token          | Value    | Usage           |
+| -------------- | -------- | --------------- |
+| `rounded-sm`   | 0.125rem | Subtle rounding |
+| `rounded-md`   | 0.375rem | Buttons, inputs |
+| `rounded-lg`   | 0.5rem   | Cards, dialogs  |
+| `rounded-full` | 9999px   | Pills, avatars  |
+
+## Adding New Components
+
+### From Shadcn CLI
+
+```bash
+npx shadcn@latest add [component-name]
+```
+
+### Custom Component Template
+
+```tsx
+// src/components/ui/custom-component.tsx
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+
+const customComponentVariants = cva("base-classes-here", {
+  variants: {
+    variant: {
+      default: "default-variant-classes",
+      secondary: "secondary-variant-classes",
+    },
+    size: {
+      sm: "small-size-classes",
+      md: "medium-size-classes",
+      lg: "large-size-classes",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    size: "md",
+  },
+});
+
+export interface CustomComponentProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof customComponentVariants> {}
+
+const CustomComponent = React.forwardRef<HTMLDivElement, CustomComponentProps>(
+  ({ className, variant, size, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(customComponentVariants({ variant, size }), className)}
+        {...props}
+      />
+    );
+  }
+);
+
+CustomComponent.displayName = "CustomComponent";
+
+export { CustomComponent, customComponentVariants };
+```
+
+## Resources
+
+- [Shadcn/ui Documentation](https://ui.shadcn.com/)
+- [Radix UI Primitives](https://www.radix-ui.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [class-variance-authority](https://cva.style/docs)

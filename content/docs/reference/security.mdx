@@ -1,0 +1,423 @@
+---
+title: Security
+description: Security policies, best practices, and guidelines for secure frontend development
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 🔒 Security
+
+<Callout type="error">
+  Security is everyone's responsibility. Follow these guidelines to protect our
+  applications and user data.
+</Callout>
+
+## Security Principles
+
+<Cards>
+  <Card
+    title="🛡️ Defense in Depth"
+    description="Multiple layers of security controls"
+  />
+  <Card
+    title="🔐 Least Privilege"
+    description="Grant minimum necessary permissions"
+  />
+  <Card
+    title="🚫 Never Trust Input"
+    description="Validate and sanitize all user input"
+  />
+  <Card
+    title="🔒 Secure by Default"
+    description="Security should be the default, not an afterthought"
+  />
+</Cards>
+
+## Input Validation
+
+### Client-Side Validation
+
+<Callout type="warn">
+  Client-side validation improves UX but does NOT provide security. Always
+  validate on the server.
+</Callout>
+
+```tsx
+import { z } from "zod";
+
+// Define strict schemas
+const userInputSchema = z.object({
+  email: z.string().email().max(255),
+  name: z
+    .string()
+    .min(1)
+    .max(100)
+    .regex(/^[\p{L}\s'-]+$/u),
+  age: z.number().int().min(0).max(150),
+  url: z.string().url().optional(),
+});
+
+// Validate before processing
+function handleSubmit(data: unknown) {
+  const result = userInputSchema.safeParse(data);
+
+  if (!result.success) {
+    // Handle validation errors
+    return { errors: result.error.flatten() };
+  }
+
+  // Use validated data
+  return submitToApi(result.data);
+}
+```
+
+### Sanitization
+
+```tsx
+import DOMPurify from "dompurify";
+
+// ✅ Sanitize HTML before rendering
+function SafeHTML({ html }: { html: string }) {
+  const sanitized = DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ["b", "i", "em", "strong", "a", "p", "br"],
+    ALLOWED_ATTR: ["href", "target", "rel"],
+  });
+
+  return <div dangerouslySetInnerHTML={{ __html: sanitized }} />;
+}
+
+// ❌ Never render unsanitized HTML
+<div dangerouslySetInnerHTML={{ __html: userInput }} />;
+```
+
+## XSS Prevention
+
+### React's Built-in Protection
+
+```tsx
+// ✅ React automatically escapes values
+<p>{userInput}</p>  // Safe - escaped by React
+
+// ❌ Dangerous - bypasses React's protection
+<div dangerouslySetInnerHTML={{ __html: userInput }} />
+```
+
+### URL Handling
+
+```tsx
+// ✅ Validate URLs before use
+function SafeLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  const isValidUrl = (url: string) => {
+    try {
+      const parsed = new URL(url);
+      return ["http:", "https:"].includes(parsed.protocol);
+    } catch {
+      return false;
+    }
+  };
+
+  if (!isValidUrl(href)) {
+    return <span>{children}</span>;
+  }
+
+  return (
+    <a href={href} rel="noopener noreferrer" target="_blank">
+      {children}
+    </a>
+  );
+}
+
+// ❌ Never use javascript: URLs
+<a href={`javascript:${userInput}`}>Click</a>;
+```
+
+### Event Handlers
+
+```tsx
+// ❌ Never use eval or Function constructor
+eval(userInput);
+new Function(userInput)();
+
+// ❌ Never construct event handlers from user input
+<button onClick={userInput}>Click</button>;
+```
+
+## CSRF Protection
+
+### Using NextAuth.js
+
+NextAuth.js provides built-in CSRF protection:
+
+```tsx
+// Automatically protected
+signIn("credentials", { email, password });
+signOut();
+```
+
+### API Routes
+
+```tsx
+// src/app/api/sensitive-action/route.ts
+import { auth } from "@/auth";
+
+export async function POST(request: Request) {
+  const session = await auth();
+
+  if (!session) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Verify CSRF token for state-changing operations
+  const csrfToken = request.headers.get("X-CSRF-Token");
+  if (!isValidCsrfToken(csrfToken)) {
+    return Response.json({ error: "Invalid CSRF token" }, { status: 403 });
+  }
+
+  // Process the request
+}
+```
+
+## Authentication Security
+
+### Secure Session Configuration
+
+```tsx
+// src/auth.ts
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  session: {
+    strategy: "jwt",
+    maxAge: 24 * 60 * 60, // 24 hours
+  },
+  cookies: {
+    sessionToken: {
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      // Don't store sensitive data in JWT
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+        // ❌ Don't store: password, credit card, etc.
+      }
+      return token;
+    },
+  },
+});
+```
+
+### Password Requirements
+
+```tsx
+const passwordSchema = z
+  .string()
+  .min(12, "Password must be at least 12 characters")
+  .regex(/[A-Z]/, "Must contain uppercase letter")
+  .regex(/[a-z]/, "Must contain lowercase letter")
+  .regex(/[0-9]/, "Must contain number")
+  .regex(/[^A-Za-z0-9]/, "Must contain special character");
+```
+
+## Sensitive Data Handling
+
+### Environment Variables
+
+```tsx
+// ✅ Server-side only - no NEXT_PUBLIC_ prefix
+const apiKey = process.env.API_SECRET_KEY;
+const dbUrl = process.env.DATABASE_URL;
+
+// ✅ Safe for client - NEXT_PUBLIC_ prefix
+const publicApiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+// ❌ Never expose secrets to client
+const secret = process.env.NEXT_PUBLIC_SECRET_KEY; // Wrong!
+```
+
+### Logging
+
+```tsx
+// ❌ Never log sensitive data
+console.log(`User login: ${email} / ${password}`);
+console.log(`API Key: ${apiKey}`);
+console.log(`Token: ${accessToken}`);
+
+// ✅ Safe logging
+console.log(`User ${userId} logged in`);
+console.log(`Request to ${endpoint} completed`);
+```
+
+### Error Messages
+
+```tsx
+// ❌ Exposes implementation details
+catch (error) {
+  return { error: error.message }; // May leak DB info, etc.
+}
+
+// ✅ Generic error messages
+catch (error) {
+  console.error("Login failed:", error); // Log full error server-side
+  return { error: "Invalid credentials" }; // Generic message to user
+}
+```
+
+## Content Security Policy
+
+```tsx
+// next.config.mjs
+const securityHeaders = [
+  {
+    key: "Content-Security-Policy",
+    value: `
+      default-src 'self';
+      script-src 'self' 'unsafe-eval' 'unsafe-inline';
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' data: https:;
+      font-src 'self';
+      connect-src 'self' ${process.env.NEXT_PUBLIC_API_URL};
+      frame-ancestors 'none';
+    `.replace(/\n/g, ""),
+  },
+  {
+    key: "X-Frame-Options",
+    value: "DENY",
+  },
+  {
+    key: "X-Content-Type-Options",
+    value: "nosniff",
+  },
+  {
+    key: "Referrer-Policy",
+    value: "strict-origin-when-cross-origin",
+  },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=()",
+  },
+];
+
+export default {
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: securityHeaders,
+      },
+    ];
+  },
+};
+```
+
+## Third-Party Dependencies
+
+### Audit Dependencies
+
+```bash
+# Check for vulnerabilities
+npm audit
+
+# Fix automatically where possible
+npm audit fix
+
+# Review advisories
+npm audit --json
+```
+
+### Lock Files
+
+Always commit lock files to ensure consistent, audited dependencies:
+
+```bash
+# Use exact versions
+npm ci  # In CI/CD
+
+# Review before upgrading
+npm outdated
+npm update --dry-run
+```
+
+## AI Tools Security
+
+<Callout type="error">Never share sensitive information with AI tools.</Callout>
+
+### What NOT to Share
+
+- API keys and secrets
+- Database connection strings
+- Passwords and credentials
+- User personal data (PII)
+- Internal URLs and endpoints
+- Production data samples
+- Security configurations
+
+### Code Sanitization Before Sharing
+
+```tsx
+// Before sharing with AI, replace:
+
+// ❌ Real credentials
+const API_KEY = "sk-live-abc123...";
+
+// ✅ Placeholder
+const API_KEY = process.env.API_KEY;
+
+// ❌ Real user data
+const user = { email: "john.doe@company.com", ssn: "123-45-6789" };
+
+// ✅ Fake data
+const user = { email: "user@example.com", ssn: "XXX-XX-XXXX" };
+```
+
+## Security Checklist
+
+### Pre-Deployment
+
+- [ ] No hardcoded secrets in code
+- [ ] Environment variables properly configured
+- [ ] Input validation on all forms
+- [ ] XSS protection verified
+- [ ] CSRF tokens implemented
+- [ ] Authentication required for protected routes
+- [ ] Authorization checks on API routes
+- [ ] Security headers configured
+- [ ] Dependencies audited
+- [ ] Error messages don't leak information
+
+### Code Review
+
+- [ ] No `dangerouslySetInnerHTML` with user input
+- [ ] No `eval()` or `new Function()`
+- [ ] URLs validated before use
+- [ ] Sensitive data not logged
+- [ ] API keys not in client code
+- [ ] Rate limiting considered
+- [ ] File uploads validated
+
+## Reporting Security Issues
+
+If you discover a security vulnerability:
+
+1. **Do NOT** create a public GitHub issue
+2. Email security@abs.com with details
+3. Include steps to reproduce
+4. Wait for acknowledgment before disclosure
+
+## Resources
+
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [Next.js Security](https://nextjs.org/docs/advanced-features/security-headers)
+- [React Security Best Practices](https://react.dev/reference/react-dom/components/common#dangerously-setting-the-inner-html)

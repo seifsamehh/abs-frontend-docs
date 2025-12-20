@@ -1,0 +1,543 @@
+---
+title: Error Reference
+description: Searchable index of common errors and their solutions
+keywords:
+  ["errors", "troubleshooting", "typescript", "react", "nextjs", "debugging"]
+difficulty: intermediate
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 🔴 Error Reference
+
+<Callout type="info">
+  A searchable index of common errors you might encounter during development.
+  Use <kbd>Ctrl</kbd> + <kbd>F</kbd> (or <kbd>⌘</kbd> + <kbd>F</kbd> on Mac) to
+  search for specific error messages.
+</Callout>
+
+## TypeScript Errors
+
+### TS2339: Property 'X' does not exist on type 'Y'
+
+**Error Message:**
+
+```
+Property 'name' does not exist on type 'unknown'.
+```
+
+**Cause:** You're trying to access a property on a value that TypeScript doesn't know has that property.
+
+**Solution:**
+
+<Tabs items={["Type Assertion", "Type Guard", "Generic Type"]}>
+  <Tab value="Type Assertion">
+    ```typescript
+    // ❌ Error
+    const user = JSON.parse(data);
+    console.log(user.name); // Error: Property 'name' does not exist on type 'unknown'
+
+    // ✅ Fix with type assertion
+    interface User {
+      name: string;
+      email: string;
+    }
+    const user = JSON.parse(data) as User;
+    console.log(user.name); // Works!
+    ```
+
+  </Tab>
+  <Tab value="Type Guard">
+    ```typescript
+    // ✅ Better: Use a type guard for runtime safety
+    function isUser(obj: unknown): obj is User {
+      return (
+        typeof obj === 'object' &&
+        obj !== null &&
+        'name' in obj &&
+        typeof (obj as User).name === 'string'
+      );
+    }
+
+    const data = JSON.parse(response);
+    if (isUser(data)) {
+      console.log(data.name); // TypeScript knows this is safe
+    }
+    ```
+
+  </Tab>
+  <Tab value="Generic Type">
+    ```typescript
+    // ✅ Use generic functions
+    async function fetchData<T>(url: string): Promise<T> {
+      const response = await fetch(url);
+      return response.json() as Promise<T>;
+    }
+
+    const user = await fetchData<User>('/api/user');
+    console.log(user.name); // Type-safe!
+    ```
+
+  </Tab>
+</Tabs>
+
+---
+
+### TS7006: Parameter 'x' implicitly has an 'any' type
+
+**Error Message:**
+
+```
+Parameter 'event' implicitly has an 'any' type.
+```
+
+**Cause:** TypeScript can't infer the type of a function parameter.
+
+**Solution:**
+
+```typescript
+// ❌ Error
+const handleClick = (event) => {
+  console.log(event.target.value);
+};
+
+// ✅ Fix: Add type annotation
+const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  console.log(event.currentTarget);
+};
+
+// ✅ For input events
+const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  console.log(event.target.value);
+};
+
+// ✅ For form events
+const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+};
+```
+
+---
+
+### TS2322: Type 'X' is not assignable to type 'Y'
+
+**Error Message:**
+
+```
+Type 'string | undefined' is not assignable to type 'string'.
+```
+
+**Cause:** You're trying to assign a value that might be `undefined` to a variable that expects a defined value.
+
+**Solution:**
+
+```typescript
+// ❌ Error
+const name: string = user?.name; // Could be undefined
+
+// ✅ Fix 1: Default value
+const name: string = user?.name ?? "Anonymous";
+
+// ✅ Fix 2: Non-null assertion (use carefully!)
+const name: string = user!.name;
+
+// ✅ Fix 3: Type guard
+if (user?.name) {
+  const name: string = user.name; // TypeScript knows it's defined
+}
+
+// ✅ Fix 4: Make the variable accept undefined
+const name: string | undefined = user?.name;
+```
+
+---
+
+### TS2345: Argument of type 'X' is not assignable to parameter of type 'Y'
+
+**Error Message:**
+
+```
+Argument of type 'string' is not assignable to parameter of type 'number'.
+```
+
+**Cause:** Function argument types don't match the expected parameter types.
+
+**Solution:**
+
+```typescript
+// ❌ Error
+function multiply(a: number, b: number) {
+  return a * b;
+}
+multiply("5", 10); // Error: 'string' not assignable to 'number'
+
+// ✅ Fix: Convert the type
+multiply(Number("5"), 10);
+multiply(parseInt("5", 10), 10);
+
+// ✅ Or use proper types from the start
+const value: number = 5;
+multiply(value, 10);
+```
+
+---
+
+## React Errors
+
+### "Cannot update a component while rendering a different component"
+
+**Error Message:**
+
+```
+Warning: Cannot update a component (`Parent`) while rendering a different component (`Child`).
+```
+
+**Cause:** You're calling `setState` directly during render instead of in an effect or event handler.
+
+**Solution:**
+
+```tsx
+// ❌ Error: State update during render
+function Child({ onMount }: { onMount: () => void }) {
+  onMount(); // This causes the error!
+  return <div>Child</div>;
+}
+
+// ✅ Fix: Use useEffect
+function Child({ onMount }: { onMount: () => void }) {
+  useEffect(() => {
+    onMount();
+  }, [onMount]);
+
+  return <div>Child</div>;
+}
+```
+
+---
+
+### "Too many re-renders. React limits the number of renders"
+
+**Error Message:**
+
+```
+Error: Too many re-renders. React limits the number of renders to prevent an infinite loop.
+```
+
+**Cause:** Your component is triggering a state update on every render, causing an infinite loop.
+
+**Solution:**
+
+```tsx
+// ❌ Error: onClick calls the function immediately
+<button onClick={handleClick()}>Click</button>
+
+// ✅ Fix: Pass function reference
+<button onClick={handleClick}>Click</button>
+
+// ❌ Error: Setting state unconditionally
+function Component() {
+  const [count, setCount] = useState(0);
+  setCount(count + 1); // Infinite loop!
+  return <div>{count}</div>;
+}
+
+// ✅ Fix: Use useEffect with dependencies
+function Component() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    setCount(c => c + 1);
+  }, []); // Only runs once
+
+  return <div>{count}</div>;
+}
+```
+
+---
+
+### "Objects are not valid as a React child"
+
+**Error Message:**
+
+```
+Error: Objects are not valid as a React child (found: object with keys {name, email}).
+```
+
+**Cause:** You're trying to render an object directly in JSX.
+
+**Solution:**
+
+```tsx
+// ❌ Error
+const user = { name: "John", email: "john@example.com" };
+return <div>{user}</div>;
+
+// ✅ Fix: Render specific properties
+return <div>{user.name}</div>;
+
+// ✅ Fix: Use JSON.stringify for debugging
+return <pre>{JSON.stringify(user, null, 2)}</pre>;
+
+// ✅ Fix: Map arrays of objects
+const users = [{ name: "John" }, { name: "Jane" }];
+return (
+  <ul>
+    {users.map((user, index) => (
+      <li key={index}>{user.name}</li>
+    ))}
+  </ul>
+);
+```
+
+---
+
+### "Each child in a list should have a unique 'key' prop"
+
+**Error Message:**
+
+```
+Warning: Each child in a list should have a unique "key" prop.
+```
+
+**Cause:** When rendering lists, React needs a unique `key` prop to track items.
+
+**Solution:**
+
+```tsx
+// ❌ Error: No keys
+{
+  items.map((item) => <div>{item.name}</div>);
+}
+
+// ❌ Bad: Using index as key (avoid if list can reorder)
+{
+  items.map((item, index) => <div key={index}>{item.name}</div>);
+}
+
+// ✅ Best: Use unique ID
+{
+  items.map((item) => <div key={item.id}>{item.name}</div>);
+}
+
+// ✅ If no ID, create a stable key
+{
+  items.map((item) => (
+    <div key={`${item.name}-${item.email}`}>{item.name}</div>
+  ));
+}
+```
+
+---
+
+## Next.js Errors
+
+### "You're importing a component that needs useState"
+
+**Error Message:**
+
+```
+You're importing a component that needs useState. It only works in a Client Component but none of its parents are marked with "use client".
+```
+
+**Cause:** You're using client-side hooks in a Server Component.
+
+**Solution:**
+
+```tsx
+// ❌ Error: Server Component using client hook
+// app/page.tsx
+import { useState } from "react";
+
+export default function Page() {
+  const [count, setCount] = useState(0); // Error!
+  return <div>{count}</div>;
+}
+
+// ✅ Fix 1: Add "use client" directive
+("use client");
+
+import { useState } from "react";
+
+export default function Page() {
+  const [count, setCount] = useState(0);
+  return <div>{count}</div>;
+}
+
+// ✅ Fix 2: Extract client logic to separate component
+// components/counter.tsx
+("use client");
+export function Counter() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount((c) => c + 1)}>{count}</button>;
+}
+
+// app/page.tsx (Server Component)
+import { Counter } from "@/components/counter";
+export default function Page() {
+  return <Counter />;
+}
+```
+
+---
+
+### "Error: Hydration failed"
+
+**Error Message:**
+
+```
+Error: Hydration failed because the initial UI does not match what was rendered on the server.
+```
+
+**Cause:** Server-rendered HTML doesn't match what React renders on the client.
+
+**Solution:**
+
+```tsx
+// ❌ Common cause: Using browser-only APIs
+function Component() {
+  return <div>{window.innerWidth}px</div>; // window is undefined on server
+}
+
+// ✅ Fix: Check for client-side
+function Component() {
+  const [width, setWidth] = useState<number | null>(null);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+  }, []);
+
+  if (width === null) return null; // or loading state
+  return <div>{width}px</div>;
+}
+
+// ❌ Common cause: Date/time differences
+<p>Current time: {new Date().toLocaleString()}</p>;
+
+// ✅ Fix: Use suppressHydrationWarning or client component
+("use client");
+function CurrentTime() {
+  const [time, setTime] = useState<string>("");
+
+  useEffect(() => {
+    setTime(new Date().toLocaleString());
+  }, []);
+
+  return <p suppressHydrationWarning>Current time: {time}</p>;
+}
+```
+
+---
+
+### "NEXT_NOT_FOUND" or notFound() issues
+
+**Error Message:**
+
+```
+Error: NEXT_NOT_FOUND
+```
+
+**Cause:** The `notFound()` function was called, typically when data isn't found.
+
+**Solution:**
+
+```tsx
+// This is expected behavior! Make sure you have a not-found.tsx
+// app/not-found.tsx
+export default function NotFound() {
+  return (
+    <div>
+      <h2>Not Found</h2>
+      <p>Could not find the requested resource</p>
+    </div>
+  );
+}
+
+// Usage in page
+import { notFound } from "next/navigation";
+
+async function Page({ params }: { params: { id: string } }) {
+  const data = await fetchData(params.id);
+
+  if (!data) {
+    notFound(); // This triggers the not-found.tsx page
+  }
+
+  return <div>{data.title}</div>;
+}
+```
+
+---
+
+## Build & Bundle Errors
+
+### "Module not found: Can't resolve 'X'"
+
+**Error Message:**
+
+```
+Module not found: Can't resolve '@/components/button'
+```
+
+**Cause:** The import path is incorrect or the module isn't installed.
+
+**Solution:**
+
+```bash
+# 1. Check if package is installed
+npm list package-name
+
+# 2. Install missing package
+npm install package-name
+
+# 3. Verify path alias in tsconfig.json
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+
+# 4. Clear cache and reinstall
+rm -rf node_modules .next
+npm install
+```
+
+---
+
+### "npm ERR! ERESOLVE unable to resolve dependency tree"
+
+**Error Message:**
+
+```
+npm ERR! ERESOLVE unable to resolve dependency tree
+```
+
+**Cause:** Package version conflicts in dependencies.
+
+**Solution:**
+
+```bash
+# Option 1: Use legacy peer deps
+npm install --legacy-peer-deps
+
+# Option 2: Force install (use with caution)
+npm install --force
+
+# Option 3: Check and update conflicting packages
+npm ls package-name
+npm update package-name
+
+# Option 4: Clear npm cache
+npm cache clean --force
+rm -rf node_modules package-lock.json
+npm install
+```
+
+---
+
+<Callout type="warn">
+  **Still stuck?** Check out our [Troubleshooting
+  Guide](/docs/help/troubleshooting) or ask in the team Slack channel.
+</Callout>

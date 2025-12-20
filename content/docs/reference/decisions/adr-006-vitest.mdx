@@ -1,0 +1,311 @@
+---
+title: "ADR-006: Vitest for Testing"
+description: Choosing Vitest over Jest for testing
+keywords:
+  ["adr", "vitest", "testing", "jest", "unit-tests", "integration-tests"]
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+# ADR-006: Use Vitest for Testing
+
+## Status
+
+✅ **Accepted** (September 2024)
+
+## Context
+
+We needed a testing framework that:
+
+- **Fast**: Quick feedback loop
+- **Modern**: ESM-first, TypeScript-native
+- **Compatible**: Works with Vite and our tooling
+- **Familiar API**: Easy transition for Jest users
+- **Watch mode**: Efficient during development
+
+### Options Considered
+
+| Solution            | Pros                               | Cons               |
+| ------------------- | ---------------------------------- | ------------------ |
+| **Vitest**          | Fast, Vite-native, Jest-compatible | Newer ecosystem    |
+| **Jest**            | Mature, large ecosystem            | Slow, ESM issues   |
+| **Testing Library** | (Used with both)                   | Not a test runner  |
+| **Playwright**      | E2E testing                        | Different use case |
+
+## Decision
+
+We chose **Vitest** as our test runner, with **Testing Library** for component testing.
+
+### Key Reasons
+
+1. **Speed**: 10-20x faster than Jest
+2. **ESM-native**: No configuration headaches
+3. **Vite integration**: Shares config, instant HMR
+4. **Jest-compatible**: Same API, easy migration
+5. **Built-in features**: Coverage, mocking, UI
+
+## Implementation
+
+### Configuration
+
+```typescript
+// vitest.config.ts
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
+import path from "path";
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: ["./src/test/setup.ts"],
+    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html", "lcov"],
+      exclude: ["node_modules", "src/test", "**/*.d.ts", "**/*.config.*"],
+    },
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+});
+```
+
+### Setup File
+
+```typescript
+// src/test/setup.ts
+import "@testing-library/jest-dom/vitest";
+import { cleanup } from "@testing-library/react";
+import { afterEach, vi } from "vitest";
+
+// Cleanup after each test
+afterEach(() => {
+  cleanup();
+});
+
+// Mock window.matchMedia
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: vi.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
+
+// Mock IntersectionObserver
+global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
+```
+
+### Unit Testing
+
+```typescript
+// src/lib/utils.test.ts
+import { describe, it, expect } from "vitest";
+import { cn, formatDate, formatCurrency } from "./utils";
+
+describe("cn", () => {
+  it("merges class names", () => {
+    expect(cn("foo", "bar")).toBe("foo bar");
+  });
+
+  it("handles conditional classes", () => {
+    expect(cn("base", true && "active", false && "hidden")).toBe("base active");
+  });
+
+  it("merges Tailwind conflicts correctly", () => {
+    expect(cn("px-4", "px-6")).toBe("px-6");
+  });
+});
+
+describe("formatDate", () => {
+  it("formats date with default options", () => {
+    const date = new Date("2024-12-20");
+    expect(formatDate(date)).toMatch(/Dec.*20.*2024/);
+  });
+
+  it("handles string input", () => {
+    expect(formatDate("2024-01-15")).toMatch(/Jan.*15.*2024/);
+  });
+});
+
+describe("formatCurrency", () => {
+  it("formats SAR by default", () => {
+    expect(formatCurrency(1234.56)).toContain("1,234.56");
+  });
+
+  it("supports USD", () => {
+    expect(formatCurrency(1234.56, "USD", "en-US")).toBe("$1,234.56");
+  });
+});
+```
+
+### Component Testing
+
+```tsx
+// src/components/button.test.tsx
+import { describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { Button } from "./button";
+
+describe("Button", () => {
+  it("renders children", () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByRole("button")).toHaveTextContent("Click me");
+  });
+
+  it("calls onClick handler", () => {
+    const handleClick = vi.fn();
+    render(<Button onClick={handleClick}>Click me</Button>);
+
+    fireEvent.click(screen.getByRole("button"));
+
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("applies variant classes", () => {
+    render(<Button variant="outline">Outline</Button>);
+    expect(screen.getByRole("button")).toHaveClass("border");
+  });
+
+  it("is disabled when disabled prop is true", () => {
+    render(<Button disabled>Disabled</Button>);
+    expect(screen.getByRole("button")).toBeDisabled();
+  });
+});
+```
+
+### Hook Testing
+
+```tsx
+// src/hooks/use-debounce.test.ts
+import { describe, it, expect, vi } from "vitest";
+import { renderHook, act } from "@testing-library/react";
+import { useDebounce } from "./use-debounce";
+
+describe("useDebounce", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("returns initial value immediately", () => {
+    const { result } = renderHook(() => useDebounce("hello", 500));
+    expect(result.current).toBe("hello");
+  });
+
+  it("debounces value changes", () => {
+    const { result, rerender } = renderHook(
+      ({ value }) => useDebounce(value, 500),
+      { initialProps: { value: "hello" } }
+    );
+
+    rerender({ value: "world" });
+    expect(result.current).toBe("hello"); // Still old value
+
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
+
+    expect(result.current).toBe("world"); // Now updated
+  });
+});
+```
+
+### Mocking
+
+```typescript
+// Mocking modules
+vi.mock("@/lib/api", () => ({
+  apiClient: {
+    get: vi.fn(),
+    post: vi.fn(),
+  },
+}));
+
+// Mocking fetch
+global.fetch = vi.fn();
+
+beforeEach(() => {
+  vi.mocked(fetch).mockResolvedValue({
+    ok: true,
+    json: () => Promise.resolve({ data: [] }),
+  } as Response);
+});
+
+// Spying
+const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+afterEach(() => {
+  consoleSpy.mockRestore();
+});
+```
+
+### Scripts
+
+```json
+{
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
+  }
+}
+```
+
+## Consequences
+
+### Positive
+
+- ✅ **10-20x faster** than Jest
+- ✅ **No ESM issues** with modern packages
+- ✅ **Instant feedback** with watch mode
+- ✅ **Beautiful UI** for exploring tests
+- ✅ **Same API** as Jest - easy migration
+
+### Negative
+
+- ⚠️ **Smaller ecosystem** than Jest
+- ⚠️ **Some Jest plugins** not compatible
+
+### Neutral
+
+- Use Testing Library for component tests
+- Use Playwright for E2E tests (separate tool)
+
+## Best Practices
+
+1. **Test behavior**, not implementation
+2. **Use `screen`** queries for better assertions
+3. **Mock at boundaries** (API, localStorage)
+4. **Keep tests focused** - one concept per test
+5. **Use `describe` blocks** for organization
+
+## References
+
+- [Vitest Documentation](https://vitest.dev)
+- [Testing Library](https://testing-library.com)
+- [Vitest UI](https://vitest.dev/guide/ui.html)
+
+<Callout type="info">
+  See our [Testing Guide](/docs/guides/testing) for comprehensive testing
+  patterns and examples.
+</Callout>

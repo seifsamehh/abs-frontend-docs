@@ -1,0 +1,203 @@
+---
+title: "ADR-003: Shadcn/ui Components"
+description: Using Shadcn/ui for base UI components
+keywords: ["adr", "shadcn", "ui", "components", "radix", "accessibility"]
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+# ADR-003: Use Shadcn/ui for Base Components
+
+## Status
+
+✅ **Accepted** (July 2024)
+
+## Context
+
+We needed a component library that provides:
+
+- **Accessibility**: WCAG compliant out of the box
+- **Customization**: Full control over styling
+- **No vendor lock-in**: Own the code
+- **TypeScript**: Full type safety
+- **Tailwind integration**: Works with our styling approach
+
+### Options Considered
+
+| Solution       | Pros                                 | Cons                      |
+| -------------- | ------------------------------------ | ------------------------- |
+| **Shadcn/ui**  | Copy-paste, full control, accessible | Manual updates            |
+| **Radix UI**   | Great primitives                     | Needs custom styling      |
+| **Chakra UI**  | Feature-rich                         | Styling conflicts         |
+| **MUI**        | Comprehensive                        | Heavy, Material Design    |
+| **Ant Design** | Enterprise features                  | Large bundle, opinionated |
+
+## Decision
+
+We chose **Shadcn/ui** as our base component library.
+
+### Key Reasons
+
+1. **Not a dependency**: Components are copied into your project
+2. **Built on Radix**: Accessible primitives under the hood
+3. **Tailwind-native**: Perfect integration with our styling
+4. **Highly customizable**: Modify anything without overrides
+5. **TypeScript-first**: Full type safety
+6. **Active community**: Regularly updated, many variants
+
+## Implementation
+
+### Installation
+
+```bash
+# Initialize shadcn/ui
+npx shadcn-ui@latest init
+
+# Add components as needed
+npx shadcn-ui@latest add button
+npx shadcn-ui@latest add card
+npx shadcn-ui@latest add dialog
+npx shadcn-ui@latest add form
+```
+
+### Component Structure
+
+```
+src/
+└── components/
+    └── ui/
+        ├── button.tsx
+        ├── card.tsx
+        ├── dialog.tsx
+        ├── dropdown-menu.tsx
+        ├── form.tsx
+        ├── input.tsx
+        ├── label.tsx
+        ├── select.tsx
+        └── ...
+```
+
+### Customization Example
+
+```tsx
+// src/components/ui/button.tsx
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
+Button.displayName = "Button";
+
+export { Button, buttonVariants };
+```
+
+### Usage
+
+```tsx
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+
+function Example() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Welcome</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p>This is a card with shadcn/ui components.</p>
+        <div className="flex gap-2 mt-4">
+          <Button>Primary</Button>
+          <Button variant="outline">Outline</Button>
+          <Button variant="ghost">Ghost</Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+## Consequences
+
+### Positive
+
+- ✅ **Full ownership** of component code
+- ✅ **Accessible by default** (WCAG 2.1 AA)
+- ✅ **Perfect Tailwind integration**
+- ✅ **No breaking updates** from external library
+- ✅ **Easy to customize** for brand requirements
+
+### Negative
+
+- ⚠️ **Manual updates** when upstream improves
+- ⚠️ **Initial setup time** to add all needed components
+- ⚠️ **Team must maintain** the components
+
+### Neutral
+
+- Components follow a consistent API pattern
+- Design tokens are customized in `globals.css`
+
+## Best Practices
+
+1. **Add components incrementally**: Only add what you need
+2. **Keep components in `ui/`**: Don't mix with feature components
+3. **Customize via variants**: Use CVA for variant patterns
+4. **Document customizations**: Note what differs from default
+
+## References
+
+- [Shadcn/ui Documentation](https://ui.shadcn.com)
+- [Radix UI Primitives](https://www.radix-ui.com/primitives)
+- [CVA Documentation](https://cva.style/docs)
+
+<Callout type="info">
+  We maintain a [Component Showcase](/docs/reference/component-showcase) with
+  live examples of all customized components.
+</Callout>

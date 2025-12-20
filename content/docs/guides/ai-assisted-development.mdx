@@ -1,0 +1,362 @@
+---
+title: AI-Assisted Development
+description: Leverage AI tools effectively for faster, higher-quality code
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 🤖 AI-Assisted Development
+
+<Callout type="info">
+  Learn how to effectively use AI coding assistants like GitHub Copilot, Claude,
+  and ChatGPT to accelerate your development workflow while maintaining code
+  quality.
+</Callout>
+
+## 🧠 Recommended AI Tools
+
+<Cards>
+  <Card
+    title="🤖 GitHub Copilot"
+    description="Real-time code suggestions in your IDE"
+  />
+  <Card
+    title="💬 Claude / ChatGPT"
+    description="Complex problem-solving and code review"
+  />
+  <Card
+    title="🔍 Cursor"
+    description="AI-first code editor with deep codebase understanding"
+  />
+  <Card
+    title="📝 v0.dev"
+    description="UI component generation from descriptions"
+  />
+</Cards>
+
+## ✍️ Effective Prompting
+
+### 🎯 The CRISP Framework
+
+Write better prompts using CRISP:
+
+| Element          | Description              | Example                                            |
+| ---------------- | ------------------------ | -------------------------------------------------- |
+| **C**ontext      | Background information   | "In a Next.js 16 app with TypeScript..."           |
+| **R**ole         | Who the AI should be     | "Act as a senior React developer..."               |
+| **I**nstructions | What to do               | "Create a reusable form component..."              |
+| **S**pecifics    | Detailed requirements    | "Include validation with Zod, use Shadcn UI..."    |
+| **P**references  | Style/format preferences | "Use functional components, add JSDoc comments..." |
+
+### 📝 Example Prompts
+
+<Tabs items={["Component", "API Integration", "Bug Fix", "Code Review"]}>
+  <Tab value="Component">
+```
+Context: Next.js 16 app with TypeScript, Tailwind CSS, and Shadcn UI.
+
+Task: Create a UserProfile component that displays:
+
+- User avatar (with fallback to initials)
+- User name and email
+- Role badge
+- Last active timestamp
+
+Requirements:
+
+- Use Shadcn Card, Avatar, and Badge components
+- Include proper TypeScript types with JSDoc
+- Make it responsive (stack on mobile)
+- Add loading skeleton variant
+- Include unit tests with Vitest
+
+Follow our code standards:
+
+- Use named exports
+- Use the cn() utility for class merging
+- Add aria labels for accessibility
+
+```
+</Tab>
+  <Tab value="API Integration">
+```
+
+Context: React app using TanStack Query v5 and native fetch API.
+
+Task: Create a custom hook for managing user orders.
+
+Requirements:
+
+- Fetch orders with pagination
+- Support filtering by status
+- Include optimistic updates for status changes
+- Handle loading, error, and empty states
+- Use Zod for response validation
+
+Include:
+
+- Query key factory
+- Type definitions
+- Error handling
+- Usage examples
+
+```
+</Tab>
+  <Tab value="Bug Fix">
+```
+
+Context: The following React component has a bug where the form
+submits twice when the user clicks rapidly.
+
+[paste your code here]
+
+Task:
+
+1. Identify the root cause
+2. Explain why this happens
+3. Provide a fix
+4. Add safeguards to prevent similar issues
+
+```
+</Tab>
+  <Tab value="Code Review">
+```
+
+Context: This is a PR for a new authentication feature.
+
+[paste your code here]
+
+Review for:
+
+1. Security vulnerabilities
+2. Performance issues
+3. Accessibility compliance
+4. TypeScript best practices
+5. Test coverage gaps
+
+Provide specific, actionable feedback with code examples.
+
+````
+</Tab>
+</Tabs>
+
+## 📝 Prompt Templates
+
+### New Feature Template
+
+```markdown
+## Feature Request
+
+**Context:**
+- Project: [Project name/type]
+- Tech Stack: [Next.js, TypeScript, etc.]
+- Related Files: [List relevant files]
+
+**Feature Description:**
+[Describe what you want to build]
+
+**Requirements:**
+- [ ] Requirement 1
+- [ ] Requirement 2
+- [ ] Requirement 3
+
+**Constraints:**
+- Must follow existing patterns in [file/folder]
+- Should match design in [Figma link]
+- Performance budget: [X]ms
+
+**Expected Output:**
+- Component files
+- Type definitions
+- Unit tests
+- Usage examples
+````
+
+### Debugging Template
+
+```markdown
+## Bug Report
+
+**Current Behavior:**
+[What's happening]
+
+**Expected Behavior:**
+[What should happen]
+
+**Steps to Reproduce:**
+
+1. Step 1
+2. Step 2
+3. Step 3
+
+**Code:**
+\`\`\`tsx
+[Paste relevant code]
+\`\`\`
+
+**Error Message:**
+\`\`\`
+[Paste error if any]
+\`\`\`
+
+**What I've Tried:**
+
+- Attempt 1
+- Attempt 2
+
+**Environment:**
+
+- Browser: [Chrome/Firefox]
+- Node: [version]
+- OS: [macOS/Windows/Linux]
+```
+
+## ⭐ Best Practices
+
+### Do's ✅
+
+<Cards>
+  <Card
+    title="Provide Context"
+    description="Include tech stack, project structure, and existing patterns"
+  />
+  <Card
+    title="Be Specific"
+    description="Detailed requirements lead to better outputs"
+  />
+  <Card title="Iterate" description="Refine prompts based on results" />
+  <Card
+    title="Review Thoroughly"
+    description="Always review and test AI-generated code"
+  />
+</Cards>
+
+### Don'ts ❌
+
+<Cards>
+  <Card
+    title="Don't Trust Blindly"
+    description="AI can generate incorrect or outdated code"
+  />
+  <Card
+    title="Don't Skip Testing"
+    description="AI-generated code needs the same testing as manual code"
+  />
+  <Card
+    title="Don't Share Secrets"
+    description="Never include API keys, passwords, or sensitive data"
+  />
+  <Card
+    title="Don't Ignore Security"
+    description="Review for vulnerabilities, especially auth/data handling"
+  />
+</Cards>
+
+## 🔐 Security Guidelines
+
+<Callout type="error">Never share sensitive information with AI tools.</Callout>
+
+### 🚫 What NOT to Share
+
+- API keys and secrets
+- Database credentials
+- User personal data
+- Internal URLs and endpoints
+- Proprietary business logic
+- Customer information
+
+### ✅ Safe Practices
+
+```tsx
+// ❌ Bad - Contains real credentials
+const API_KEY = "sk-real-api-key-12345";
+
+// ✅ Good - Use placeholder
+const API_KEY = process.env.API_KEY; // "your-api-key-here"
+```
+
+### 🧹 Code Sanitization
+
+Before sharing code with AI:
+
+1. Replace real API keys with placeholders
+2. Remove user data and PII
+3. Anonymize business-specific logic if needed
+4. Remove internal URLs
+
+## 🔄 Workflow Integration
+
+### 🖥️ GitHub Copilot in VS Code
+
+1. **Enable Copilot** - Install the GitHub Copilot extension
+2. **Write Comments** - Describe what you want to build
+3. **Tab to Accept** - Accept suggestions with Tab
+4. **Cycle Suggestions** - Use Alt+] to see alternatives
+
+### 🔍 Code Review with AI
+
+```bash
+# Generate PR description
+gh copilot explain "Summarize the changes in this PR"
+
+# Review for issues
+gh copilot review --security --performance
+```
+
+### 📚 Using AI for Documentation
+
+```markdown
+## Documentation Request
+
+Generate JSDoc comments for this function:
+
+\`\`\`tsx
+function calculateShippingCost(
+weight: number,
+distance: number,
+expedited: boolean
+): number {
+// ... implementation
+}
+\`\`\`
+
+Include:
+
+- Description
+- @param tags
+- @returns tag
+- @example usage
+```
+
+## ✅ Quality Checklist
+
+Before committing AI-generated code:
+
+- [ ] Code compiles without errors
+- [ ] All tests pass
+- [ ] No linting warnings
+- [ ] Types are correct and complete
+- [ ] Follows project conventions
+- [ ] Accessible (ARIA, keyboard nav)
+- [ ] No hardcoded values
+- [ ] Error handling included
+- [ ] Security reviewed
+- [ ] Performance acceptable
+
+## ⚠️ Common Pitfalls
+
+| Pitfall            | Solution                                               |
+| ------------------ | ------------------------------------------------------ |
+| Outdated syntax    | Specify versions: "Using React 19..."                  |
+| Wrong patterns     | Reference existing code: "Match style in UserCard.tsx" |
+| Missing edge cases | Ask: "What edge cases should I handle?"                |
+| Over-engineering   | Ask for "simple, minimal implementation"               |
+| No error handling  | Explicitly request error handling                      |
+
+## 👉 Next Steps
+
+- 📖 [Code Standards](/docs/reference/code-standards) - Our coding conventions
+- 🧪 [Testing Guide](/docs/guides/testing) - Test AI-generated code
+- 🔒 [Security](/docs/reference/security) - Security best practices

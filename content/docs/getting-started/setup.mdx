@@ -1,17 +1,28 @@
 ---
 title: Getting Started
 description: Quick start guide for new team members and contributors
+keywords:
+  [
+    "setup",
+    "installation",
+    "getting-started",
+    "environment",
+    "nodejs",
+    "vscode",
+  ]
+difficulty: beginner
+estimatedTime: "30 min"
 ---
 
 import { Card, Cards } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
 # 🚀 Getting Started
 
 <Callout type="info">
   Welcome to the ABS frontend team! This guide will help you set up your
-  development environment and make your first contribution.
+  development environment and make your first contribution. **Updated for
+  Node.js 20+ and Next.js 16!**
 </Callout>
 
 ## Prerequisites
@@ -22,12 +33,12 @@ Before you begin, make sure you have the following installed:
 
 <Cards>
   <Card
-    title="📦 Node.js"
-    description="Version 18+ (we recommend using nvm for version management)"
+    title="📦 Node.js 20+"
+    description="LTS version required (we recommend using nvm for version management)"
   />
   <Card
-    title="⚡ npm"
-    description="Our preferred package manager for installs"
+    title="⚡ npm 10+"
+    description="Our preferred package manager (comes with Node.js)"
   />
   <Card title="🔧 Git" description="Version control system" />
   <Card
@@ -38,73 +49,68 @@ Before you begin, make sure you have the following installed:
 
 ### Installation Steps
 
-<Tabs items={['macOS', 'Windows', 'Linux']}>
-  <Tab value="macOS">
-    ```bash
-    # Install Homebrew (if not already installed)
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```bash tab="macOS"
+# Install Homebrew (if not already installed)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    # Install Node.js via nvm
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-    nvm install 18
-    nvm use 18
+# Install Node.js via nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+nvm install 20
+nvm use 20
 
-    # Install npm (comes with Node.js)
+# Verify installation
+node --version  # Should be v20.x.x
+npm --version   # Should be 10.x.x
 
-    # Install Git (if not already installed)
-    brew install git
+# Install Git (if not already installed)
+brew install git
 
-    # Install VS Code
-    brew install --cask visual-studio-code
-    ```
+# Install VS Code
+brew install --cask visual-studio-code
+```
 
-  </Tab>
-  
-  <Tab value="Windows">
-    ```powershell
-    # Install Node.js via nvm-windows
-    # Download and install from: https://github.com/coreybutler/nvm-windows
+```powershell tab="Windows"
+# Install Node.js via nvm-windows
+# Download and install from: https://github.com/coreybutler/nvm-windows
 
-    nvm install 18.0.0
-    nvm use 18.0.0
+nvm install 20
+nvm use 20
 
-    # Install npm (comes with Node.js)
+# Verify installation
+node --version  # Should be v20.x.x
+npm --version   # Should be 10.x.x
 
-    # Install Git
-    # Download from: https://git-scm.com/download/win
+# Install Git
+# Download from: https://git-scm.com/download/win
 
-    # Install VS Code
-    # Download from: https://code.visualstudio.com/
-    ```
+# Install VS Code
+# Download from: https://code.visualstudio.com/
+```
 
-  </Tab>
-  
-  <Tab value="Linux">
-    ```bash
-    # Install Node.js via nvm
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-    source ~/.bashrc  # or ~/.zshrc if using zsh
-    nvm install 18
-    nvm use 18
+```bash tab="Linux"
+# Install Node.js via nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc  # or ~/.zshrc if using zsh
+nvm install 20
+nvm use 20
 
-    # Install npm (comes with Node.js)
+# Verify installation
+node --version  # Should be v20.x.x
+npm --version   # Should be 10.x.x
 
-    # Install Git (if not already installed)
-    sudo apt update
-    sudo apt install git
+# Install Git (if not already installed)
+sudo apt update
+sudo apt install git
 
-    # Install VS Code
-    # Download .deb package from: https://code.visualstudio.com/
-    # Then install with:
-    sudo dpkg -i code_*.deb
-    sudo apt-get install -f  # Fix any dependency issues
+# Install VS Code
+# Download .deb package from: https://code.visualstudio.com/
+# Then install with:
+sudo dpkg -i code_*.deb
+sudo apt-get install -f  # Fix any dependency issues
 
-    # Alternative: Install via snap
-    # sudo snap install --classic code
-    ```
-
-  </Tab>
-</Tabs>
+# Alternative: Install via snap
+# sudo snap install --classic code
+```
 
 ---
 

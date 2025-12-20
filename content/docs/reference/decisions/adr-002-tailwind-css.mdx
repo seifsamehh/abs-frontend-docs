@@ -1,0 +1,151 @@
+---
+title: "ADR-002: Tailwind CSS for Styling"
+description: Adopting Tailwind CSS as the primary styling solution
+keywords: ["adr", "tailwind", "css", "styling", "utility-first"]
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+# ADR-002: Adopt Tailwind CSS for Styling
+
+## Status
+
+✅ **Accepted** (June 2024)
+
+## Context
+
+We needed a consistent, scalable styling approach for our frontend applications. Key requirements:
+
+- **Consistency**: Unified design system across projects
+- **Developer Experience**: Fast iteration, easy maintenance
+- **Performance**: Small bundle sizes, no unused CSS
+- **Customization**: Support for brand colors and design tokens
+- **Team Adoption**: Easy to learn for new developers
+
+### Options Considered
+
+| Solution              | Pros                                   | Cons                                 |
+| --------------------- | -------------------------------------- | ------------------------------------ |
+| **Tailwind CSS**      | Utility-first, great DX, small bundles | Class verbosity                      |
+| **CSS Modules**       | Scoped styles, familiar syntax         | No design system                     |
+| **Styled Components** | Component-based, dynamic               | Runtime overhead, SSR issues         |
+| **Sass/SCSS**         | Powerful features, familiar            | Global scope issues, no tree-shaking |
+
+## Decision
+
+We chose **Tailwind CSS** as our primary styling solution.
+
+### Key Reasons
+
+1. **Utility-first approach**: No context switching between files
+2. **Design system built-in**: Consistent spacing, colors, typography
+3. **Excellent performance**: Unused CSS is automatically purged
+4. **Great with Next.js**: First-class support and optimization
+5. **Rapid prototyping**: Build UIs incredibly fast
+6. **Large ecosystem**: Tailwind UI, plugins, community
+
+## Implementation
+
+### Configuration (Tailwind CSS v4)
+
+```css
+/* src/app/global.css */
+@import "tailwindcss";
+
+@theme {
+  /* Brand Colors */
+  --color-primary: #0ea5e9;
+  --color-primary-foreground: #ffffff;
+  --color-accent: #f97316;
+
+  /* Custom spacing */
+  --spacing-18: 4.5rem;
+
+  /* Typography */
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "Fira Code", monospace;
+}
+```
+
+### Usage Patterns
+
+```tsx
+// Component with Tailwind classes
+function Card({ title, children }: CardProps) {
+  return (
+    <div className="rounded-lg border bg-card p-6 shadow-sm">
+      <h3 className="mb-2 text-lg font-semibold">{title}</h3>
+      <div className="text-muted-foreground">{children}</div>
+    </div>
+  );
+}
+
+// Conditional classes with cn() utility
+import { cn } from "@/lib/utils";
+
+function Button({ variant = "default", className, ...props }: ButtonProps) {
+  return (
+    <button
+      className={cn(
+        "inline-flex items-center justify-center rounded-md px-4 py-2 font-medium transition-colors",
+        variant === "default" &&
+          "bg-primary text-primary-foreground hover:bg-primary/90",
+        variant === "outline" &&
+          "border border-input bg-background hover:bg-accent",
+        variant === "ghost" && "hover:bg-accent hover:text-accent-foreground",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+```
+
+### Class Name Utility
+
+```typescript
+// src/lib/utils.ts
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+## Consequences
+
+### Positive
+
+- ✅ **50% faster** UI development
+- ✅ **Consistent design** across all projects
+- ✅ **Smaller bundles** than CSS-in-JS solutions
+- ✅ **No naming debates** (BEM, etc.)
+- ✅ **Easy responsive design** with breakpoint prefixes
+
+### Negative
+
+- ⚠️ **Verbose HTML** with many classes
+- ⚠️ **Learning curve** for utility-first approach
+- ⚠️ **Initial setup** requires configuration
+
+### Neutral
+
+- Teams should use component abstraction for repeated patterns
+- IDE extensions (Tailwind IntelliSense) are essential
+
+## Best Practices
+
+1. **Extract components** for repeated patterns
+2. **Use `cn()` utility** for conditional classes
+3. **Follow mobile-first** responsive design
+4. **Leverage design tokens** via `@theme`
+5. **Install VS Code extension** for IntelliSense
+
+## References
+
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Tailwind CSS v4 Beta](https://tailwindcss.com/blog/tailwindcss-v4-beta)
+- [Tailwind with Next.js](https://tailwindcss.com/docs/guides/nextjs)
+
+<Callout type="info">Updated for Tailwind CSS v4 in December 2024.</Callout>

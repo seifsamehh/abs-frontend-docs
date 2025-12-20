@@ -1,0 +1,243 @@
+---
+title: First Contribution
+description: Step-by-step guide to making your first code contribution
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps } from "fumadocs-ui/components/steps";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# Your First Contribution
+
+<Callout type="info">
+  This guide walks you through the entire process of making your first
+  contribution, from picking a task to getting your code merged.
+</Callout>
+
+## Contribution Workflow
+
+<Steps>
+  ### Pick a Task
+
+Start with a "good first issue" labeled task:
+
+- Look for issues labeled `good-first-issue` in GitHub
+- Ask your team lead for a starter task
+- Fix a typo in documentation (like this one!)
+
+### Create a Branch
+
+```bash
+# Make sure you're on the latest main
+git checkout main
+git pull origin main
+
+# Create your feature branch
+git checkout -b feat/your-feature-name
+```
+
+### Make Your Changes
+
+Write your code following our [code standards](/docs/reference/code-standards):
+
+- Use TypeScript
+- Follow component patterns
+- Add tests for new functionality
+
+### Test Locally
+
+```bash
+# Run type checking
+pnpm tsc --noEmit
+
+# Run linting
+pnpm lint
+
+# Run tests
+pnpm test
+
+# Test the dev server
+pnpm dev
+```
+
+### Commit Your Changes
+
+Use [Conventional Commits](https://www.conventionalcommits.org/):
+
+```bash
+git add .
+git commit -m "feat: add user profile component"
+```
+
+### Push and Create PR
+
+```bash
+git push origin feat/your-feature-name
+```
+
+Then create a Pull Request on GitHub.
+
+### Address Review Feedback
+
+Respond to review comments and push updates:
+
+```bash
+git add .
+git commit -m "fix: address review feedback"
+git push
+```
+
+### Celebrate! 🎉
+
+Once approved and merged, you've made your first contribution!
+
+</Steps>
+
+## Commit Message Format
+
+<Tabs items={['Format', 'Examples', 'Types']}>
+  <Tab value="Format">
+    ```
+    <type>(<scope>): <description>
+
+    [optional body]
+
+    [optional footer]
+    ```
+
+    - **type**: What kind of change (see Types tab)
+    - **scope**: What area of the codebase (optional)
+    - **description**: Short summary in present tense
+
+</Tab>
+  <Tab value="Examples">
+    ```bash
+    # Feature
+    feat(auth): add login form validation
+
+    # Bug fix
+    fix(ui): resolve button hover state on mobile
+
+    # Documentation
+    docs: update installation instructions
+
+    # Refactoring
+    refactor(api): extract user fetching logic
+
+    # Tests
+    test(auth): add unit tests for login flow
+    ```
+
+</Tab>
+  <Tab value="Types">
+    | Type | Description |
+    |------|-------------|
+    | `feat` | New feature |
+    | `fix` | Bug fix |
+    | `docs` | Documentation changes |
+    | `style` | Code formatting (no logic change) |
+    | `refactor` | Code restructuring |
+    | `test` | Adding or updating tests |
+    | `chore` | Build, tooling, dependencies |
+    | `perf` | Performance improvement |
+</Tab>
+</Tabs>
+
+## Pull Request Guidelines
+
+### PR Title
+
+Follow the same format as commit messages:
+
+```
+feat(auth): add social login buttons
+```
+
+### PR Description Template
+
+```markdown
+## Summary
+
+Brief description of what this PR does.
+
+## Changes
+
+- Added X component
+- Updated Y function
+- Fixed Z bug
+
+## Testing
+
+- [ ] Unit tests pass
+- [ ] Manual testing completed
+- [ ] No TypeScript errors
+
+## Screenshots (if UI changes)
+
+[Add screenshots here]
+```
+
+### Code Review Checklist
+
+Before requesting review, ensure:
+
+- [ ] Code follows our [standards](/docs/reference/code-standards)
+- [ ] TypeScript has no errors (`pnpm tsc --noEmit`)
+- [ ] Linting passes (`pnpm lint`)
+- [ ] Tests pass (`pnpm test`)
+- [ ] New features have tests
+- [ ] Documentation updated if needed
+
+## Common First Contributions
+
+### 1. Fix a Bug
+
+```typescript
+// Before: Bug in validation
+const isValid = email.includes("@"); // Missing domain check
+
+// After: Fixed validation
+const isValid = email.includes("@") && email.includes(".");
+```
+
+### 2. Add a Component
+
+```tsx
+// src/components/ui/Badge.tsx
+interface BadgeProps {
+  variant: "default" | "success" | "warning" | "error";
+  children: React.ReactNode;
+}
+
+export function Badge({ variant, children }: BadgeProps) {
+  return <span className={`badge badge-${variant}`}>{children}</span>;
+}
+```
+
+### 3. Update Documentation
+
+```mdx
+## // content/docs/guides/example.mdx
+
+title: Updated Guide
+description: Clearer explanation
+
+---
+
+# Better Documentation
+
+This explains the concept more clearly...
+```
+
+## Getting Help
+
+Stuck? Here's what to do:
+
+1. Check the [troubleshooting guide](/docs/help/troubleshooting)
+2. Search existing issues and PRs
+3. Ask in the team channel
+4. Request a pairing session
+
+<Callout type="info">
+  Remember: There are no silly questions! Everyone was new once.
+</Callout>

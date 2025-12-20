@@ -1,0 +1,546 @@
+---
+title: Tech Stack
+description: Technologies, frameworks, and tools used in ABS frontend projects - Updated December 2025
+keywords:
+  ["tech stack", "Next.js 16", "React 19", "Tailwind CSS 4", "TanStack Query"]
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 🛠️ Tech Stack
+
+<Callout type="info">
+  Our technology stack is carefully chosen to ensure scalability,
+  maintainability, and excellent developer experience. **Last updated: December
+  2025**
+</Callout>
+
+## Core Technologies
+
+<Cards>
+  <Card
+    title="⚛️ React 19.1"
+    description="UI library with Server Components, Actions, and enhanced hooks"
+  />
+  <Card
+    title="▲ Next.js 16.1"
+    description="Full-stack React framework with App Router and Turbopack"
+  />
+  <Card
+    title="📘 TypeScript 5.9"
+    description="Type-safe JavaScript with latest features"
+  />
+  <Card
+    title="🎨 Tailwind CSS 4.1"
+    description="CSS-first utility framework with new engine"
+  />
+</Cards>
+
+## Technology Overview
+
+### Frontend Framework
+
+| Technology     | Version | Key Features                                     |
+| -------------- | ------- | ------------------------------------------------ |
+| **Next.js**    | 15.5.x  | App Router, Turbopack, Server Actions, PPR       |
+| **React**      | 19.1.x  | Server Components, Actions, `use` hook, Compiler |
+| **TypeScript** | 5.9.x   | Isolated declarations, `--erasableSyntaxOnly`    |
+
+### React 19 New Features
+
+<Callout type="warn">
+  **Security Advisory (December 2025):** Update to React 19.0.1, 19.1.2, or
+  19.2.1+ immediately for critical RSC vulnerability patches.
+</Callout>
+
+| Feature               | Description                                                |
+| --------------------- | ---------------------------------------------------------- |
+| **Server Components** | Components that run on the server, zero client JS          |
+| **Server Actions**    | Async functions that run on the server, called from client |
+| **`use` hook**        | Read resources in render (promises, context)               |
+| **React Compiler**    | v1.0 stable - automatic memoization                        |
+| **`useActionState`**  | Manage form state with server actions                      |
+| **`useFormStatus`**   | Access form submission status from children                |
+| **`useOptimistic`**   | Optimistic UI updates during async operations              |
+| **Activity**          | New API for managing component activity states             |
+| **View Transitions**  | Native CSS view transitions support                        |
+
+```tsx
+// React 19 Server Action Example
+"use server";
+
+export async function createUser(formData: FormData) {
+  const name = formData.get("name");
+  const email = formData.get("email");
+
+  // Validate and create user
+  const user = await db.user.create({ data: { name, email } });
+
+  revalidatePath("/users");
+  return { success: true, user };
+}
+```
+
+```tsx
+// React 19 useActionState Example
+"use client";
+
+import { useActionState } from "react";
+import { createUser } from "./actions";
+
+function CreateUserForm() {
+  const [state, formAction, isPending] = useActionState(createUser, null);
+
+  return (
+    <form action={formAction}>
+      <input name="name" disabled={isPending} />
+      <input name="email" type="email" disabled={isPending} />
+      <button type="submit" disabled={isPending}>
+        {isPending ? "Creating..." : "Create User"}
+      </button>
+      {state?.error && <p className="text-red-500">{state.error}</p>}
+    </form>
+  );
+}
+```
+
+### Next.js 15.5 Features
+
+| Feature                              | Description                                                    |
+| ------------------------------------ | -------------------------------------------------------------- |
+| **App Router**                       | File-based routing with layouts, loading states, and streaming |
+| **Turbopack**                        | Rust-based bundler, 5x faster than Webpack (stable in dev)     |
+| **Server Actions**                   | Built-in form handling with progressive enhancement            |
+| **Partial Prerendering**             | Combine static and dynamic content in single route             |
+| **`next/form`**                      | Enhanced Form component with client-side navigation            |
+| **`forbidden()` / `unauthorized()`** | New auth-related functions                                     |
+| **Caching Changes**                  | `fetch` and route handlers no longer cached by default         |
+
+```tsx
+// Next.js 15 Route Handler Example
+// app/api/users/route.ts
+import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const query = searchParams.get("query");
+
+  const users = await db.user.findMany({
+    where: query ? { name: { contains: query } } : undefined,
+  });
+
+  return NextResponse.json(users);
+}
+
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const user = await db.user.create({ data: body });
+
+  return NextResponse.json(user, { status: 201 });
+}
+```
+
+### Styling - Tailwind CSS 4.1
+
+<Callout>
+  Tailwind CSS v4.0 is a **ground-up rewrite** with a new high-performance
+  engine. Full builds are 3.5x faster, incremental builds 8x faster!
+</Callout>
+
+| Feature                         | Description                                                    |
+| ------------------------------- | -------------------------------------------------------------- |
+| **CSS-first config**            | Configure in CSS with `@theme`, no `tailwind.config.js` needed |
+| **`@import "tailwindcss"`**     | Single import replaces `@tailwind` directives                  |
+| **CSS theme variables**         | All tokens available as native CSS variables                   |
+| **Automatic content detection** | No need to configure `content` array                           |
+| **Container queries**           | Built-in `@container` support, no plugin needed                |
+| **P3 color palette**            | OKLCH colors for wider gamut displays                          |
+| **3D transforms**               | `rotate-x-*`, `rotate-y-*`, `perspective-*`                    |
+| **Gradient APIs**               | Radial, conic gradients, interpolation modes                   |
+
+```css
+/* Tailwind CSS v4 Configuration in CSS */
+@import "tailwindcss";
+
+@theme {
+  /* Custom colors */
+  --color-brand-50: oklch(0.98 0.02 75);
+  --color-brand-500: oklch(0.65 0.18 75);
+  --color-brand-900: oklch(0.25 0.12 75);
+
+  /* Custom fonts */
+  --font-display: "Cal Sans", "Inter", sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  /* Custom spacing */
+  --spacing-18: 4.5rem;
+  --spacing-128: 32rem;
+
+  /* Custom breakpoints */
+  --breakpoint-3xl: 1920px;
+
+  /* Custom animations */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Custom utilities */
+@utility text-balance {
+  text-wrap: balance;
+}
+
+/* Source detection for external packages */
+@source "../node_modules/@my-company/ui-lib";
+```
+
+```tsx
+// New Tailwind v4 Features in Use
+export function Card() {
+  return (
+    <div className="@container">
+      {/* Container queries - no plugin needed */}
+      <div className="@sm:flex @lg:grid @lg:grid-cols-2">
+        {/* 3D transforms */}
+        <div className="perspective-distant hover:rotate-y-12 transform-3d">
+          {/* Dynamic spacing */}
+          <p className="px-17 py-29">Content</p>
+        </div>
+
+        {/* New gradient features */}
+        <div className="bg-conic from-red-500 via-yellow-500 to-red-500" />
+        <div className="bg-radial-[at_25%_25%] from-white to-zinc-900" />
+
+        {/* Linear gradient with angle */}
+        <div className="bg-linear-45 from-indigo-500 to-purple-500" />
+      </div>
+    </div>
+  );
+}
+```
+
+### State Management
+
+| Technology         | Purpose                 | When to Use                   |
+| ------------------ | ----------------------- | ----------------------------- |
+| **TanStack Query** | Server state & caching  | All API data fetching         |
+| **Zustand**        | Simple client state     | UI state, user preferences    |
+| **Redux Toolkit**  | Complex client state    | Large apps, time-travel debug |
+| **React Context**  | Theme, auth, UI state   | Global app state, theming     |
+| **Jotai**          | Atomic state management | Fine-grained reactivity       |
+
+### TanStack Query v5
+
+```tsx
+// TanStack Query v5 with React 19
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+
+// Standard query
+const { data, isPending, error } = useQuery({
+  queryKey: ["users"],
+  queryFn: () => fetch("/api/users").then((r) => r.json()),
+});
+
+// Suspense query (recommended with React 19)
+function UserList() {
+  const { data } = useSuspenseQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsers,
+  });
+
+  return (
+    <ul>
+      {data.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+
+// With Suspense boundary
+function UsersPage() {
+  return (
+    <Suspense fallback={<UsersSkeleton />}>
+      <UserList />
+    </Suspense>
+  );
+}
+```
+
+### Forms & Validation
+
+| Technology              | Purpose               |
+| ----------------------- | --------------------- |
+| **React Hook Form**     | Form state management |
+| **Zod**                 | Schema validation     |
+| **@hookform/resolvers** | Zod integration       |
+| **Server Actions**      | Form submission       |
+
+```tsx
+// Modern Form with Zod + React Hook Form + Server Actions
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const schema = z.object({
+  email: z.string().email("Invalid email"),
+  password: z.string().min(8, "Password must be 8+ characters"),
+});
+
+type FormData = z.infer<typeof schema>;
+
+export function LoginForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
+
+  async function onSubmit(data: FormData) {
+    const result = await loginAction(data);
+    if (result.error) {
+      // Handle error
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register("email")} type="email" />
+      {errors.email && <span>{errors.email.message}</span>}
+
+      <input {...register("password")} type="password" />
+      {errors.password && <span>{errors.password.message}</span>}
+
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Logging in..." : "Login"}
+      </button>
+    </form>
+  );
+}
+```
+
+### Authentication
+
+| Technology     | Purpose                  |
+| -------------- | ------------------------ |
+| **Auth.js v5** | Authentication framework |
+| **JWT**        | Token-based auth         |
+| **Middleware** | Route protection         |
+
+```tsx
+// Auth.js v5 Configuration
+// auth.ts
+import NextAuth from "next-auth";
+import GitHub from "next-auth/providers/github";
+import Credentials from "next-auth/providers/credentials";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    GitHub,
+    Credentials({
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      authorize: async (credentials) => {
+        // Validate credentials
+        const user = await validateUser(credentials);
+        return user;
+      },
+    }),
+  ],
+  callbacks: {
+    authorized: async ({ auth }) => {
+      return !!auth;
+    },
+  },
+});
+```
+
+### Testing
+
+| Technology          | Purpose                  | Status |
+| ------------------- | ------------------------ | ------ |
+| **Vitest**          | Unit & integration tests | ✅     |
+| **Testing Library** | Component testing        | ✅     |
+| **Playwright**      | E2E testing              | ✅     |
+| **MSW 2.0**         | API mocking              | ✅     |
+
+```tsx
+// Vitest + Testing Library Example
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { describe, it, expect, vi } from "vitest";
+
+describe("LoginForm", () => {
+  it("validates email format", async () => {
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    await user.type(screen.getByRole("textbox", { name: /email/i }), "invalid");
+    await user.click(screen.getByRole("button", { name: /login/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/invalid email/i)).toBeInTheDocument();
+    });
+  });
+});
+```
+
+### Development Tools
+
+| Technology      | Purpose            | Version  |
+| --------------- | ------------------ | -------- |
+| **ESLint**      | Code linting       | 9.x      |
+| **Prettier**    | Code formatting    | 3.x      |
+| **Husky**       | Git hooks          | 9.x      |
+| **lint-staged** | Pre-commit checks  | 15.x     |
+| **Turbopack**   | Dev server bundler | Built-in |
+
+### Build & Deploy
+
+| Technology         | Purpose                        |
+| ------------------ | ------------------------------ |
+| **Vercel**         | Hosting & deployment           |
+| **GitHub Actions** | CI/CD pipelines                |
+| **Docker**         | Containerization (when needed) |
+
+## Package Versions (December 2025)
+
+```json
+{
+  "dependencies": {
+    "next": "^15.5.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "@tanstack/react-query": "^5.62.0",
+    "react-hook-form": "^7.54.0",
+    "@hookform/resolvers": "^3.9.0",
+    "zod": "^3.24.0",
+    "next-auth": "^5.0.0-beta.25",
+    "zustand": "^5.0.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0",
+    "lucide-react": "^0.468.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "tailwindcss": "^4.1.0",
+    "@tailwindcss/postcss": "^4.1.0",
+    "@types/react": "^19.1.0",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^15.5.0",
+    "prettier": "^3.4.0",
+    "vitest": "^2.1.0",
+    "@testing-library/react": "^16.1.0",
+    "@playwright/test": "^1.49.0"
+  }
+}
+```
+
+## Why These Choices?
+
+### Why Next.js 16?
+
+<Cards>
+  <Card
+    title="Server Components"
+    description="Better performance with server-side rendering by default"
+  />
+  <Card
+    title="App Router"
+    description="Modern routing with layouts, loading states, and streaming"
+  />
+  <Card
+    title="Turbopack"
+    description="Rust-based bundler, 5x faster builds in development"
+  />
+  <Card
+    title="Built-in Optimization"
+    description="Automatic code splitting, image optimization, and fonts"
+  />
+</Cards>
+
+### Why React 19?
+
+- **Server Components** - Zero client JS for static content
+- **Actions** - Simplified data mutations with forms
+- **Compiler** - Automatic memoization, no more useMemo/useCallback
+- **Suspense** - First-class async support with streaming
+
+### Why TypeScript 5.9?
+
+- **Type Safety** - Catch errors at compile time
+- **Better DX** - Autocomplete and inline documentation
+- **Refactoring** - Confident code changes
+- **Isolated Declarations** - Faster declaration emit
+
+### Why Tailwind CSS 4?
+
+- **Performance** - 3.5x faster full builds, 8x faster incremental
+- **CSS-First** - Configure in CSS, no JS config file needed
+- **Modern CSS** - Native cascade layers, `@property`, `color-mix()`
+- **Auto Detection** - No `content` array configuration needed
+
+### Why TanStack Query?
+
+- **Automatic Caching** - Smart cache invalidation
+- **Background Updates** - Stale-while-revalidate pattern
+- **DevTools** - Excellent debugging experience
+- **Suspense** - First-class React 19 Suspense support
+
+### Why Zod?
+
+- **TypeScript Integration** - Automatic type inference
+- **Runtime Validation** - Validate API responses
+- **Composable** - Build complex schemas easily
+- **Error Messages** - User-friendly validation errors
+
+## Learning Resources
+
+### Official Documentation
+
+| Technology     | Link                                                            |
+| -------------- | --------------------------------------------------------------- |
+| Next.js 16     | [nextjs.org/docs](https://nextjs.org/docs)                      |
+| React 19       | [react.dev](https://react.dev)                                  |
+| TypeScript 5   | [typescriptlang.org/docs](https://www.typescriptlang.org/docs/) |
+| Tailwind CSS 4 | [tailwindcss.com/docs](https://tailwindcss.com/docs)            |
+| TanStack Query | [tanstack.com/query](https://tanstack.com/query/latest)         |
+| Zod            | [zod.dev](https://zod.dev)                                      |
+
+### Recommended Courses
+
+| Topic          | Resource                                             |
+| -------------- | ---------------------------------------------------- |
+| React 19       | [react.dev/learn](https://react.dev/learn)           |
+| Next.js 16     | [nextjs.org/learn](https://nextjs.org/learn)         |
+| TypeScript     | [Total TypeScript](https://www.totaltypescript.com/) |
+| TanStack Query | [query.gg](https://query.gg/)                        |
+| Testing        | [Testing JavaScript](https://testingjavascript.com/) |
+
+## Browser Support
+
+| Browser | Minimum Version |
+| ------- | --------------- |
+| Chrome  | 109+            |
+| Firefox | 115+            |
+| Safari  | 16.4+           |
+| Edge    | 109+            |
+
+<Callout type="warn">
+  Internet Explorer is not supported. Safari 16.4+ required for modern CSS
+  features.
+</Callout>
+
+## Runtime Requirements
+
+- **Node.js:** 20.x LTS (recommended) or 22.x
+- **Package Manager:** npm 10.x, pnpm 9.x, or yarn 4.x
+- **Operating System:** macOS, Windows, or Linux

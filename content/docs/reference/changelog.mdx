@@ -1,0 +1,211 @@
+---
+title: Changelog
+description: Track documentation and stack updates, breaking changes, and new features
+keywords: ["changelog", "updates", "releases", "migration", "breaking changes"]
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 📋 Changelog
+
+<Callout type="info">
+  Track updates to this documentation, our tech stack, and important changes
+  that affect development workflows.
+</Callout>
+
+## December 2024
+
+### v2.0.0 - Major Update 🎉
+
+**Released:** December 20, 2024
+
+#### Breaking Changes
+
+- **React 19 Upgrade**: Updated to React 19 with new concurrent features
+- **Next.js 15.5**: Upgraded to Next.js 15.5 with Turbopack as default
+- **Tailwind CSS 4**: Migrated to Tailwind CSS v4 with new configuration format
+
+<Tabs items={["Migration Guide", "What's New", "Deprecations"]}>
+  <Tab value="Migration Guide">
+    #### Migrating to React 19
+
+    ```bash
+    # Update dependencies
+    npm install react@19 react-dom@19
+
+    # Update types
+    npm install -D @types/react@19 @types/react-dom@19
+    ```
+
+    **Key Changes:**
+    - `useFormStatus` and `useFormState` are now stable
+    - `use()` hook for reading resources in render
+    - Ref as a prop (no more `forwardRef` needed in most cases)
+
+    #### Migrating to Tailwind CSS 4
+
+    ```css
+    /* Old: tailwind.config.js */
+    /* New: CSS-first configuration */
+
+    @import "tailwindcss";
+
+    @theme {
+      --color-primary: #0ea5e9;
+      --font-sans: "Inter", sans-serif;
+    }
+    ```
+
+  </Tab>
+  <Tab value="What's New">
+    #### New Features
+
+    - ✅ **Interactive Playgrounds**: Live code editing with Sandpack
+    - ✅ **API Reference**: Complete documentation for hooks and utilities
+    - ✅ **Error Reference**: Searchable index of common errors
+    - ✅ **ADR Documentation**: Architecture Decision Records
+    - ✅ **Edit on GitHub**: Quick links to edit documentation
+    - ✅ **Enhanced Search**: Better keyword-based search
+    - ✅ **Mermaid Diagrams**: Visual architecture diagrams
+
+    #### Improvements
+
+    - 🎨 New Tailwind-inspired UI design
+    - ⚡ Faster page loads with Turbopack
+    - 📱 Better mobile responsiveness
+    - 🌙 Improved dark mode support
+    - 🔍 Enhanced documentation search
+
+  </Tab>
+  <Tab value="Deprecations">
+    #### Deprecated
+
+    - `getServerSideProps` - Use Server Components instead
+    - `getStaticProps` - Use `generateStaticParams` with Server Components
+    - Class components - Use functional components with hooks
+    - Legacy Context API - Use modern Context with `use()`
+
+    #### Removed
+
+    - Support for Node.js < 18.17
+    - Legacy Tailwind configuration format
+    - `pages/` directory routing (App Router only)
+
+  </Tab>
+</Tabs>
+
+---
+
+## November 2024
+
+### v1.5.0 - Documentation Expansion
+
+**Released:** November 15, 2024
+
+#### New Documentation
+
+- 📚 Added comprehensive Testing Guide
+- 📚 Added State Management patterns
+- 📚 Added Authentication guide with NextAuth.js
+- 📚 Added Real-World Examples section
+
+#### Improvements
+
+- Better code examples with syntax highlighting
+- Added copy buttons to code blocks
+- Improved navigation structure
+- Added search functionality
+
+---
+
+## October 2024
+
+### v1.4.0 - Component Library
+
+**Released:** October 28, 2024
+
+#### New Features
+
+- 🧩 Component Library documentation
+- 🧩 Component Showcase with live examples
+- 🧩 Accessibility guidelines
+- 🧩 Design token documentation
+
+---
+
+## September 2024
+
+### v1.3.0 - Developer Experience
+
+**Released:** September 10, 2024
+
+#### New Features
+
+- 🛠️ ESLint configuration guide
+- 🛠️ Prettier setup documentation
+- 🛠️ Git hooks with Husky
+- 🛠️ VS Code extensions recommendations
+
+---
+
+## August 2024
+
+### v1.2.0 - Monorepo Support
+
+**Released:** August 22, 2024
+
+#### New Features
+
+- 📦 Monorepo architecture guide
+- 📦 Turborepo configuration
+- 📦 Shared packages documentation
+- 📦 Workspace management
+
+---
+
+## July 2024
+
+### v1.1.0 - API Patterns
+
+**Released:** July 5, 2024
+
+#### New Features
+
+- 🔌 Data fetching patterns
+- 🔌 TanStack Query integration
+- 🔌 API client setup
+- 🔌 Error handling strategies
+
+---
+
+## June 2024
+
+### v1.0.0 - Initial Release 🚀
+
+**Released:** June 1, 2024
+
+#### Features
+
+- 📖 Getting Started guide
+- 📖 Code standards documentation
+- 📖 Project structure guide
+- 📖 Tech stack overview
+- 📖 Deployment guide
+
+---
+
+## Upcoming
+
+### Planned for Q1 2025
+
+- [ ] Arabic language support (i18n)
+- [ ] Video tutorials integration
+- [ ] Interactive quizzes
+- [ ] Certificate of completion
+- [ ] Community contributions section
+
+<Callout type="info">
+  Want to contribute? Check out our [contribution
+  guide](/docs/getting-started/first-contribution).
+</Callout>

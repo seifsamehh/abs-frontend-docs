@@ -1,0 +1,489 @@
+---
+title: API Reference
+description: Complete API documentation for custom hooks, utilities, and services
+keywords: ["api", "hooks", "utilities", "reference", "typescript"]
+difficulty: intermediate
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 📚 API Reference
+
+<Callout type="info">
+  Complete API documentation for our custom hooks, utilities, and services. All
+  APIs are fully typed with TypeScript.
+</Callout>
+
+## Hooks
+
+### useDebounce
+
+Debounces a value by the specified delay. Useful for search inputs and API calls.
+
+#### Signature
+
+```typescript
+function useDebounce<T>(value: T, delay: number): T;
+```
+
+#### Parameters
+
+| Parameter | Type     | Default  | Description           |
+| --------- | -------- | -------- | --------------------- |
+| `value`   | `T`      | required | The value to debounce |
+| `delay`   | `number` | required | Delay in milliseconds |
+
+#### Returns
+
+Returns the debounced value of type `T`.
+
+#### Example
+
+```tsx
+import { useDebounce } from "@/hooks/use-debounce";
+
+function SearchComponent() {
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
+
+  useEffect(() => {
+    // This will only run 300ms after the user stops typing
+    if (debouncedSearch) {
+      searchAPI(debouncedSearch);
+    }
+  }, [debouncedSearch]);
+
+  return (
+    <input
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      placeholder="Search..."
+    />
+  );
+}
+```
+
+---
+
+### useLocalStorage
+
+Persist state to localStorage with automatic serialization and SSR support.
+
+#### Signature
+
+```typescript
+function useLocalStorage<T>(
+  key: string,
+  initialValue: T
+): [T, (value: T | ((prev: T) => T)) => void];
+```
+
+#### Parameters
+
+| Parameter      | Type     | Default  | Description                        |
+| -------------- | -------- | -------- | ---------------------------------- |
+| `key`          | `string` | required | localStorage key                   |
+| `initialValue` | `T`      | required | Default value if key doesn't exist |
+
+#### Returns
+
+Returns a tuple `[value, setValue]` similar to `useState`.
+
+#### Example
+
+```tsx
+import { useLocalStorage } from "@/hooks/use-local-storage";
+
+function ThemeToggle() {
+  const [theme, setTheme] = useLocalStorage("theme", "light");
+
+  return (
+    <button onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}>
+      Current: {theme}
+    </button>
+  );
+}
+```
+
+---
+
+### useMediaQuery
+
+Subscribe to media query changes with SSR support.
+
+#### Signature
+
+```typescript
+function useMediaQuery(query: string): boolean;
+```
+
+#### Parameters
+
+| Parameter | Type     | Default  | Description            |
+| --------- | -------- | -------- | ---------------------- |
+| `query`   | `string` | required | CSS media query string |
+
+#### Returns
+
+Returns `true` if the media query matches, `false` otherwise.
+
+#### Example
+
+```tsx
+import { useMediaQuery } from "@/hooks/use-media-query";
+
+function ResponsiveComponent() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
+
+  return (
+    <div>
+      {isMobile ? <MobileNav /> : <DesktopNav />}
+      <p>Dark mode preferred: {prefersDark ? "Yes" : "No"}</p>
+    </div>
+  );
+}
+```
+
+---
+
+### useOnClickOutside
+
+Detect clicks outside of an element. Useful for dropdowns and modals.
+
+#### Signature
+
+```typescript
+function useOnClickOutside<T extends HTMLElement>(
+  ref: RefObject<T>,
+  handler: (event: MouseEvent | TouchEvent) => void
+): void;
+```
+
+#### Parameters
+
+| Parameter | Type           | Description                    |
+| --------- | -------------- | ------------------------------ |
+| `ref`     | `RefObject<T>` | Ref to the element to watch    |
+| `handler` | `Function`     | Callback when clicking outside |
+
+#### Example
+
+```tsx
+import { useOnClickOutside } from "@/hooks/use-on-click-outside";
+
+function Dropdown() {
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useOnClickOutside(ref, () => setIsOpen(false));
+
+  return (
+    <div ref={ref}>
+      <button onClick={() => setIsOpen(true)}>Open</button>
+      {isOpen && <div className="dropdown-content">...</div>}
+    </div>
+  );
+}
+```
+
+---
+
+### useCopyToClipboard
+
+Copy text to clipboard with success/error feedback.
+
+#### Signature
+
+```typescript
+function useCopyToClipboard(): {
+  copiedText: string | null;
+  copy: (text: string) => Promise<boolean>;
+};
+```
+
+#### Returns
+
+| Property     | Type             | Description                   |
+| ------------ | ---------------- | ----------------------------- |
+| `copiedText` | `string \| null` | Last successfully copied text |
+| `copy`       | `Function`       | Async function to copy text   |
+
+#### Example
+
+```tsx
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+
+function CopyButton({ text }: { text: string }) {
+  const { copiedText, copy } = useCopyToClipboard();
+  const hasCopied = copiedText === text;
+
+  return (
+    <button onClick={() => copy(text)}>
+      {hasCopied ? "✓ Copied!" : "Copy"}
+    </button>
+  );
+}
+```
+
+---
+
+## Utilities
+
+### cn (Class Names)
+
+Merge class names with Tailwind CSS conflict resolution.
+
+#### Signature
+
+```typescript
+function cn(...inputs: ClassValue[]): string;
+```
+
+#### Example
+
+```tsx
+import { cn } from "@/lib/utils";
+
+<button
+  className={cn(
+    "px-4 py-2 rounded",
+    isActive && "bg-primary text-white",
+    isDisabled && "opacity-50 cursor-not-allowed",
+    className
+  )}
+>
+  Click me
+</button>;
+```
+
+---
+
+### formatDate
+
+Format dates consistently across the application.
+
+#### Signature
+
+```typescript
+function formatDate(
+  date: Date | string | number,
+  options?: Intl.DateTimeFormatOptions
+): string;
+```
+
+#### Parameters
+
+| Parameter | Type                         | Default                   | Description        |
+| --------- | ---------------------------- | ------------------------- | ------------------ |
+| `date`    | `Date \| string \| number`   | required                  | Date to format     |
+| `options` | `Intl.DateTimeFormatOptions` | `{ dateStyle: 'medium' }` | Formatting options |
+
+#### Example
+
+```tsx
+import { formatDate } from "@/lib/utils";
+
+formatDate(new Date()); // "Dec 20, 2024"
+formatDate("2024-01-15", { dateStyle: "full" }); // "Monday, January 15, 2024"
+formatDate(Date.now(), { dateStyle: "short" }); // "12/20/24"
+```
+
+---
+
+### formatCurrency
+
+Format numbers as currency with locale support.
+
+#### Signature
+
+```typescript
+function formatCurrency(
+  amount: number,
+  currency?: string,
+  locale?: string
+): string;
+```
+
+#### Parameters
+
+| Parameter  | Type     | Default   | Description           |
+| ---------- | -------- | --------- | --------------------- |
+| `amount`   | `number` | required  | Amount to format      |
+| `currency` | `string` | `'SAR'`   | Currency code         |
+| `locale`   | `string` | `'ar-SA'` | Locale for formatting |
+
+#### Example
+
+```tsx
+import { formatCurrency } from "@/lib/utils";
+
+formatCurrency(1234.56); // "١٬٢٣٤٫٥٦ ر.س."
+formatCurrency(1234.56, "USD", "en-US"); // "$1,234.56"
+formatCurrency(1234.56, "EGP", "ar-EG"); // "١٬٢٣٤٫٥٦ ج.م."
+```
+
+---
+
+## Services
+
+### API Client
+
+Centralized API client with automatic error handling, token refresh, and request/response interceptors.
+
+#### Configuration
+
+```typescript
+import { apiClient } from "@/lib/api";
+
+// All methods return Promise<T>
+const users = await apiClient.get<User[]>("/users");
+const user = await apiClient.post<User>("/users", { name: "John" });
+const updated = await apiClient.put<User>("/users/1", { name: "Jane" });
+await apiClient.delete("/users/1");
+```
+
+#### Error Handling
+
+```typescript
+import { apiClient, ApiError } from "@/lib/api";
+
+try {
+  const data = await apiClient.get("/endpoint");
+} catch (error) {
+  if (error instanceof ApiError) {
+    console.log(error.status); // HTTP status code
+    console.log(error.message); // Error message
+    console.log(error.data); // Response body
+  }
+}
+```
+
+---
+
+## Type Definitions
+
+### Common Types
+
+```typescript
+// API Response wrapper
+interface ApiResponse<T> {
+  data: T;
+  message?: string;
+  meta?: {
+    total: number;
+    page: number;
+    pageSize: number;
+  };
+}
+
+// Pagination params
+interface PaginationParams {
+  page?: number;
+  pageSize?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
+
+// Base entity with audit fields
+interface BaseEntity {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  createdBy?: string;
+  updatedBy?: string;
+}
+
+// User type
+interface User extends BaseEntity {
+  email: string;
+  name: string;
+  role: "admin" | "user" | "guest";
+  avatar?: string;
+}
+```
+
+---
+
+## React Query Hooks
+
+### useUsers
+
+Fetch and manage users with caching and automatic refetching.
+
+```typescript
+import {
+  useUsers,
+  useUser,
+  useCreateUser,
+  useUpdateUser,
+  useDeleteUser,
+} from "@/features/users/hooks";
+
+// List users with pagination
+const { data, isLoading, error } = useUsers({ page: 1, pageSize: 10 });
+
+// Get single user
+const { data: user } = useUser(userId);
+
+// Mutations
+const createUser = useCreateUser();
+const updateUser = useUpdateUser();
+const deleteUser = useDeleteUser();
+
+// Usage
+await createUser.mutateAsync({ name: "John", email: "john@example.com" });
+await updateUser.mutateAsync({ id: "1", name: "Updated Name" });
+await deleteUser.mutateAsync("1");
+```
+
+<Callout type="warn">
+  All mutation hooks automatically invalidate relevant queries and show toast
+  notifications.
+</Callout>
+
+---
+
+## Zod Schemas
+
+### User Schema
+
+```typescript
+import { z } from "zod";
+
+export const userSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  role: z.enum(["admin", "user", "guest"]),
+  avatar: z.string().url().optional(),
+});
+
+export type UserInput = z.infer<typeof userSchema>;
+
+// Usage with React Hook Form
+const form = useForm<UserInput>({
+  resolver: zodResolver(userSchema),
+  defaultValues: {
+    name: "",
+    email: "",
+    role: "user",
+  },
+});
+```
+
+---
+
+<Cards>
+  <Card
+    title="View Full Source"
+    description="Browse the complete source code on GitHub"
+    href="https://github.com/ABS-Courier"
+  />
+  <Card
+    title="Contributing"
+    description="Learn how to contribute new utilities"
+    href="/docs/getting-started/first-contribution"
+  />
+</Cards>

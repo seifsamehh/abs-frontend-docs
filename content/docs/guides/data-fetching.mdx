@@ -1,0 +1,750 @@
+---
+title: Data Fetching & Server Actions
+description: Fetch, cache, and mutate data using TanStack Query v5 and Next.js Server Actions
+keywords:
+  [
+    "TanStack Query",
+    "data fetching",
+    "React Query",
+    "caching",
+    "server state",
+    "Server Actions",
+    "useActionState",
+  ]
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 📡 Data Fetching & Server Actions
+
+<Callout type="info">
+  Learn how to fetch, cache, and mutate data using **TanStack Query v5** for
+  client-side operations and **Next.js Server Actions** for server-side
+  mutations. Updated for React 19!
+</Callout>
+
+## 🛠️ Our Data Stack
+
+| Library               | Purpose                                  |
+| --------------------- | ---------------------------------------- |
+| **TanStack Query v5** | Client-side caching & server state       |
+| **Server Actions**    | Server-side mutations & form submissions |
+| **Native Fetch**      | Built-in HTTP client                     |
+| **Zod**               | Runtime response validation              |
+
+## ⚙️ Setup
+
+### 📦 Install Dependencies
+
+```bash
+npm install @tanstack/react-query zod
+```
+
+### 📋 Configure Query Client
+
+```tsx
+// src/lib/query-client.ts
+import { QueryClient } from "@tanstack/react-query";
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000, // 1 minute
+      gcTime: 5 * 60 * 1000, // 5 minutes (renamed from cacheTime in v5)
+      retry: 3,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+```
+
+### 🔌 Add Provider (React 19 Compatible)
+
+```tsx
+// src/app/providers.tsx
+"use client";
+
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { queryClient } from "@/lib/query-client";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
+```
+
+## ⚠️ TanStack Query v5 Changes
+
+<Callout type="warn">
+  TanStack Query v5 has breaking changes from v4. Key changes: - `cacheTime`
+  renamed to `gcTime` - `isLoading` replaced with `isPending` for initial load -
+  `isInitialLoading` removed (use `isPending && isFetching`) - `status:
+  'loading'` replaced with `status: 'pending'`
+</Callout>
+
+## 📥 Basic Data Fetching
+
+### 🎣 Creating a Query Hook
+
+```tsx
+// src/hooks/use-users.ts
+import { useQuery } from "@tanstack/react-query";
+import { z } from "zod";
+import { api } from "@/lib/api";
+
+// Define response schema
+const userSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+  role: z.enum(["admin", "user", "guest"]),
+});
+
+const usersResponseSchema = z.array(userSchema);
+
+export type User = z.infer<typeof userSchema>;
+
+// Query key factory (recommended pattern)
+export const userKeys = {
+  all: ["users"] as const,
+  lists: () => [...userKeys.all, "list"] as const,
+  list: (filters: string) => [...userKeys.lists(), filters] as const,
+  details: () => [...userKeys.all, "detail"] as const,
+  detail: (id: string) => [...userKeys.details(), id] as const,
+};
+
+// Fetch function
+async function fetchUsers(): Promise<User[]> {
+  const response = await api.get("/users");
+  return usersResponseSchema.parse(response.data);
+}
+
+// Custom hook
+export function useUsers() {
+  return useQuery({
+    queryKey: userKeys.lists(),
+    queryFn: fetchUsers,
+  });
+}
+```
+
+### 🎮 Using the Hook
+
+```tsx
+import { useUsers } from "@/hooks/use-users";
+
+export function UserList() {
+  const { data: users, isLoading, isError, error } = useUsers();
+
+  if (isLoading) {
+    return <UserListSkeleton />;
+  }
+
+  if (isError) {
+    return <ErrorState message={error.message} onRetry={() => refetch()} />;
+  }
+
+  if (!users?.length) {
+    return <EmptyState message="No users found" />;
+  }
+
+  return (
+    <ul className="space-y-2">
+      {users.map((user) => (
+        <UserCard key={user.id} user={user} />
+      ))}
+    </ul>
+  );
+}
+```
+
+## ✍️ Mutations (Creating/Updating Data)
+
+```tsx
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { userKeys } from "./use-users";
+
+interface CreateUserData {
+  name: string;
+  email: string;
+  role: "admin" | "user" | "guest";
+}
+
+async function createUser(data: CreateUserData): Promise<User> {
+  const response = await api.post("/users", data);
+  return userSchema.parse(response.data);
+}
+
+export function useCreateUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createUser,
+    onSuccess: (newUser) => {
+      // Invalidate and refetch users list
+      queryClient.invalidateQueries({ queryKey: userKeys.lists() });
+
+      // Or optimistically update the cache
+      queryClient.setQueryData<User[]>(userKeys.lists(), (old) =>
+        old ? [...old, newUser] : [newUser]
+      );
+    },
+    onError: (error) => {
+      console.error("Failed to create user:", error);
+    },
+  });
+}
+```
+
+### 📝 Using Mutations
+
+```tsx
+import { useCreateUser } from "@/hooks/use-create-user";
+
+export function CreateUserForm() {
+  const createUser = useCreateUser();
+
+  async function onSubmit(data: CreateUserData) {
+    try {
+      await createUser.mutateAsync(data);
+      toast.success("User created successfully");
+    } catch (error) {
+      toast.error("Failed to create user");
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      {/* Form fields */}
+      <Button disabled={createUser.isPending}>
+        {createUser.isPending ? "Creating..." : "Create User"}
+      </Button>
+    </form>
+  );
+}
+```
+
+## ⚡ Server Actions (Next.js)
+
+<Callout type="info">
+  Server Actions are async functions that run on the server. Use them for form
+  submissions, database operations, and mutations that don't need client-side
+  caching.
+</Callout>
+
+### 🤔 When to Use What?
+
+| Use Case                                      | Solution                          |
+| --------------------------------------------- | --------------------------------- |
+| **Fetching & caching data**                   | TanStack Query                    |
+| **Complex mutations with optimistic updates** | TanStack Query mutations          |
+| **Simple form submissions**                   | Server Actions                    |
+| **Database operations**                       | Server Actions                    |
+| **File uploads**                              | Server Actions                    |
+| **Actions needing revalidation**              | Server Actions + `revalidatePath` |
+
+### 📝 Basic Server Action
+
+```tsx
+// app/actions/user-actions.ts
+"use server";
+
+import { z } from "zod";
+import { revalidatePath } from "next/cache";
+
+const createUserSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+});
+
+export async function createUser(formData: FormData) {
+  const rawData = {
+    name: formData.get("name"),
+    email: formData.get("email"),
+  };
+
+  // Validate input
+  const result = createUserSchema.safeParse(rawData);
+  if (!result.success) {
+    return { error: result.error.flatten().fieldErrors };
+  }
+
+  // Perform database operation
+  const user = await db.user.create({
+    data: result.data,
+  });
+
+  // Revalidate the users list page
+  revalidatePath("/users");
+
+  return { success: true, user };
+}
+```
+
+### 🎮 Using with useActionState (React 19)
+
+```tsx
+"use client";
+
+import { useActionState } from "react";
+import { createUser } from "@/app/actions/user-actions";
+
+const initialState = {
+  error: null,
+  success: false,
+};
+
+export function CreateUserForm() {
+  const [state, formAction, isPending] = useActionState(
+    createUser,
+    initialState
+  );
+
+  return (
+    <form action={formAction} className="space-y-4">
+      <div>
+        <label htmlFor="name">Name</label>
+        <input
+          id="name"
+          name="name"
+          required
+          className="w-full rounded border p-2"
+        />
+        {state.error?.name && (
+          <p className="text-sm text-red-500">{state.error.name}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          className="w-full rounded border p-2"
+        />
+        {state.error?.email && (
+          <p className="text-sm text-red-500">{state.error.email}</p>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        disabled={isPending}
+        className="rounded bg-blue-500 px-4 py-2 text-white disabled:opacity-50"
+      >
+        {isPending ? "Creating..." : "Create User"}
+      </button>
+
+      {state.success && (
+        <p className="text-green-500">User created successfully!</p>
+      )}
+    </form>
+  );
+}
+```
+
+### 🔄 Using useFormStatus for Submit Button
+
+```tsx
+"use client";
+
+import { useFormStatus } from "react-dom";
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="rounded bg-blue-500 px-4 py-2 text-white disabled:opacity-50"
+    >
+      {pending ? "Submitting..." : "Submit"}
+    </button>
+  );
+}
+
+// Usage in form
+export function MyForm() {
+  return (
+    <form action={myServerAction}>
+      {/* form fields */}
+      <SubmitButton />
+    </form>
+  );
+}
+```
+
+### 🔒 Server Action with Authentication
+
+```tsx
+// app/actions/protected-actions.ts
+"use server";
+
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
+export async function updateProfile(formData: FormData) {
+  const session = await auth();
+
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  const name = formData.get("name") as string;
+
+  await db.user.update({
+    where: { id: session.user.id },
+    data: { name },
+  });
+
+  revalidatePath("/profile");
+  return { success: true };
+}
+```
+
+### ⚠️ Error Handling Pattern
+
+```tsx
+// app/actions/safe-action.ts
+"use server";
+
+import { z } from "zod";
+
+type ActionState<T> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+  fieldErrors?: Record<string, string[]>;
+};
+
+export async function safeAction<T>(
+  schema: z.ZodSchema,
+  formData: FormData,
+  action: (data: z.infer<typeof schema>) => Promise<T>
+): Promise<ActionState<T>> {
+  const rawData = Object.fromEntries(formData);
+  const result = schema.safeParse(rawData);
+
+  if (!result.success) {
+    return {
+      success: false,
+      fieldErrors: result.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    const data = await action(result.data);
+    return { success: true, data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Something went wrong",
+    };
+  }
+}
+```
+
+## 🚀 Advanced Patterns
+
+### 📄 Pagination
+
+```tsx
+import { useInfiniteQuery } from "@tanstack/react-query";
+
+interface PaginatedResponse<T> {
+  data: T[];
+  nextCursor: string | null;
+  hasMore: boolean;
+}
+
+export function useInfiniteUsers() {
+  return useInfiniteQuery({
+    queryKey: userKeys.lists(),
+    queryFn: async ({ pageParam = null }) => {
+      const response = await api.get<PaginatedResponse<User>>("/users", {
+        params: { cursor: pageParam, limit: 20 },
+      });
+      return response.data;
+    },
+    getNextPageParam: (lastPage) =>
+      lastPage.hasMore ? lastPage.nextCursor : undefined,
+    initialPageParam: null,
+  });
+}
+
+// Usage
+function UserList() {
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteUsers();
+
+  const users = data?.pages.flatMap((page) => page.data) ?? [];
+
+  return (
+    <>
+      <ul>
+        {users.map((user) => (
+          <UserCard key={user.id} user={user} />
+        ))}
+      </ul>
+      {hasNextPage && (
+        <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+          {isFetchingNextPage ? "Loading..." : "Load More"}
+        </Button>
+      )}
+    </>
+  );
+}
+```
+
+### Optimistic Updates
+
+```tsx
+export function useUpdateUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateUser,
+    onMutate: async (updatedUser) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({
+        queryKey: userKeys.detail(updatedUser.id),
+      });
+
+      // Snapshot previous value
+      const previousUser = queryClient.getQueryData<User>(
+        userKeys.detail(updatedUser.id)
+      );
+
+      // Optimistically update
+      queryClient.setQueryData<User>(
+        userKeys.detail(updatedUser.id),
+        (old) => ({ ...old, ...updatedUser })
+      );
+
+      return { previousUser };
+    },
+    onError: (err, updatedUser, context) => {
+      // Rollback on error
+      if (context?.previousUser) {
+        queryClient.setQueryData(
+          userKeys.detail(updatedUser.id),
+          context.previousUser
+        );
+      }
+    },
+    onSettled: (data, error, variables) => {
+      // Refetch to ensure consistency
+      queryClient.invalidateQueries({
+        queryKey: userKeys.detail(variables.id),
+      });
+    },
+  });
+}
+```
+
+### Parallel Queries
+
+```tsx
+import { useQueries } from "@tanstack/react-query";
+
+function Dashboard() {
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ["users"],
+        queryFn: fetchUsers,
+      },
+      {
+        queryKey: ["orders"],
+        queryFn: fetchOrders,
+      },
+      {
+        queryKey: ["analytics"],
+        queryFn: fetchAnalytics,
+      },
+    ],
+  });
+
+  const isLoading = results.some((r) => r.isLoading);
+  const [users, orders, analytics] = results.map((r) => r.data);
+
+  if (isLoading) return <DashboardSkeleton />;
+
+  return (
+    <div>
+      <UserStats users={users} />
+      <OrdersSummary orders={orders} />
+      <AnalyticsChart data={analytics} />
+    </div>
+  );
+}
+```
+
+## ⚠️ Error Handling
+
+### Global Error Handler
+
+```tsx
+// src/lib/api.ts
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+class ApiError extends Error {
+  constructor(public status: number, message: string) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
+async function handleResponse<T>(response: Response): Promise<T> {
+  if (!response.ok) {
+    if (response.status === 401) {
+      // Handle unauthorized - redirect to login
+      window.location.href = "/login";
+    }
+
+    if (response.status === 403) {
+      // Handle forbidden
+      toast.error("You don't have permission to perform this action");
+    }
+
+    if (response.status >= 500) {
+      // Handle server errors
+      toast.error("Something went wrong. Please try again later.");
+    }
+
+    throw new ApiError(response.status, response.statusText);
+  }
+
+  return response.json();
+}
+
+export const api = {
+  async get<T>(endpoint: string, options?: RequestInit): Promise<T> {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      ...options,
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
+    });
+    return handleResponse<T>(response);
+  },
+
+  async post<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: RequestInit
+  ): Promise<T> {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      ...options,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
+      body: data ? JSON.stringify(data) : undefined,
+    });
+    return handleResponse<T>(response);
+  },
+
+  async patch<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: RequestInit
+  ): Promise<T> {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      ...options,
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
+      body: data ? JSON.stringify(data) : undefined,
+    });
+    return handleResponse<T>(response);
+  },
+
+  async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      ...options,
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
+    });
+    return handleResponse<T>(response);
+  },
+};
+```
+
+### Query Error Boundary
+
+```tsx
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import { ErrorBoundary } from "react-error-boundary";
+
+function App() {
+  return (
+    <QueryErrorResetBoundary>
+      {({ reset }) => (
+        <ErrorBoundary
+          onReset={reset}
+          fallbackRender={({ error, resetErrorBoundary }) => (
+            <ErrorFallback error={error} onRetry={resetErrorBoundary} />
+          )}
+        >
+          <MyComponent />
+        </ErrorBoundary>
+      )}
+    </QueryErrorResetBoundary>
+  );
+}
+```
+
+## ⭐ Best Practices
+
+<Cards>
+  <Card
+    title="✅ Use Query Keys Factory"
+    description="Create consistent, type-safe query keys for TanStack Query"
+  />
+  <Card
+    title="✅ Validate All Data"
+    description="Use Zod for both API responses and Server Action inputs"
+  />
+  <Card
+    title="✅ Handle All States"
+    description="Always handle loading, error, and empty states"
+  />
+  <Card
+    title="✅ Use Server Actions for Forms"
+    description="Prefer Server Actions for form submissions with progressive enhancement"
+  />
+  <Card
+    title="✅ Revalidate After Mutations"
+    description="Use revalidatePath/revalidateTag after Server Actions"
+  />
+  <Card
+    title="✅ Prefetch Data"
+    description="Prefetch on hover for instant navigation"
+  />
+</Cards>
+
+## 👉 Next Steps
+
+- 📝 [Forms Guide](/docs/guides/forms) - Build validated forms
+- 🔐 [Authentication](/docs/guides/authentication) - Handle auth state
+- 🏠 [State Management](/docs/guides/state-management) - Client state patterns
+- 🧪 [Testing Guide](/docs/guides/testing) - Test your data fetching

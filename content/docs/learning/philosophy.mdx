@@ -1,0 +1,234 @@
+---
+title: Development Philosophy
+description: Core principles and values guiding our frontend development approach
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+
+# 💡 Development Philosophy
+
+<Callout type="info">
+  Our development philosophy shapes every decision we make. Understanding these
+  principles helps you write code that fits naturally into our codebase.
+</Callout>
+
+## Core Principles
+
+### 1. User Experience First
+
+Everything we build serves the user. Before writing code, ask:
+
+- Does this improve the user's experience?
+- Is this intuitive and accessible?
+- How fast will this feel to users?
+
+### 2. Simplicity Over Cleverness
+
+<Cards>
+  <Card
+    title="✅ Clear Code"
+    description="Code that anyone on the team can understand immediately"
+  />
+  <Card
+    title="❌ Clever Code"
+    description="Complex patterns that require explanation"
+  />
+</Cards>
+
+```tsx
+// ❌ Clever but unclear
+const r = d
+  .filter((x) => x.a && !x.b)
+  .map((x) => ({ ...x, c: x.a + 1 }))
+  .reduce((p, c) => ({ ...p, [c.id]: c }), {});
+
+// ✅ Clear and maintainable
+const activeItems = data.filter((item) => item.isActive && !item.isDeleted);
+const enrichedItems = activeItems.map((item) => ({
+  ...item,
+  priority: item.importance + 1,
+}));
+const itemsById = enrichedItems.reduce((acc, item) => {
+  acc[item.id] = item;
+  return acc;
+}, {});
+```
+
+### 3. Composition Over Inheritance
+
+Build complex functionality by combining simple, focused pieces:
+
+```tsx
+// ✅ Composition - flexible and testable
+function UserProfile({ user }) {
+  return (
+    <Card>
+      <UserAvatar user={user} />
+      <UserInfo user={user} />
+      <UserActions user={user} />
+    </Card>
+  );
+}
+
+// ❌ Inheritance - rigid and hard to modify
+class UserProfile extends BaseProfile {
+  // Complex inheritance hierarchy
+}
+```
+
+### 4. Convention Over Configuration
+
+Follow established patterns so the codebase is predictable:
+
+- File naming follows consistent conventions
+- Components follow the same structure
+- API calls use the same patterns
+- Tests follow the same organization
+
+### 5. Progressive Enhancement
+
+Start with the basics, then enhance:
+
+1. Make it work (functionality)
+2. Make it right (clean code)
+3. Make it fast (performance)
+4. Make it beautiful (polish)
+
+## Code Quality Values
+
+### Readability
+
+Code is read far more than it's written. Optimize for reading:
+
+```tsx
+// ✅ Self-documenting code
+function calculateShippingCost(
+  packageWeight: number,
+  destination: ShippingZone,
+  isExpedited: boolean
+): number {
+  const baseRate = SHIPPING_RATES[destination];
+  const weightMultiplier = Math.ceil(packageWeight / WEIGHT_UNIT);
+  const expeditedSurcharge = isExpedited ? EXPEDITED_FEE : 0;
+
+  return baseRate * weightMultiplier + expeditedSurcharge;
+}
+
+// ❌ Cryptic code
+function calc(w, d, e) {
+  return R[d] * Math.ceil(w / U) + (e ? F : 0);
+}
+```
+
+### Maintainability
+
+Write code your future self will thank you for:
+
+- Small, focused functions
+- Clear naming
+- Minimal dependencies
+- Good test coverage
+
+### Testability
+
+If it's hard to test, it's probably hard to maintain:
+
+- Pure functions where possible
+- Dependency injection
+- Clear boundaries between modules
+- Mocking-friendly architecture
+
+## Collaboration Values
+
+### Document Decisions
+
+When you make a non-obvious choice, document why:
+
+```tsx
+// We use optimistic updates here because the server
+// response is typically fast (<100ms) and the UX feels
+// more responsive. If the update fails, we roll back
+// and show an error toast.
+const updateUser = useMutation({
+  onMutate: async (newData) => {
+    // Optimistic update logic
+  },
+});
+```
+
+### Code Reviews as Learning
+
+Code reviews are opportunities to:
+
+- Share knowledge
+- Catch issues early
+- Maintain consistency
+- Learn from each other
+
+### Ask Questions
+
+There are no stupid questions. If something is unclear:
+
+- Ask on Slack
+- Request clarification in code review
+- Update documentation for others
+
+## Technical Decision Making
+
+### When to Build vs. Use Libraries
+
+Build when:
+
+- The solution is specific to our business logic
+- Available libraries are overly complex for our needs
+- We need full control over the implementation
+
+Use libraries when:
+
+- The problem is well-solved by existing solutions
+- The library is well-maintained and documented
+- It saves significant development time
+
+### When to Refactor
+
+Refactor when:
+
+- You're touching the code anyway (Boy Scout Rule)
+- Tests cover the existing functionality
+- The improvement is clear and measurable
+
+Don't refactor when:
+
+- There's no test coverage
+- You're on a tight deadline
+- The code works and isn't blocking anything
+
+### When to Optimize
+
+Measure first, then optimize:
+
+1. Profile to identify actual bottlenecks
+2. Optimize the measured bottleneck
+3. Verify the improvement with measurements
+
+```tsx
+// ❌ Premature optimization
+const memoizedValue = useMemo(() => simpleCalculation(a, b), [a, b]);
+
+// ✅ Measured optimization
+const expensiveResult = useMemo(() => {
+  // This calculation takes 100ms+ as measured by profiling
+  return processLargeDataset(data, filters);
+}, [data, filters]);
+```
+
+## Quotes to Remember
+
+> "Any fool can write code that a computer can understand. Good programmers write code that humans can understand." - Martin Fowler
+
+> "Simplicity is the ultimate sophistication." - Leonardo da Vinci
+
+> "Make it work, make it right, make it fast." - Kent Beck
+
+> "The best code is no code at all." - Jeff Atwood

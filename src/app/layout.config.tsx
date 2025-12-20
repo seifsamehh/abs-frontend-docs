@@ -1,4 +1,5 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
+import Image from "next/image";
 
 /**
  * Shared layout configurations
@@ -9,7 +10,25 @@ import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
  */
 export const baseOptions: BaseLayoutProps = {
   nav: {
-    title: "Frontend Development Guide",
+    title: (
+      <div className="flex items-center gap-2.5">
+        <Image
+          src="/logo-light.svg"
+          alt="ABS Logo"
+          width={32}
+          height={32}
+          className="dark:hidden shrink-0"
+        />
+        <Image
+          src="/logo-dark.svg"
+          alt="ABS Logo"
+          width={32}
+          height={32}
+          className="hidden dark:block shrink-0"
+        />
+        <span className="font-semibold">Frontend Guide</span>
+      </div>
+    ),
     url: "/",
   },
   // see https://fumadocs.dev/docs/ui/navigation/links

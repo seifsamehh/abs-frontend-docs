@@ -1,0 +1,23 @@
+{
+  "title": "Reference",
+  "icon": "FileText",
+  "pages": [
+    "index",
+    "---Standards---",
+    "code-standards",
+    "architecture",
+    "monorepo",
+    "---Components---",
+    "component-library",
+    "component-showcase",
+    "---API---",
+    "api-reference",
+    "---Resources---",
+    "tech-stack",
+    "changelog",
+    "---Policies---",
+    "security",
+    "---Decisions---",
+    "decisions"
+  ]
+}

@@ -8,19 +8,997 @@
 @source "../../mdx-components.tsx";
 @source "../../node_modules/fumadocs-ui/dist/**/*.js";
 
-/* Custom Orange Theme */
-:root {
-  --primary: 32 97% 46%;
-  --primary-foreground: 0 0% 100%;
-  --ring: 32 97% 46%;
-  --accent: 32 97% 46%;
-  --accent-foreground: 0 0% 100%;
+/* ===== ABS BRAND THEME - Orange #EA8303 ===== */
+
+/* Fumadocs Theme Variables (Tailwind CSS v4) */
+@theme {
+  /* Layout Configuration - Wider layout for better readability */
+  --fd-layout-width: 95rem;
+  --fd-sidebar-width: 17rem;
+  --fd-toc-width: 17rem;
+
+  /* Light Mode - Fumadocs Variables */
+  --color-fd-background: hsl(0, 0%, 100%);
+  --color-fd-foreground: hsl(240, 4%, 18%);
+  --color-fd-muted: hsl(60, 4.8%, 95.9%);
+  --color-fd-muted-foreground: hsl(25, 5.3%, 44.7%);
+  --color-fd-popover: hsl(0, 0%, 100%);
+  --color-fd-popover-foreground: hsl(240, 4%, 18%);
+  --color-fd-card: hsl(0, 0%, 100%);
+  --color-fd-card-foreground: hsl(240, 4%, 18%);
+  --color-fd-border: hsla(20, 5.9%, 90%, 80%);
+  --color-fd-primary: hsl(33, 97%, 46%);
+  --color-fd-primary-foreground: hsl(60, 9.1%, 97.8%);
+  --color-fd-secondary: hsl(60, 4.8%, 95.9%);
+  --color-fd-secondary-foreground: hsl(24, 9.8%, 10%);
+  --color-fd-accent: hsl(33, 100%, 97%);
+  --color-fd-accent-foreground: hsl(24, 9.8%, 10%);
+  --color-fd-ring: hsl(33, 97%, 46%);
 }
 
 .dark {
-  --primary: 32 97% 46%;
+  --color-fd-background: hsl(0, 0%, 9%);
+  --color-fd-foreground: hsl(60, 9.1%, 97.8%);
+  --color-fd-muted: hsl(0, 0%, 14%);
+  --color-fd-muted-foreground: hsla(24, 5.4%, 63.9%, 0.9);
+  --color-fd-popover: hsl(0, 0%, 12%);
+  --color-fd-popover-foreground: hsl(60, 9.1%, 97.8%);
+  --color-fd-card: hsl(0, 0%, 12%);
+  --color-fd-card-foreground: hsl(60, 9.1%, 97.8%);
+  --color-fd-border: hsla(0, 0%, 100%, 10%);
+  --color-fd-primary: hsl(33, 97%, 50%);
+  --color-fd-primary-foreground: hsl(0, 0%, 100%);
+  --color-fd-secondary: hsl(0, 0%, 14%);
+  --color-fd-secondary-foreground: hsl(60, 9.1%, 97.8%);
+  --color-fd-accent: hsl(33, 50%, 15%);
+  --color-fd-accent-foreground: hsl(33, 97%, 70%);
+  --color-fd-ring: hsl(33, 97%, 50%);
+}
+
+/* CSS Variables for Components (Shadcn-compatible) */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 240 4% 18%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 4% 18%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 4% 18%;
+  --primary: 33 97% 46%;
+  --primary-foreground: 60 9.1% 97.8%;
+  --secondary: 24 9.8% 10%;
+  --secondary-foreground: 60 4.8% 95.9%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --accent: 33 100% 97%;
+  --accent-foreground: 24 9.8% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --ring: 33 97% 46%;
+  --radius: 0.625rem;
+
+  /* Chart Colors */
+  --chart-1: 33 97% 46%;
+  --chart-2: 173 58% 39%;
+  --chart-3: 197 37% 24%;
+  --chart-4: 43 74% 66%;
+  --chart-5: 27 87% 67%;
+
+  /* Sidebar Variables - Light Mode */
+  --sidebar-background: 0 0% 99%;
+  --sidebar-foreground: 240 4% 18%;
+  --sidebar-primary: 33 97% 46%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 33 100% 97%;
+  --sidebar-accent-foreground: 240 4% 18%;
+  --sidebar-border: 20 5.9% 92%;
+  --sidebar-ring: 33 97% 46%;
+
+  /* Logistics Status Colors - Light Mode */
+  --status-pending: 45 93% 47%;
+  --status-pending-foreground: 26 83% 14%;
+  --status-in-transit: 217 91% 60%;
+  --status-in-transit-foreground: 222 47% 11%;
+  --status-delivered: 142 71% 45%;
+  --status-delivered-foreground: 138 76% 97%;
+  --status-failed: 0 84% 60%;
+  --status-failed-foreground: 0 86% 97%;
+  --status-cancelled: 215 14% 34%;
+  --status-cancelled-foreground: 210 20% 98%;
+}
+
+.dark {
+  --background: 0 0% 9%;
+  --foreground: 60 9.1% 97.8%;
+  --card: 0 0% 12%;
+  --card-foreground: 60 9.1% 97.8%;
+  --popover: 0 0% 12%;
+  --popover-foreground: 60 9.1% 97.8%;
+  --primary: 33 97% 50%;
   --primary-foreground: 0 0% 100%;
-  --ring: 32 97% 46%;
-  --accent: 32 97% 46%;
-  --accent-foreground: 0 0% 100%;
+  --secondary: 0 0% 14%;
+  --secondary-foreground: 60 9.1% 97.8%;
+  --muted: 0 0% 14%;
+  --muted-foreground: 24 5.4% 63.9%;
+  --accent: 33 50% 15%;
+  --accent-foreground: 33 97% 70%;
+  --destructive: 0 72.2% 50.6%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --border: 0 0% 18%;
+  --input: 0 0% 14%;
+  --ring: 33 97% 50%;
+
+  /* Chart Colors - Dark Mode */
+  --chart-1: 33 97% 55%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+
+  /* Sidebar Variables - Dark Mode */
+  --sidebar-background: 0 0% 10%;
+  --sidebar-foreground: 60 9.1% 97.8%;
+  --sidebar-primary: 33 97% 55%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 33 50% 15%;
+  --sidebar-accent-foreground: 33 97% 80%;
+  --sidebar-border: 0 0% 16%;
+  --sidebar-ring: 33 97% 55%;
+
+  /* Logistics Status Colors - Dark Mode */
+  --status-pending: 48 96% 53%;
+  --status-pending-foreground: 48 96% 89%;
+  --status-in-transit: 217 91% 65%;
+  --status-in-transit-foreground: 217 91% 95%;
+  --status-delivered: 142 76% 36%;
+  --status-delivered-foreground: 142 76% 96%;
+  --status-failed: 0 84% 60%;
+  --status-failed-foreground: 0 86% 97%;
+  --status-cancelled: 215 14% 46%;
+  --status-cancelled-foreground: 210 20% 98%;
+}
+
+/* ===== ENHANCED TYPOGRAPHY ===== */
+body {
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ===== PROSE ENHANCEMENTS ===== */
+.prose {
+  --tw-prose-links: hsl(var(--primary));
+  --tw-prose-counters: hsl(var(--muted-foreground));
+  --tw-prose-bullets: hsl(var(--muted-foreground));
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  scroll-margin-top: 5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.prose h2 {
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid hsl(var(--border));
+  margin-top: 2.5rem;
+}
+
+.prose a {
+  text-decoration-color: hsl(var(--primary) / 0.4);
+  text-underline-offset: 3px;
+  transition: all 150ms ease;
+}
+
+.prose a:hover {
+  text-decoration-color: hsl(var(--primary));
+}
+
+/* ===== CODE BLOCK TABS FIX ===== */
+/* Remove duplicate border on tabs list inside code blocks */
+figure.shiki [role="tablist"],
+[data-rehype-pretty-code-figure] [role="tablist"] {
+  border-bottom: none;
+}
+
+/* ===== BRAND GRADIENT TEXT ===== */
+.gradient-text {
+  background-image: linear-gradient(
+    135deg,
+    #ea8303 0%,
+    #f59e0b 50%,
+    #ea8303 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-size: 200% auto;
+}
+
+.dark .gradient-text {
+  background-image: linear-gradient(
+    135deg,
+    #fbbf24 0%,
+    #ea8303 50%,
+    #fbbf24 100%
+  );
+}
+
+/* ===== DOCUMENTATION CARDS ===== */
+.fd-card,
+[class*="fumadocs-card"] {
+  transition: all 200ms ease;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.625rem;
+}
+
+.fd-card:hover,
+[class*="fumadocs-card"]:hover {
+  border-color: hsl(var(--primary) / 0.5);
+  box-shadow: 0 0 0 1px hsl(var(--primary) / 0.1),
+    0 4px 12px hsl(var(--primary) / 0.08);
+  transform: translateY(-1px);
+}
+
+.dark .fd-card,
+.dark [class*="fumadocs-card"] {
+  background-color: hsl(var(--card));
+}
+
+.dark .fd-card:hover,
+.dark [class*="fumadocs-card"]:hover {
+  border-color: hsl(var(--primary) / 0.4);
+  box-shadow: 0 0 0 1px hsl(var(--primary) / 0.15),
+    0 4px 16px hsl(0 0% 0% / 0.3);
+}
+
+/* ===== CALLOUT ENHANCEMENTS ===== */
+[data-callout] {
+  border-radius: 0.625rem;
+  border-left-width: 3px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+
+[data-callout] p {
+  margin: 0;
+}
+
+[data-callout="info"] {
+  border-left-color: #3b82f6;
+  background-color: hsl(217 91% 60% / 0.08);
+}
+
+.dark [data-callout="info"] {
+  background-color: hsl(217 91% 60% / 0.12);
+}
+
+[data-callout="warn"],
+[data-callout="warning"] {
+  border-left-color: hsl(var(--primary));
+  background-color: hsl(var(--primary) / 0.08);
+}
+
+.dark [data-callout="warn"],
+.dark [data-callout="warning"] {
+  background-color: hsl(var(--primary) / 0.12);
+}
+
+[data-callout="error"],
+[data-callout="danger"] {
+  border-left-color: #ef4444;
+  background-color: hsl(0 84% 60% / 0.08);
+}
+
+.dark [data-callout="error"],
+.dark [data-callout="danger"] {
+  background-color: hsl(0 84% 60% / 0.12);
+}
+
+[data-callout="tip"],
+[data-callout="success"] {
+  border-left-color: #22c55e;
+  background-color: hsl(142 71% 45% / 0.08);
+}
+
+.dark [data-callout="tip"],
+.dark [data-callout="success"] {
+  background-color: hsl(142 71% 45% / 0.12);
+}
+
+/* ===== SMOOTH SCROLL ===== */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+/* ===== SELECTION COLOR ===== */
+::selection {
+  background-color: hsl(var(--primary) / 0.25);
+  color: hsl(var(--foreground));
+}
+
+/* ===== FOCUS STYLES ===== */
+:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* ===== CUSTOM SCROLLBAR ===== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted) / 0.5);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+}
+
+/* ===== BADGES ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: all 150ms ease;
+}
+
+.badge-primary {
+  background-color: hsl(var(--primary) / 0.12);
+  color: hsl(var(--primary));
+  border: 1px solid hsl(var(--primary) / 0.2);
+}
+
+.badge-secondary {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  border: 1px solid hsl(var(--border));
+}
+
+.badge-success {
+  background-color: hsl(142 71% 45% / 0.12);
+  color: #16a34a;
+  border: 1px solid hsl(142 71% 45% / 0.2);
+}
+
+.dark .badge-success {
+  background-color: hsl(142 71% 45% / 0.15);
+  color: #4ade80;
+}
+
+.badge-warning {
+  background-color: hsl(var(--primary) / 0.12);
+  color: hsl(var(--primary));
+  border: 1px solid hsl(var(--primary) / 0.2);
+}
+
+.dark .badge-warning {
+  background-color: hsl(var(--primary) / 0.15);
+  color: hsl(33 97% 70%);
+}
+
+.badge-danger {
+  background-color: hsl(0 84% 60% / 0.12);
+  color: #dc2626;
+  border: 1px solid hsl(0 84% 60% / 0.2);
+}
+
+.dark .badge-danger {
+  background-color: hsl(0 84% 60% / 0.15);
+  color: #f87171;
+}
+
+/* ===== HERO GRADIENT BACKGROUNDS ===== */
+.hero-gradient {
+  background: radial-gradient(
+      ellipse 60% 50% at 50% -10%,
+      hsl(var(--primary) / 0.12),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 80% 60% at 80% 0%,
+      hsl(33 100% 60% / 0.08),
+      transparent 50%
+    );
+}
+
+.dark .hero-gradient {
+  background: radial-gradient(
+      ellipse 60% 50% at 50% -10%,
+      hsl(var(--primary) / 0.15),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 80% 60% at 80% 0%,
+      hsl(33 100% 50% / 0.1),
+      transparent 50%
+    );
+}
+
+/* ===== NAVIGATION ENHANCEMENTS ===== */
+/* Active navigation item */
+nav a[aria-current="page"],
+nav a[data-active="true"] {
+  color: hsl(var(--primary)) !important;
+  font-weight: 500;
+}
+
+/* Sidebar navigation hover */
+aside a:hover {
+  color: hsl(var(--primary));
+}
+
+/* TOC active indicator */
+[data-toc-item][data-active="true"] {
+  color: hsl(var(--primary));
+  border-left-color: hsl(var(--primary));
+}
+
+/* ===== FUMADOCS CARD SPACING FIX ===== */
+
+/* Cards container spacing - override fumadocs default gap-3 */
+.prose .grid.grid-cols-2,
+[class*="Cards"],
+.fd-cards {
+  gap: 1.5rem !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Add space between consecutive Cards components */
+.prose .grid.grid-cols-2 + .grid.grid-cols-2,
+[class*="Cards"] + [class*="Cards"],
+.fd-cards + .fd-cards {
+  margin-top: 1.5rem !important;
+}
+
+/* Individual card styling */
+[class*="Cards"] > *,
+.fd-cards > *,
+.prose .grid.grid-cols-2 > a {
+  padding: 1.25rem !important;
+  border-radius: 0.625rem;
+}
+
+/* ===== ANIMATED UNDERLINE ===== */
+.animated-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.animated-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(33 100% 60%));
+  border-radius: 1px;
+  transition: width 200ms ease;
+}
+
+.animated-underline:hover::after {
+  width: 100%;
+}
+
+/* ===== TABLE ENHANCEMENTS ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+}
+
+table {
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.625rem;
+  overflow: hidden;
+}
+
+th {
+  background-color: hsl(var(--muted));
+  padding: 0.875rem 1rem;
+  text-align: left;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+td {
+  border-top: 1px solid hsl(var(--border));
+  padding: 0.875rem 1rem;
+  color: hsl(var(--foreground));
+}
+
+tbody tr {
+  transition: background-color 150ms ease;
+}
+
+tbody tr:hover {
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+/* ===== FEATURE GRID ===== */
+.feature-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .feature-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.feature-card {
+  position: relative;
+  border-radius: 0.625rem;
+  border: 1px solid hsl(var(--border));
+  background-color: hsl(var(--card));
+  padding: 1.5rem;
+  transition: all 200ms ease;
+}
+
+.feature-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 0.625rem;
+  opacity: 0;
+  background: linear-gradient(135deg, hsl(var(--primary) / 0.05), transparent);
+  transition: opacity 200ms ease;
+}
+
+.feature-card:hover {
+  border-color: hsl(var(--primary) / 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px hsl(var(--primary) / 0.08);
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+/* ===== QUICK LINKS ===== */
+.quick-link {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  border-radius: 0.625rem;
+  border: 1px solid hsl(var(--border));
+  padding: 1rem 1.25rem;
+  background-color: hsl(var(--card));
+  transition: all 200ms ease;
+}
+
+.quick-link:hover {
+  border-color: hsl(var(--primary) / 0.4);
+  background-color: hsl(var(--primary) / 0.04);
+  transform: translateX(4px);
+}
+
+.quick-link:hover svg,
+.quick-link:hover .quick-link-icon {
+  color: hsl(var(--primary));
+}
+
+/* ===== MERMAID DIAGRAM STYLING ===== */
+.mermaid {
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+  border-radius: 0.625rem;
+  background-color: hsl(var(--muted) / 0.5);
+  padding: 2rem;
+  border: 1px solid hsl(var(--border));
+}
+
+/* ===== KEYBOARD SHORTCUTS ===== */
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  border: 1px solid hsl(var(--border));
+  background: linear-gradient(180deg, hsl(var(--card)), hsl(var(--muted)));
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
+  box-shadow: 0 1px 2px hsl(var(--foreground) / 0.05);
+}
+
+.dark kbd {
+  background: linear-gradient(180deg, hsl(var(--muted)), hsl(0 0% 10%));
+}
+
+/* ===== SEARCH ENHANCEMENTS ===== */
+[data-search-dialog] {
+  border-radius: 0.75rem !important;
+  border: 1px solid hsl(var(--border)) !important;
+  box-shadow: 0 24px 48px hsl(var(--foreground) / 0.15) !important;
+}
+
+[data-search-dialog] input {
+  border-radius: 0.5rem;
+}
+
+/* ===== BUTTON ENHANCEMENTS ===== */
+.btn-primary {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 150ms ease;
+  box-shadow: 0 1px 2px hsl(var(--primary) / 0.2);
+}
+
+.btn-primary:hover {
+  background-color: hsl(33 97% 42%);
+  box-shadow: 0 4px 12px hsl(var(--primary) / 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid hsl(var(--border));
+  font-weight: 500;
+  transition: all 150ms ease;
+}
+
+.btn-secondary:hover {
+  background-color: hsl(var(--muted));
+  border-color: hsl(var(--primary) / 0.3);
+}
+
+/* ===== STEPS COMPONENT ===== */
+[data-steps] {
+  counter-reset: step;
+  padding-left: 2rem;
+  position: relative;
+}
+
+[data-steps]::before {
+  content: "";
+  position: absolute;
+  left: 0.875rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: hsl(var(--border));
+}
+
+[data-steps] > * {
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+
+[data-steps] > *::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: -2rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ===== SIDEBAR STYLING ===== */
+/* Clean sidebar - minimal overrides to match Fumadocs default */
+
+/* Sidebar navigation items */
+aside#nd-sidebar a,
+aside#nd-sidebar button {
+  border-radius: 0.375rem;
+  transition: all 150ms ease;
+}
+
+aside#nd-sidebar a:hover,
+aside#nd-sidebar button:hover {
+  background-color: hsl(var(--accent));
+}
+
+aside#nd-sidebar a[aria-current="page"],
+aside#nd-sidebar a[data-active="true"] {
+  background-color: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+  font-weight: 500;
+}
+
+/* Sidebar footer - theme switcher aligned right */
+#nd-sidebar footer,
+aside#nd-sidebar > div > div:last-child {
+  display: flex !important;
+  justify-content: flex-end !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+aside#nd-sidebar a,
+aside#nd-sidebar button {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  border-radius: 0.375rem;
+  transition: all 150ms ease;
+}
+
+aside#nd-sidebar a:hover,
+aside#nd-sidebar button:hover {
+  background-color: hsl(var(--accent));
+}
+
+aside#nd-sidebar a[aria-current="page"],
+aside#nd-sidebar a[data-active="true"] {
+  background-color: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+  font-weight: 500;
+}
+
+/* ===== DOCS LAYOUT - COMPACT SPACING ===== */
+/* Override Fumadocs default spacing for tighter layout */
+
+/* Main docs layout container */
+#nd-docs-layout {
+  --fd-sidebar-width: 17rem !important;
+  --fd-toc-width: 17rem !important;
+}
+
+/* Main content wrapper - reduce left margin */
+#nd-docs-layout > main,
+[id="nd-docs-layout"] > main {
+  padding-left: 2rem !important;
+  padding-right: 1.5rem !important;
+}
+
+/* Article/page content area */
+article,
+[class*="prose"] {
+  max-width: 58rem !important;
+}
+
+/* Page wrapper */
+[class*="Page"] > div:first-child,
+main > article {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Reduce Fumadocs default container padding */
+.fd-container {
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
+
+/* Sidebar container - slightly wider */
+#nd-sidebar {
+  width: 17rem !important;
+}
+
+/* TOC container - wider for better readability */
+aside[class*="toc"],
+nav[aria-label="Table of Contents"],
+[data-toc] {
+  width: 17rem !important;
+  min-width: 17rem !important;
+}
+
+/* Content between sidebar and TOC - maximize space */
+#nd-docs-layout > main > div {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* ===== TOC (Table of Contents) STYLING ===== */
+
+/* TOC title styling */
+#toc-title,
+[id="toc-title"] {
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: hsl(var(--muted-foreground)) !important;
+  margin-bottom: 0.75rem !important;
+  padding-bottom: 0.5rem !important;
+  border-bottom: 1px solid hsl(var(--border) / 0.5) !important;
+}
+
+/* TOC container */
+nav[aria-label="Table of Contents"],
+[data-toc] {
+  padding-right: 0.5rem !important;
+}
+
+/* TOC links - improved spacing and hierarchy */
+nav[aria-label="Table of Contents"] a,
+[data-toc] a {
+  display: block;
+  border-left: 2px solid transparent;
+  padding: 0.375rem 0.75rem;
+  margin-left: -2px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+  transition: all 150ms ease;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Level 2 headings (main sections) */
+nav[aria-label="Table of Contents"] a[data-depth="2"],
+[data-toc] a[data-depth="2"] {
+  font-weight: 500;
+  color: hsl(var(--foreground) / 0.9);
+  margin-top: 0.5rem;
+}
+
+/* Level 3+ headings (sub-sections) - indented */
+nav[aria-label="Table of Contents"] a[data-depth="3"],
+[data-toc] a[data-depth="3"] {
+  padding-left: 1.25rem;
+  font-size: 0.78125rem;
+}
+
+nav[aria-label="Table of Contents"] a[data-depth="4"],
+[data-toc] a[data-depth="4"] {
+  padding-left: 1.75rem;
+  font-size: 0.75rem;
+}
+
+nav[aria-label="Table of Contents"] a:hover,
+[data-toc] a:hover {
+  color: hsl(var(--primary));
+  border-left-color: hsl(var(--primary) / 0.4);
+  background-color: hsl(var(--primary) / 0.04);
+}
+
+nav[aria-label="Table of Contents"] a[data-active="true"],
+[data-toc] a[data-active="true"],
+[data-toc-item][data-active="true"] {
+  color: hsl(var(--primary)) !important;
+  border-left-color: hsl(var(--primary)) !important;
+  font-weight: 500 !important;
+  background-color: hsl(var(--primary) / 0.06) !important;
+}
+
+/* ===== HEADER/NAV BAR STYLING ===== */
+header {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ===== BLOCKQUOTE STYLING ===== */
+blockquote {
+  border-left: 3px solid hsl(var(--primary) / 0.5);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+}
+
+blockquote p {
+  margin: 0;
+}
+
+/* ===== HORIZONTAL RULE ===== */
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--border)),
+    transparent
+  );
+  margin: 2rem 0;
+}
+
+/* ===== LOADING SKELETON ===== */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)),
+    hsl(var(--muted) / 0.5),
+    hsl(var(--muted))
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 0.375rem;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ===== COPY BUTTON STYLING ===== */
+button[data-copy-button] {
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+pre:hover button[data-copy-button] {
+  opacity: 1;
+}
+
+button[data-copy-button]:hover {
+  background-color: hsl(var(--muted)) !important;
+}
+
+/* ===== FOOTER STYLING ===== */
+footer {
+  border-top: 1px solid hsl(var(--border));
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+/* ===== IMAGES ===== */
+.prose img {
+  border-radius: 0.625rem;
+  border: 1px solid hsl(var(--border));
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  aside,
+  nav[aria-label="Table of Contents"],
+  header,
+  footer {
+    display: none !important;
+  }
+
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
 }

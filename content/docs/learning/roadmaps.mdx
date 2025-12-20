@@ -1,0 +1,296 @@
+---
+title: Learning Roadmaps
+description: Structured learning paths for mastering our tech stack
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+
+# Learning Roadmaps
+
+<Callout type="info">
+  These roadmaps provide structured learning paths from beginner to advanced
+  levels for each technology in our stack.
+</Callout>
+
+## Choose Your Path
+
+<Cards>
+  <Card
+    title="🆕 New to Frontend"
+    description="Start from HTML/CSS basics to React"
+  />
+  <Card
+    title="⚛️ Know React"
+    description="Learn Next.js and our specific patterns"
+  />
+  <Card
+    title="🎯 Know Next.js"
+    description="Deep dive into advanced patterns"
+  />
+  <Card title="🔧 Full Stack" description="Complete frontend mastery" />
+</Cards>
+
+---
+
+## React Learning Path
+
+### Beginner (4-6 weeks)
+
+**Week 1-2: JavaScript Fundamentals**
+
+- ES6+ features (arrow functions, destructuring, spread)
+- Promises and async/await
+- Array methods (map, filter, reduce)
+
+**Resources:** [javascript.info](https://javascript.info/), [MDN JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide)
+
+**Week 3-4: React Basics**
+
+- Components and JSX
+- Props and state
+- Event handling
+- Conditional rendering
+- Lists and keys
+
+**Resources:** [react.dev/learn](https://react.dev/learn)
+
+**Week 5-6: React Hooks**
+
+- useState and useEffect
+- useRef and useCallback
+- Custom hooks basics
+
+**Project:** Build a todo app with local storage
+
+### Intermediate (4-6 weeks)
+
+**Week 1-2: Advanced State**
+
+- useReducer for complex state
+- Context API for global state
+- State management patterns
+
+**Week 3-4: Performance**
+
+- React.memo and useMemo
+- useCallback optimization
+- Code splitting with lazy/Suspense
+- React DevTools profiling
+
+**Week 5-6: Testing**
+
+- React Testing Library
+- Testing hooks
+- Mocking and async tests
+
+**Project:** Build a dashboard with data fetching, filtering, and pagination
+
+### Advanced (4+ weeks)
+
+**Week 1-2: Architecture**
+
+- Component composition patterns
+- Render props and HOCs
+- Compound components
+- Controlled vs uncontrolled
+
+**Week 3-4: Advanced Patterns**
+
+- Error boundaries
+- Portals and refs
+- Server components concepts
+- Concurrent features
+
+**Ongoing: Deep Dives**
+
+- React internals (fiber, reconciliation)
+- Custom renderers
+- Contributing to React ecosystem
+
+**Project:** Build a design system with Storybook
+
+---
+
+## TypeScript Learning Path
+
+### Beginner (2-3 weeks)
+
+**Core Concepts:**
+
+- Basic types (string, number, boolean, array)
+- Type inference
+- Interfaces vs types
+- Function typing
+
+**Resources:** [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/), [Total TypeScript Beginners](https://www.totaltypescript.com/tutorials/beginners-typescript)
+
+### Intermediate (2-3 weeks)
+
+**Advanced Types:**
+
+- Generics
+- Union and intersection types
+- Type guards and narrowing
+- Mapped and conditional types
+- Template literal types
+
+**Resources:** [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/)
+
+### Advanced (Ongoing)
+
+**Mastery Topics:**
+
+- Variance (covariance/contravariance)
+- Module augmentation
+- Declaration files
+- Performance optimization
+- Complex generic patterns
+
+**Resources:** [Type Challenges](https://github.com/type-challenges/type-challenges), [Total TypeScript Advanced](https://www.totaltypescript.com/)
+
+---
+
+## Next.js Learning Path
+
+### Beginner (2-3 weeks)
+
+**Core Concepts:**
+
+- App Router basics
+- Pages and layouts
+- Navigation and linking
+- Static vs dynamic rendering
+- Data fetching basics
+
+**Resources:** [Next.js Learn Course](https://nextjs.org/learn), [Next.js Documentation](https://nextjs.org/docs)
+
+### Intermediate (3-4 weeks)
+
+**Advanced Routing:**
+
+- Route groups
+- Parallel routes
+- Intercepting routes
+- Middleware
+
+**Data Patterns:**
+
+- Server Actions
+- Revalidation strategies
+- Streaming and Suspense
+- Error handling
+
+**Project:** Build a full CRUD app with authentication
+
+### Advanced (Ongoing)
+
+**Production Patterns:**
+
+- Advanced caching strategies
+- Performance optimization
+- Monitoring and analytics
+- Custom servers
+- Deployment strategies
+
+**Project:** Build a multi-tenant SaaS application
+
+---
+
+## Tailwind CSS Learning Path
+
+| Level            | Topics                                                 | Time      |
+| ---------------- | ------------------------------------------------------ | --------- |
+| **Beginner**     | Utility classes, flexbox, grid, responsive design      | 1-2 weeks |
+| **Intermediate** | Custom configuration, plugins, dark mode, animations   | 2-3 weeks |
+| **Advanced**     | Design systems, CVA patterns, performance optimization | Ongoing   |
+
+**Resources:** [Tailwind CSS Documentation](https://tailwindcss.com/docs), [Tailwind UI Components](https://tailwindui.com/)
+
+---
+
+## Complete Developer Roadmap
+
+### Month 1: Foundations
+
+| Week | Focus                         | Deliverable             |
+| ---- | ----------------------------- | ----------------------- |
+| 1    | Environment setup, Git basics | Dev environment ready   |
+| 2    | TypeScript fundamentals       | Complete type exercises |
+| 3    | React basics                  | Simple components       |
+| 4    | Tailwind CSS                  | Styled components       |
+
+### Month 2: Core Skills
+
+| Week | Focus                             | Deliverable     |
+| ---- | --------------------------------- | --------------- |
+| 1    | Next.js App Router                | Multi-page app  |
+| 2    | Forms with React Hook Form + Zod  | Form handling   |
+| 3    | Data fetching with TanStack Query | API integration |
+| 4    | Testing basics                    | Test suite      |
+
+### Month 3: Advanced Topics
+
+| Week | Focus                        | Deliverable       |
+| ---- | ---------------------------- | ----------------- |
+| 1    | Authentication with NextAuth | Auth flow         |
+| 2    | State management patterns    | Complex state     |
+| 3    | Performance optimization     | Optimized app     |
+| 4    | Deployment and CI/CD         | Production deploy |
+
+### Month 4+: Mastery
+
+- Advanced TypeScript patterns
+- Accessibility deep dive
+- Architecture patterns
+- Team lead skills
+
+---
+
+## Learning Tips
+
+<Cards>
+  <Card
+    title="📖 Read Official Docs"
+    description="Always start with official documentation"
+  />
+  <Card
+    title="🛠️ Build Projects"
+    description="Apply concepts in real projects immediately"
+  />
+  <Card title="👥 Pair Program" description="Learn from senior developers" />
+  <Card
+    title="📝 Document Learning"
+    description="Write notes and share knowledge"
+  />
+</Cards>
+
+---
+
+## Recommended Resources
+
+### Books
+
+- "Learning TypeScript" by Josh Goldberg
+- "React Design Patterns" by Carlos Santana Roldán
+- "Full Stack Development with Next.js"
+
+### Courses
+
+- [react.dev](https://react.dev) - Official React docs
+- [Next.js Learn](https://nextjs.org/learn) - Official Next.js course
+- [Total TypeScript](https://totaltypescript.com) - TypeScript mastery
+- [Testing JavaScript](https://testingjavascript.com) - Testing course
+
+### YouTube
+
+- **Theo** - Web development insights
+- **Jack Herrington** - Advanced React
+- **Matt Pocock** - TypeScript tips
+- **Lee Robinson** - Next.js tutorials
+
+### Podcasts
+
+- Syntax.fm
+- JS Party
+- React Podcast

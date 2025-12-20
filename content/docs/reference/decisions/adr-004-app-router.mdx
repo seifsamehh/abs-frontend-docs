@@ -1,0 +1,258 @@
+---
+title: "ADR-004: Next.js App Router"
+description: Migrating to Next.js App Router from Pages Router
+keywords:
+  ["adr", "nextjs", "app-router", "react-server-components", "migration"]
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+# ADR-004: Migrate to Next.js App Router
+
+## Status
+
+✅ **Accepted** (August 2024)
+
+## Context
+
+With Next.js 13+ introducing the App Router, we needed to decide whether to:
+
+- Stay on Pages Router
+- Migrate to App Router
+- Use a hybrid approach
+
+### Key Considerations
+
+- **React Server Components**: Reduce client-side JavaScript
+- **Streaming**: Improve perceived performance
+- **Layouts**: Better nested layout support
+- **Data Fetching**: Simpler patterns with `async` components
+- **Migration Effort**: Time and resources required
+
+## Decision
+
+We chose to **fully adopt the App Router** for all new projects and migrate existing projects incrementally.
+
+### Key Reasons
+
+1. **Server Components**: Smaller bundles, faster loads
+2. **Simplified data fetching**: No more `getServerSideProps`
+3. **Better layouts**: Nested, persistent layouts
+4. **Parallel routes**: Advanced routing patterns
+5. **Future-proof**: This is the direction of Next.js
+
+## Implementation
+
+### Directory Structure
+
+```
+app/
+├── (auth)/                    # Route group (no URL segment)
+│   ├── login/
+│   │   └── page.tsx
+│   ├── register/
+│   │   └── page.tsx
+│   └── layout.tsx             # Auth-specific layout
+│
+├── (dashboard)/               # Protected routes
+│   ├── layout.tsx             # Dashboard layout with sidebar
+│   ├── page.tsx               # /dashboard
+│   ├── users/
+│   │   ├── page.tsx           # /dashboard/users
+│   │   └── [id]/
+│   │       └── page.tsx       # /dashboard/users/[id]
+│   └── settings/
+│       └── page.tsx
+│
+├── api/                       # API routes
+│   └── [...]/route.ts
+│
+├── layout.tsx                 # Root layout
+├── page.tsx                   # Home page
+├── loading.tsx                # Global loading UI
+├── error.tsx                  # Global error UI
+└── not-found.tsx              # 404 page
+```
+
+### Server Components (Default)
+
+```tsx
+// app/users/page.tsx
+// This is a Server Component by default - no "use client"
+
+import { UserList } from "@/features/users/components/user-list";
+
+async function getUsers() {
+  const res = await fetch(`${process.env.API_URL}/users`, {
+    next: { revalidate: 60 }, // ISR: revalidate every 60 seconds
+  });
+
+  if (!res.ok) throw new Error("Failed to fetch users");
+  return res.json();
+}
+
+export default async function UsersPage() {
+  const users = await getUsers();
+
+  return (
+    <main className="container py-8">
+      <h1 className="text-2xl font-bold mb-6">Users</h1>
+      <UserList users={users} />
+    </main>
+  );
+}
+
+export const metadata = {
+  title: "Users",
+  description: "Manage your users",
+};
+```
+
+### Client Components (When Needed)
+
+```tsx
+// components/user-search.tsx
+"use client";
+
+import { useState } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
+
+export function UserSearch({
+  onSearch,
+}: {
+  onSearch: (query: string) => void;
+}) {
+  const [query, setQuery] = useState("");
+  const debouncedQuery = useDebounce(query, 300);
+
+  useEffect(() => {
+    onSearch(debouncedQuery);
+  }, [debouncedQuery, onSearch]);
+
+  return (
+    <input
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      placeholder="Search users..."
+      className="rounded-md border px-4 py-2"
+    />
+  );
+}
+```
+
+### Layouts
+
+```tsx
+// app/(dashboard)/layout.tsx
+import { Sidebar } from "@/components/layout/sidebar";
+import { Header } from "@/components/layout/header";
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <div className="flex-1">
+        <Header />
+        <main className="p-6">{children}</main>
+      </div>
+    </div>
+  );
+}
+```
+
+### Loading States
+
+```tsx
+// app/(dashboard)/users/loading.tsx
+import { Skeleton } from "@/components/ui/skeleton";
+
+export default function UsersLoading() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-8 w-48" />
+      <div className="grid gap-4">
+        {[...Array(5)].map((_, i) => (
+          <Skeleton key={i} className="h-16 w-full" />
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+### Error Handling
+
+```tsx
+// app/(dashboard)/users/error.tsx
+"use client";
+
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+
+export default function UsersError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    // Log error to monitoring service
+    console.error(error);
+  }, [error]);
+
+  return (
+    <div className="flex flex-col items-center justify-center py-12">
+      <h2 className="text-xl font-semibold mb-4">Something went wrong!</h2>
+      <p className="text-muted-foreground mb-6">{error.message}</p>
+      <Button onClick={reset}>Try again</Button>
+    </div>
+  );
+}
+```
+
+## Consequences
+
+### Positive
+
+- ✅ **40% smaller** client-side JavaScript
+- ✅ **Faster initial loads** with Server Components
+- ✅ **Simpler data fetching** with async components
+- ✅ **Better SEO** with server-rendered content
+- ✅ **Improved DX** with collocated loading/error states
+
+### Negative
+
+- ⚠️ **Migration effort** for existing projects
+- ⚠️ **Learning curve** for Server Components
+- ⚠️ **Some libraries** need updates for RSC compatibility
+
+### Neutral
+
+- Need to think about client vs server component boundaries
+- Third-party libraries may need `'use client'` wrappers
+
+## Migration Checklist
+
+- [ ] Update Next.js to latest version
+- [ ] Create `app/` directory structure
+- [ ] Move pages incrementally
+- [ ] Convert `getServerSideProps` to async components
+- [ ] Update data fetching patterns
+- [ ] Add loading/error states
+- [ ] Test thoroughly
+
+## References
+
+- [Next.js App Router Documentation](https://nextjs.org/docs/app)
+- [Server Components RFC](https://github.com/reactjs/rfcs/blob/main/text/0188-server-components.md)
+- [Migration Guide](https://nextjs.org/docs/app/building-your-application/upgrading/app-router-migration)
+
+<Callout type="warn">
+  All new projects must use App Router. Pages Router is only acceptable for
+  maintaining legacy code.
+</Callout>

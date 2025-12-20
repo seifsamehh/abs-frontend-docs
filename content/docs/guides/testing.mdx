@@ -1,0 +1,467 @@
+---
+title: Testing Your Code
+description: Write comprehensive tests with Vitest and Testing Library
+keywords:
+  [
+    "testing",
+    "vitest",
+    "testing-library",
+    "unit-tests",
+    "integration-tests",
+    "e2e",
+  ]
+difficulty: intermediate
+estimatedTime: "45 min"
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 🧪 Testing Your Code
+
+<Callout type="info">
+  Learn how to write effective unit tests, integration tests, and end-to-end
+  tests using Vitest and Testing Library.
+</Callout>
+
+## 🛠️ Testing Stack
+
+| Tool                | Purpose                    |
+| ------------------- | -------------------------- |
+| **Vitest**          | Test runner and assertions |
+| **Testing Library** | DOM testing utilities      |
+| **MSW**             | API mocking                |
+| **Playwright**      | E2E testing                |
+
+## ⚙️ Setup
+
+### 📦 Install Dependencies
+
+```bash
+npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom msw
+```
+
+### 📋 Configure Vitest
+
+```tsx
+// vitest.config.ts
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
+import path from "path";
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: ["./src/test/setup.ts"],
+    include: ["**/*.{test,spec}.{ts,tsx}"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json", "html"],
+      exclude: ["node_modules/", "src/test/"],
+    },
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+});
+```
+
+### 📂 Setup File
+
+```tsx
+// src/test/setup.ts
+import "@testing-library/jest-dom";
+import { cleanup } from "@testing-library/react";
+import { afterEach, beforeAll, afterAll } from "vitest";
+import { server } from "./mocks/server";
+
+// Start MSW server
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+afterAll(() => server.close());
+afterEach(() => {
+  cleanup();
+  server.resetHandlers();
+});
+```
+
+## 🧪 Unit Testing Components
+
+### 📝 Basic Component Test
+
+```tsx
+// src/components/button.test.tsx
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { describe, it, expect, vi } from "vitest";
+import { Button } from "./button";
+
+describe("Button", () => {
+  it("renders children correctly", () => {
+    render(<Button>Click me</Button>);
+    expect(
+      screen.getByRole("button", { name: /click me/i })
+    ).toBeInTheDocument();
+  });
+
+  it("calls onClick when clicked", async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+
+    render(<Button onClick={handleClick}>Click me</Button>);
+    await user.click(screen.getByRole("button"));
+
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("is disabled when disabled prop is true", () => {
+    render(<Button disabled>Click me</Button>);
+    expect(screen.getByRole("button")).toBeDisabled();
+  });
+
+  it("applies variant classes correctly", () => {
+    render(<Button variant="destructive">Delete</Button>);
+    expect(screen.getByRole("button")).toHaveClass("bg-destructive");
+  });
+});
+```
+
+### 🎭 Testing with Context
+
+```tsx
+// src/test/test-utils.tsx
+import { render, RenderOptions } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SessionProvider } from "next-auth/react";
+
+const createTestQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  });
+
+interface WrapperProps {
+  children: React.ReactNode;
+}
+
+function AllProviders({ children }: WrapperProps) {
+  const queryClient = createTestQueryClient();
+
+  return (
+    <SessionProvider session={null}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </SessionProvider>
+  );
+}
+
+export function renderWithProviders(
+  ui: React.ReactElement,
+  options?: Omit<RenderOptions, "wrapper">
+) {
+  return render(ui, { wrapper: AllProviders, ...options });
+}
+
+export * from "@testing-library/react";
+export { renderWithProviders as render };
+```
+
+## 🎣 Testing Hooks
+
+```tsx
+// src/hooks/use-counter.test.ts
+import { renderHook, act } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import { useCounter } from "./use-counter";
+
+describe("useCounter", () => {
+  it("initializes with default value", () => {
+    const { result } = renderHook(() => useCounter());
+    expect(result.current.count).toBe(0);
+  });
+
+  it("initializes with provided value", () => {
+    const { result } = renderHook(() => useCounter(10));
+    expect(result.current.count).toBe(10);
+  });
+
+  it("increments the count", () => {
+    const { result } = renderHook(() => useCounter());
+
+    act(() => {
+      result.current.increment();
+    });
+
+    expect(result.current.count).toBe(1);
+  });
+
+  it("decrements the count", () => {
+    const { result } = renderHook(() => useCounter(5));
+
+    act(() => {
+      result.current.decrement();
+    });
+
+    expect(result.current.count).toBe(4);
+  });
+});
+```
+
+## 🙊 API Mocking with MSW
+
+### 📑 Setup Handlers
+
+```tsx
+// src/test/mocks/handlers.ts
+import { http, HttpResponse } from "msw";
+
+export const handlers = [
+  http.get("/api/users", () => {
+    return HttpResponse.json([
+      { id: "1", name: "John Doe", email: "john@example.com" },
+      { id: "2", name: "Jane Doe", email: "jane@example.com" },
+    ]);
+  }),
+
+  http.post("/api/users", async ({ request }) => {
+    const body = await request.json();
+    return HttpResponse.json({ id: "3", ...body }, { status: 201 });
+  }),
+
+  http.get("/api/users/:id", ({ params }) => {
+    const { id } = params;
+    return HttpResponse.json({
+      id,
+      name: "John Doe",
+      email: "john@example.com",
+    });
+  }),
+];
+```
+
+### 🖥️ Create Server
+
+```tsx
+// src/test/mocks/server.ts
+import { setupServer } from "msw/node";
+import { handlers } from "./handlers";
+
+export const server = setupServer(...handlers);
+```
+
+### Testing with Mocked API
+
+```tsx
+import { render, screen, waitFor } from "@/test/test-utils";
+import { describe, it, expect } from "vitest";
+import { server } from "@/test/mocks/server";
+import { http, HttpResponse } from "msw";
+import { UserList } from "./user-list";
+
+describe("UserList", () => {
+  it("displays loading state initially", () => {
+    render(<UserList />);
+    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+  });
+
+  it("displays users after loading", async () => {
+    render(<UserList />);
+
+    await waitFor(() => {
+      expect(screen.getByText("John Doe")).toBeInTheDocument();
+      expect(screen.getByText("Jane Doe")).toBeInTheDocument();
+    });
+  });
+
+  it("displays error state on failure", async () => {
+    // Override handler for this test
+    server.use(
+      http.get("/api/users", () => {
+        return HttpResponse.json({ message: "Server error" }, { status: 500 });
+      })
+    );
+
+    render(<UserList />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/error/i)).toBeInTheDocument();
+    });
+  });
+});
+```
+
+## 📝 Testing Forms
+
+```tsx
+import { render, screen, waitFor } from "@/test/test-utils";
+import userEvent from "@testing-library/user-event";
+import { describe, it, expect, vi } from "vitest";
+import { ContactForm } from "./contact-form";
+
+describe("ContactForm", () => {
+  it("shows validation errors for empty required fields", async () => {
+    const user = userEvent.setup();
+    render(<ContactForm />);
+
+    await user.click(screen.getByRole("button", { name: /submit/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/name is required/i)).toBeInTheDocument();
+      expect(screen.getByText(/email is required/i)).toBeInTheDocument();
+    });
+  });
+
+  it("shows error for invalid email", async () => {
+    const user = userEvent.setup();
+    render(<ContactForm />);
+
+    await user.type(screen.getByLabelText(/email/i), "invalid-email");
+    await user.click(screen.getByRole("button", { name: /submit/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/valid email/i)).toBeInTheDocument();
+    });
+  });
+
+  it("submits form with valid data", async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+    render(<ContactForm onSubmit={onSubmit} />);
+
+    await user.type(screen.getByLabelText(/name/i), "John Doe");
+    await user.type(screen.getByLabelText(/email/i), "john@example.com");
+    await user.type(
+      screen.getByLabelText(/message/i),
+      "Hello, this is a test message."
+    );
+    await user.click(screen.getByRole("button", { name: /submit/i }));
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith({
+        name: "John Doe",
+        email: "john@example.com",
+        message: "Hello, this is a test message.",
+      });
+    });
+  });
+});
+```
+
+## 🎭 E2E Testing with Playwright
+
+### Setup
+
+```bash
+npm install -D @playwright/test
+npx playwright install
+```
+
+### Configuration
+
+```tsx
+// playwright.config.ts
+import { defineConfig, devices } from "@playwright/test";
+
+export default defineConfig({
+  testDir: "./e2e",
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: "html",
+  use: {
+    baseURL: "http://localhost:3000",
+    trace: "on-first-retry",
+  },
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    { name: "firefox", use: { ...devices["Desktop Firefox"] } },
+    { name: "webkit", use: { ...devices["Desktop Safari"] } },
+  ],
+  webServer: {
+    command: "npm run dev",
+    url: "http://localhost:3000",
+    reuseExistingServer: !process.env.CI,
+  },
+});
+```
+
+### E2E Test Example
+
+```tsx
+// e2e/login.spec.ts
+import { test, expect } from "@playwright/test";
+
+test.describe("Login", () => {
+  test("user can log in with valid credentials", async ({ page }) => {
+    await page.goto("/login");
+
+    await page.fill('input[name="email"]', "user@example.com");
+    await page.fill('input[name="password"]', "password123");
+    await page.click('button[type="submit"]');
+
+    await expect(page).toHaveURL("/dashboard");
+    await expect(page.locator("h1")).toContainText("Dashboard");
+  });
+
+  test("shows error for invalid credentials", async ({ page }) => {
+    await page.goto("/login");
+
+    await page.fill('input[name="email"]', "wrong@example.com");
+    await page.fill('input[name="password"]', "wrongpassword");
+    await page.click('button[type="submit"]');
+
+    await expect(page.locator(".error-message")).toBeVisible();
+    await expect(page).toHaveURL("/login");
+  });
+});
+```
+
+## 📊 Test Coverage
+
+### 🏃 Running Coverage
+
+```bash
+npm run test -- --coverage
+```
+
+### 🎯 Coverage Targets
+
+| Metric         | Target |
+| -------------- | ------ |
+| **Statements** | 80%    |
+| **Branches**   | 75%    |
+| **Functions**  | 80%    |
+| **Lines**      | 80%    |
+
+## ⭐ Best Practices
+
+<Cards>
+  <Card
+    title="✅ Test Behavior, Not Implementation"
+    description="Focus on what users see and do, not internal details"
+  />
+  <Card
+    title="✅ Use Semantic Queries"
+    description="Prefer getByRole, getByLabelText over getByTestId"
+  />
+  <Card
+    title="✅ Keep Tests Independent"
+    description="Each test should run in isolation"
+  />
+  <Card
+    title="✅ Mock External Dependencies"
+    description="Use MSW for API calls, avoid network requests"
+  />
+</Cards>
+
+## 👉 Next Steps
+
+- 📖 [Code Standards](/docs/reference/code-standards) - Testing requirements
+- 🚀 [CI/CD](/docs/guides/deployment) - Run tests in pipelines
+- 🧩 [Components](/docs/guides/components) - Test your components

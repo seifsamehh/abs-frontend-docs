@@ -1,0 +1,248 @@
+---
+title: "ADR-005: Zod for Validation"
+description: Using Zod for runtime validation and type inference
+keywords: ["adr", "zod", "validation", "typescript", "forms", "api"]
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+# ADR-005: Use Zod for Runtime Validation
+
+## Status
+
+✅ **Accepted** (July 2024)
+
+## Context
+
+We needed a validation library that:
+
+- **TypeScript integration**: Infer types from schemas
+- **Runtime validation**: Validate data at boundaries
+- **Form validation**: Work with React Hook Form
+- **API validation**: Validate request/response data
+- **Error messages**: User-friendly, customizable
+
+### Options Considered
+
+| Solution        | Pros                      | Cons                  |
+| --------------- | ------------------------- | --------------------- |
+| **Zod**         | TS-first, great inference | Smaller ecosystem     |
+| **Yup**         | Mature, widely used       | TS types less elegant |
+| **Joi**         | Feature-rich              | Not TypeScript-native |
+| **Superstruct** | Lightweight               | Less features         |
+
+## Decision
+
+We chose **Zod** as our validation library.
+
+### Key Reasons
+
+1. **TypeScript-first**: Schema IS the type
+2. **Zero dependencies**: Small bundle impact
+3. **Great DX**: Fluent API, excellent errors
+4. **React Hook Form**: First-class integration
+5. **Transformations**: Parse and transform in one step
+
+## Implementation
+
+### Basic Schemas
+
+```typescript
+import { z } from "zod";
+
+// User schema
+export const userSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  role: z.enum(["admin", "user", "guest"]),
+  age: z.number().int().positive().optional(),
+  createdAt: z.string().datetime(),
+});
+
+// Infer TypeScript type from schema
+export type User = z.infer<typeof userSchema>;
+
+// Create/Update schemas (without id, createdAt)
+export const createUserSchema = userSchema.omit({
+  id: true,
+  createdAt: true,
+});
+
+export type CreateUserInput = z.infer<typeof createUserSchema>;
+```
+
+### Form Validation
+
+```tsx
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createUserSchema, type CreateUserInput } from "@/schemas/user";
+
+function CreateUserForm() {
+  const form = useForm<CreateUserInput>({
+    resolver: zodResolver(createUserSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      role: "user",
+    },
+  });
+
+  const onSubmit = (data: CreateUserInput) => {
+    // data is fully typed and validated
+    console.log(data);
+  };
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <input {...form.register("name")} />
+      {form.formState.errors.name && (
+        <p className="text-red-500">{form.formState.errors.name.message}</p>
+      )}
+
+      <input {...form.register("email")} type="email" />
+      {form.formState.errors.email && (
+        <p className="text-red-500">{form.formState.errors.email.message}</p>
+      )}
+
+      <button type="submit">Create User</button>
+    </form>
+  );
+}
+```
+
+### API Validation
+
+```typescript
+// Validate API responses
+export async function fetchUser(id: string): Promise<User> {
+  const response = await fetch(`/api/users/${id}`);
+  const data = await response.json();
+
+  // Validate response matches expected shape
+  return userSchema.parse(data);
+}
+
+// Safe parse (doesn't throw)
+export async function fetchUserSafe(id: string) {
+  const response = await fetch(`/api/users/${id}`);
+  const data = await response.json();
+
+  const result = userSchema.safeParse(data);
+
+  if (!result.success) {
+    console.error("Validation failed:", result.error);
+    return null;
+  }
+
+  return result.data;
+}
+```
+
+### Server Action Validation (Next.js)
+
+```typescript
+"use server";
+
+import { z } from "zod";
+import { createUserSchema } from "@/schemas/user";
+
+export async function createUser(formData: FormData) {
+  // Parse and validate form data
+  const rawData = Object.fromEntries(formData.entries());
+
+  const result = createUserSchema.safeParse(rawData);
+
+  if (!result.success) {
+    return {
+      success: false,
+      errors: result.error.flatten().fieldErrors,
+    };
+  }
+
+  // result.data is typed as CreateUserInput
+  const user = await db.users.create(result.data);
+
+  return { success: true, user };
+}
+```
+
+### Advanced Patterns
+
+```typescript
+// Refinements for complex validation
+const passwordSchema = z
+  .object({
+    password: z.string().min(8),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+// Transformations
+const dateSchema = z.string().transform((val) => new Date(val));
+
+// Discriminated unions
+const notificationSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("email"), email: z.string().email() }),
+  z.object({ type: z.literal("sms"), phone: z.string() }),
+  z.object({ type: z.literal("push"), deviceId: z.string() }),
+]);
+
+// Recursive types
+interface Comment {
+  id: string;
+  text: string;
+  replies: Comment[];
+}
+
+const commentSchema: z.ZodType<Comment> = z.lazy(() =>
+  z.object({
+    id: z.string(),
+    text: z.string(),
+    replies: z.array(commentSchema),
+  })
+);
+```
+
+## Consequences
+
+### Positive
+
+- ✅ **Single source of truth** for types and validation
+- ✅ **Type-safe forms** with React Hook Form
+- ✅ **API boundary validation** catches errors early
+- ✅ **Great error messages** for user feedback
+- ✅ **No runtime type mismatches**
+
+### Negative
+
+- ⚠️ **Learning curve** for advanced patterns
+- ⚠️ **Schema duplication** if also using database schemas
+
+### Neutral
+
+- Schemas should live close to their usage
+- Consider generating schemas from OpenAPI for API responses
+
+## Best Practices
+
+1. **Colocate schemas** with the code that uses them
+2. **Use `safeParse`** when failure is expected
+3. **Create input schemas** by omitting generated fields
+4. **Add custom error messages** for user-facing validation
+5. **Use `z.infer`** instead of manual type definitions
+
+## References
+
+- [Zod Documentation](https://zod.dev)
+- [React Hook Form Integration](https://react-hook-form.com/get-started#SchemaValidation)
+- [Zod + Next.js Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
+
+<Callout type="info">
+  See our [Forms Guide](/docs/guides/forms) for complete examples of form
+  validation with Zod.
+</Callout>

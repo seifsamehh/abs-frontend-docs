@@ -1,0 +1,175 @@
+---
+title: Getting Help
+description: How to ask effective questions and get support from the team
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# Getting Help
+
+<Callout type="info">
+  Asking the right questions is an important skill. This guide will help you get
+  faster, more helpful responses.
+</Callout>
+
+## Support Channels
+
+<Cards>
+  <Card
+    title="💬 WhatsApp"
+    description="Fastest way to get help from the team (business hours)"
+  />
+  <Card
+    title="👥 Pair Programming"
+    description="Request a quick pairing session for complex issues"
+  />
+  <Card
+    title="📚 Documentation"
+    description="Check existing docs for solutions"
+  />
+  <Card
+    title="🔍 Code Search"
+    description="Look for similar implementations in the codebase"
+  />
+</Cards>
+
+## Before Asking for Help
+
+Complete this checklist to get faster help:
+
+- [ ] **Searched documentation** for existing solutions
+- [ ] **Checked FAQ** for similar questions
+- [ ] **Searched the codebase** for similar implementations
+- [ ] **Gathered error messages** and stack traces
+- [ ] **Identified steps to reproduce** the issue
+- [ ] **Noted what you've already tried**
+
+## How to Ask Effective Questions
+
+### Good Example
+
+**Subject:** TypeScript error with useQuery hook in UserProfile component
+
+**Description:**
+I'm getting a TypeScript error when using TanStack Query in the UserProfile
+component. The error occurs when trying to access the `user.email` property.
+
+**Error Message:**
+
+```
+Property 'email' does not exist on type 'unknown'
+```
+
+**Code:**
+
+```typescript
+const { data: user } = useQuery({
+  queryKey: ["user", userId],
+  queryFn: () => fetchUser(userId),
+});
+
+return <div>{user.email}</div>; // Error here
+```
+
+**Environment:**
+
+- Next.js 16.1
+- TypeScript 5.9.2
+- TanStack Query 5.0.0
+
+**What I've tried:**
+
+- Added type assertion `(user as User).email` - works but feels wrong
+- Checked TanStack Query docs for proper typing
+
+### Bad Example
+
+**Subject:** Help!!!
+
+**Description:**
+My code is broken and I don't know why. It was working yesterday but now
+it's not. Can someone fix this?
+
+**What's wrong:**
+
+- No clear description of the problem
+- No error messages
+- No context about what changed
+- No information about environment
+- No code provided
+- Demanding rather than asking for help
+
+### Question Template
+
+```markdown
+**Subject:** [Clear, descriptive title]
+
+**Description:**
+[Brief description of what you're trying to do]
+
+**Problem:**
+[What's not working as expected]
+
+**Error Messages:**
+[Exact error messages with stack traces]
+
+**Code:**
+[Minimal, reproducible code example]
+
+**Environment:**
+
+- [Framework versions]
+- [Browser/Node version]
+- [Operating system]
+
+**What I've tried:**
+
+- [Solution 1 and result]
+- [Solution 2 and result]
+```
+
+## Creating a Minimal Reproduction
+
+A minimal reproduction helps others understand and debug your issue:
+
+1. **Start with a fresh project** or CodeSandbox
+2. **Add only the code needed** to reproduce the issue
+3. **Remove unrelated dependencies** and features
+4. **Verify the issue still occurs** in the minimal version
+5. **Share the reproduction** via GitHub repo or CodeSandbox link
+
+```bash
+# Quick way to create a minimal reproduction
+npx create-next-app@latest repro-issue-123 --typescript
+cd repro-issue-123
+# Add only the minimal code to reproduce
+```
+
+## Response Time Expectations
+
+| Priority     | Example                | Expected Response |
+| ------------ | ---------------------- | ----------------- |
+| **Critical** | Production is down     | < 15 minutes      |
+| **High**     | Major feature broken   | < 30 minutes      |
+| **Normal**   | Bug or question        | < 2 hours         |
+| **Low**      | Nice-to-have, learning | < 24 hours        |
+
+## Escalation Path
+
+If you're not getting help:
+
+1. **15 min:** Re-check your question follows the template
+2. **30 min:** Tag the relevant team member directly
+3. **1 hour:** Escalate to Frontend Lead
+4. **2 hours:** Escalate to Team Lead (critical issues)
+
+## After Getting Help
+
+<Callout type="info">Help improve the team's knowledge base!</Callout>
+
+- **Thank the helper** - Acknowledge their time
+- **Document the solution** - Update docs or create a new FAQ entry
+- **Share with others** - Post in team channel if it might help others
+- **Update the code** - Add comments explaining the fix for future reference

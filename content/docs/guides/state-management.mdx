@@ -1,0 +1,383 @@
+---
+title: State Management
+description: Manage application state with Redux Toolkit and React Context
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 🏪 State Management
+
+<Callout type="info">
+  Learn when and how to use different state management approaches: local state,
+  React Context, and Redux Toolkit.
+</Callout>
+
+## 🧠 Choosing the Right Approach
+
+| State Type            | Solution       | Example                         |
+| --------------------- | -------------- | ------------------------------- |
+| **UI State**          | `useState`     | Modal open/close, form inputs   |
+| **Shared UI State**   | React Context  | Theme, sidebar state            |
+| **Server State**      | TanStack Query | API data, caching               |
+| **Complex App State** | Redux Toolkit  | Shopping cart, user preferences |
+
+## 📍 Local State with useState
+
+For component-specific state:
+
+```tsx
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount((c) => c + 1)}>Increment</button>
+    </div>
+  );
+}
+```
+
+## 🌐 React Context for Shared State
+
+### 🛠️ Creating a Context
+
+```tsx
+// src/contexts/sidebar-context.tsx
+"use client";
+
+import { createContext, useContext, useState, useCallback } from "react";
+
+interface SidebarContextValue {
+  isOpen: boolean;
+  toggle: () => void;
+  open: () => void;
+  close: () => void;
+}
+
+const SidebarContext = createContext<SidebarContextValue | null>(null);
+
+export function SidebarProvider({ children }: { children: React.ReactNode }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
+  const open = useCallback(() => setIsOpen(true), []);
+  const close = useCallback(() => setIsOpen(false), []);
+
+  return (
+    <SidebarContext.Provider value={{ isOpen, toggle, open, close }}>
+      {children}
+    </SidebarContext.Provider>
+  );
+}
+
+export function useSidebar() {
+  const context = useContext(SidebarContext);
+  if (!context) {
+    throw new Error("useSidebar must be used within SidebarProvider");
+  }
+  return context;
+}
+```
+
+### 🎮 Using Context
+
+```tsx
+// In a component
+function Header() {
+  const { toggle, isOpen } = useSidebar();
+
+  return (
+    <header>
+      <button onClick={toggle} aria-expanded={isOpen}>
+        {isOpen ? "Close" : "Open"} Menu
+      </button>
+    </header>
+  );
+}
+```
+
+## 📦 Redux Toolkit for Complex State
+
+### Setup Redux Store
+
+```bash
+npm install @reduxjs/toolkit react-redux
+```
+
+```tsx
+// src/store/store.ts
+import { configureStore } from "@reduxjs/toolkit";
+import { cartReducer } from "./slices/cart-slice";
+import { userPreferencesReducer } from "./slices/preferences-slice";
+
+export const store = configureStore({
+  reducer: {
+    cart: cartReducer,
+    preferences: userPreferencesReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these action types
+        ignoredActions: ["persist/PERSIST"],
+      },
+    }),
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+```
+
+### Creating Slices
+
+```tsx
+// src/store/slices/cart-slice.ts
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+interface CartState {
+  items: CartItem[];
+  isOpen: boolean;
+}
+
+const initialState: CartState = {
+  items: [],
+  isOpen: false,
+};
+
+const cartSlice = createSlice({
+  name: "cart",
+  initialState,
+  reducers: {
+    addItem: (state, action: PayloadAction<Omit<CartItem, "quantity">>) => {
+      const existingItem = state.items.find(
+        (item) => item.id === action.payload.id
+      );
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        state.items.push({ ...action.payload, quantity: 1 });
+      }
+    },
+    removeItem: (state, action: PayloadAction<string>) => {
+      state.items = state.items.filter((item) => item.id !== action.payload);
+    },
+    updateQuantity: (
+      state,
+      action: PayloadAction<{ id: string; quantity: number }>
+    ) => {
+      const item = state.items.find((item) => item.id === action.payload.id);
+      if (item) {
+        item.quantity = action.payload.quantity;
+      }
+    },
+    clearCart: (state) => {
+      state.items = [];
+    },
+    toggleCart: (state) => {
+      state.isOpen = !state.isOpen;
+    },
+  },
+});
+
+export const { addItem, removeItem, updateQuantity, clearCart, toggleCart } =
+  cartSlice.actions;
+export const cartReducer = cartSlice.reducer;
+```
+
+### Typed Hooks
+
+```tsx
+// src/store/hooks.ts
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import type { RootState, AppDispatch } from "./store";
+
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+```
+
+### Selectors
+
+```tsx
+// src/store/selectors/cart-selectors.ts
+import { createSelector } from "@reduxjs/toolkit";
+import type { RootState } from "../store";
+
+const selectCartItems = (state: RootState) => state.cart.items;
+
+export const selectCartTotal = createSelector([selectCartItems], (items) =>
+  items.reduce((total, item) => total + item.price * item.quantity, 0)
+);
+
+export const selectCartItemCount = createSelector([selectCartItems], (items) =>
+  items.reduce((count, item) => count + item.quantity, 0)
+);
+
+export const selectCartItemById = (id: string) =>
+  createSelector([selectCartItems], (items) =>
+    items.find((item) => item.id === id)
+  );
+```
+
+### Using Redux in Components
+
+```tsx
+"use client";
+
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { addItem, removeItem } from "@/store/slices/cart-slice";
+import {
+  selectCartTotal,
+  selectCartItemCount,
+} from "@/store/selectors/cart-selectors";
+
+function ProductCard({ product }: { product: Product }) {
+  const dispatch = useAppDispatch();
+
+  return (
+    <div className="rounded-lg border p-4">
+      <h3>{product.name}</h3>
+      <p>${product.price}</p>
+      <button
+        onClick={() =>
+          dispatch(
+            addItem({
+              id: product.id,
+              name: product.name,
+              price: product.price,
+            })
+          )
+        }
+      >
+        Add to Cart
+      </button>
+    </div>
+  );
+}
+
+function CartSummary() {
+  const total = useAppSelector(selectCartTotal);
+  const itemCount = useAppSelector(selectCartItemCount);
+
+  return (
+    <div className="rounded-lg bg-muted p-4">
+      <p>Items: {itemCount}</p>
+      <p>Total: ${total.toFixed(2)}</p>
+    </div>
+  );
+}
+```
+
+### 🔌 Provider Setup
+
+```tsx
+// src/app/providers.tsx
+"use client";
+
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Provider store={store}>{children}</Provider>;
+}
+```
+
+## ⌛ Async Actions with createAsyncThunk
+
+```tsx
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
+export const fetchUserOrders = createAsyncThunk(
+  "orders/fetchUserOrders",
+  async (userId: string, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/users/${userId}/orders`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue("Failed to fetch orders");
+    }
+  }
+);
+
+const ordersSlice = createSlice({
+  name: "orders",
+  initialState: {
+    items: [] as Order[],
+    loading: false,
+    error: null as string | null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUserOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(fetchUserOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+  },
+});
+```
+
+## ⭐ Best Practices
+
+<Cards>
+  <Card
+    title="✅ Colocate State"
+    description="Keep state as close to where it's used as possible"
+  />
+  <Card
+    title="✅ Use Selectors"
+    description="Create memoized selectors for derived state"
+  />
+  <Card
+    title="✅ Normalize Data"
+    description="Store entities by ID for easy updates"
+  />
+  <Card
+    title="✅ Type Everything"
+    description="Use TypeScript for all state and actions"
+  />
+</Cards>
+
+### 🤔 When to Use What
+
+<Tabs items={["useState", "Context", "Redux", "TanStack Query"]}>
+  <Tab value="useState">
+    - Form input values - Toggle states (open/close) - Component-specific UI
+    state - Temporary local data
+  </Tab>
+  <Tab value="Context">
+    - Theme/appearance settings - User authentication state - Locale/language
+    preferences - Sidebar/navigation state
+  </Tab>
+  <Tab value="Redux">
+    - Shopping cart - Complex form wizards - Undo/redo functionality -
+    Cross-cutting app state
+  </Tab>
+  <Tab value="TanStack Query">
+    - API data fetching - Server state caching - Pagination/infinite scroll -
+    Real-time data sync
+  </Tab>
+</Tabs>
+
+## 👉 Next Steps
+
+- 📡 [Data Fetching](/docs/guides/data-fetching) - Server state with TanStack Query
+- 📝 [Forms Guide](/docs/guides/forms) - Form state management
+- 🧪 [Testing Guide](/docs/guides/testing) - Test your state logic

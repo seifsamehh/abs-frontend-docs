@@ -1,209 +1,197 @@
 ---
 title: Frontend Development Guide
 description: Complete guide for frontend development at ABS - from setup to deployment
+keywords: ["frontend", "react", "nextjs", "typescript", "documentation", "abs"]
+featured: true
 ---
 
 import { Card, Cards } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 
-# 🚀 Frontend Development Guide
+# Frontend Development Guide
 
 <Callout type="info">
-  Welcome to the comprehensive frontend development documentation for ABS. This
-  guide covers everything from initial setup to advanced patterns, helping you
-  build exceptional user experiences with our modern tech stack.
+  Welcome to the ABS frontend documentation. This guide covers everything from
+  initial setup to advanced patterns, helping you build exceptional user
+  experiences with our modern tech stack.
 </Callout>
 
-## 🎯 Quick Start
+## Quick Start
 
 <Steps>
   <Step>
-    <h3>Environment Setup</h3>
-    <p>
-      Get your development environment ready with our recommended tools and
-      configurations.
-    </p>
-    <a href="/docs/getting-started/setup">Start Setup →</a>
+    ### Set Up Your Environment Get your development environment ready with our
+    recommended tools and configurations. [Start Setup
+    →](/docs/getting-started/setup)
   </Step>
   <Step>
-    <h3>Learn Our Stack</h3>
-    <p>Understand our technology choices and how they work together.</p>
-    <a href="/docs/tech-stack/overview">Explore Stack →</a>
+    ### Read the Standards Understand our code standards and best practices.
+    [View Standards →](/docs/reference/code-standards)
   </Step>
   <Step>
-    <h3>Development Guide</h3>
-    <p>Follow our coding standards and development practices.</p>
-    <a href="/docs/development-guide/overview">Read Guide →</a>
+    ### Build a Feature Follow our step-by-step guides to build components and
+    features. [Explore Guides →](/docs/guides)
   </Step>
   <Step>
-    <h3>Build & Deploy</h3>
-    <p>Learn our build processes and deployment strategies.</p>
-    <a href="/docs/deployment/overview">Deploy App →</a>
+    ### Make Your First Contribution Learn the workflow and submit your first
+    pull request. [Contribute →](/docs/getting-started/first-contribution)
   </Step>
 </Steps>
 
-## 📚 Core Topics
+## Documentation Sections
 
 <Cards>
   <Card
-    title="💻 Development"
-    href="/docs/development/overview"
-    description="Complete development guide: standards, best practices, and workflows"
+    title="🚀 Getting Started"
+    href="/docs/getting-started"
+    description="New here? Set up your environment and make your first contribution"
   />
   <Card
-    title="🛠️ Tech Stack"
-    href="/docs/tech-stack/overview"
-    description="React, Next.js, TypeScript, Tailwind CSS, and our technology choices"
+    title="📚 Guides"
+    href="/docs/guides"
+    description="Step-by-step tutorials for building features, forms, data fetching, and more"
   />
   <Card
-    title="🧩 Components"
-    href="/docs/components/overview"
-    description="Reusable UI components and design system"
+    title="📖 Reference"
+    href="/docs/reference"
+    description="Technical specifications: code standards, architecture, tech stack"
   />
   <Card
-    title="🎨 Patterns"
-    href="/docs/patterns/overview"
-    description="Common patterns and architectural decisions"
-  />
-</Cards>
-
-<Cards>
-  <Card
-    title="🧪 Testing"
-    href="/docs/testing/overview"
-    description="Testing strategies, tools, and best practices"
-  />
-  <Card
-    title="🚀 Deployment"
-    href="/docs/deployment/overview"
-    description="Build processes, CI/CD, and production deployment"
-  />
-  <Card
-    title="🤖 AI Tools"
-    href="/docs/ai-tools/overview"
-    description="Guidelines for using AI tools in development"
+    title="🎓 Learning"
+    href="/docs/learning"
+    description="Deep dives into concepts, philosophy, and learning roadmaps"
   />
   <Card
     title="📦 Projects"
     href="/docs/projects/overview"
     description="Current projects, status, and contribution opportunities"
   />
-</Cards>
-
-<Cards>
   <Card
-    title="📚 Resources"
-    href="/docs/resources/overview"
-    description="Learning materials, tools, and skill development"
-  />
-  <Card
-    title="💬 Support"
-    href="/docs/support/overview"
-    description="Get help from the team and community resources"
-  />
-  <Card
-    title="🔧 Troubleshooting"
-    href="/docs/troubleshooting/overview"
-    description="Common issues and debugging techniques"
-  />
-  <Card
-    title="🔒 Security"
-    href="/docs/security/overview"
-    description="Security guidelines and best practices"
+    title="🆘 Help"
+    href="/docs/help"
+    description="Troubleshooting, FAQ, and support resources"
   />
 </Cards>
 
-## 🏗️ Our Tech Stack
+## Our Tech Stack
 
 We use modern, battle-tested technologies to build fast, scalable applications:
 
-- **⚛️ React 19** - Latest React with concurrent features
-- **🚀 Next.js 15** - Full-stack React framework with App Router
-- **🔷 TypeScript** - Type-safe JavaScript for better DX
-- **🎨 Tailwind CSS** - Utility-first CSS framework
-- **🧩 Shadcn/ui** - Beautiful, accessible components
-- **📊 TanStack Query** - Server state management
-- **🏪 Redux Toolkit** - Client state management
-- **🎭 Framer Motion** - Smooth animations and interactions
+| Technology         | Version | Purpose                                       |
+| ------------------ | ------- | --------------------------------------------- |
+| **React**          | 19.x    | UI component library with concurrent features |
+| **Next.js**        | 15.x    | Full-stack framework with App Router          |
+| **TypeScript**     | 5.x     | Type-safe JavaScript                          |
+| **Tailwind CSS**   | 4.x     | Utility-first styling                         |
+| **TanStack Query** | 5.x     | Server state management                       |
+| **Redux Toolkit**  | 2.x     | Client state management                       |
+| **shadcn/ui**      | Latest  | Accessible component library                  |
+| **Vitest**         | 3.x     | Unit testing                                  |
+| **Playwright**     | 1.x     | E2E testing                                   |
 
-## 🎯 Development Principles
+[Learn more about our tech stack →](/docs/reference/tech-stack)
+
+## Development Principles
 
 <Callout type="note">
   Our development approach is guided by these core principles:
 </Callout>
 
-- **Performance First** - Build fast, responsive applications
-- **Developer Experience** - Tools and patterns that enhance productivity
-- **Maintainability** - Clean, readable, and well-tested code
-- **Accessibility** - Inclusive design for all users
-- **Scalability** - Architecture that grows with our needs
+- **Performance First** — Build fast, responsive applications
+- **Developer Experience** — Tools and patterns that enhance productivity
+- **Maintainability** — Clean, readable, and well-tested code
+- **Accessibility** — Inclusive design for all users
+- **Type Safety** — Catch errors at compile time, not runtime
 
-## 🚀 Getting Started
-
-### For New Team Members
-
-1. **[Complete Setup](/docs/getting-started/setup)** - Environment and tools
-2. **[Read Standards](/docs/development/overview)** - Coding guidelines
-3. **[Explore Components](/docs/components/overview)** - UI component library
-4. **[Join a Project](/docs/projects/overview)** - Start contributing
-
-### For Experienced Developers
-
-- **[Advanced Patterns](/docs/patterns/overview)** - Complex architectural patterns
-- **[Best Practices](/docs/development/best-practices)** - Performance and optimization guidelines
-- **[Testing Strategies](/docs/testing/overview)** - Comprehensive testing approaches
-
-## 📊 Project Status
+## Popular Guides
 
 <Cards>
   <Card
-    title="🌐 ABS Website"
-    description="Main corporate website - Active development"
-    href="/docs/projects/overview#abs-website"
+    title="🎮 Interactive Examples"
+    href="/docs/guides/examples"
+    description="Learn by doing with playgrounds and code sandboxes"
   />
   <Card
-    title="👥 Employee Portal"
-    description="Internal tools and dashboards - Ongoing"
-    href="/docs/projects/overview#employee-portal"
+    title="🏗️ Real-World Examples"
+    href="/docs/guides/real-world-examples"
+    description="Production-ready code patterns from our projects"
   />
   <Card
-    title="🔐 Client Portal"
-    description="Customer portal for shipping management - Testing phase"
-    href="https://dev.portal.absegy.com/en/auth/signin"
-    external
+    title="📦 Monorepo Architecture"
+    href="/docs/reference/monorepo"
+    description="Our monorepo setup with Turborepo and pnpm"
   />
   <Card
-    title="📱 Mobile App"
-    description="Customer mobile application - Planning phase"
-    href="/docs/projects/overview#mobile-app"
+    title="🎨 Component Showcase"
+    href="/docs/reference/component-showcase"
+    description="Interactive UI component gallery"
   />
 </Cards>
 
-## 🆘 Need Help?
+## Core Guides
 
 <Cards>
   <Card
-    title="💬 Team Support"
-    href="/docs/support/overview"
-    description="Get help from the frontend team"
+    title="Building Components"
+    href="/docs/guides/components"
+    description="Create reusable, accessible UI components"
   />
   <Card
-    title="🐛 Report Issues"
-    href="/docs/troubleshooting/reporting"
-    description="How to report bugs and request features"
+    title="Data Fetching"
+    href="/docs/guides/data-fetching"
+    description="TanStack Query patterns for server state"
   />
   <Card
-    title="💡 Share Ideas"
-    href="/docs/support/overview#feedback"
-    description="Contribute to our development practices"
+    title="Forms & Validation"
+    href="/docs/guides/forms"
+    description="React Hook Form with Zod validation"
+  />
+  <Card
+    title="Testing"
+    href="/docs/guides/testing"
+    description="Unit and integration testing strategies"
+  />
+</Cards>
+
+## Level Up Your Skills
+
+<Cards>
+  <Card
+    title="🚀 Pro Tips & Tricks"
+    href="/docs/learning/tips"
+    description="Battle-tested tips from the ABS team"
+  />
+  <Card
+    title="📚 Learning Roadmaps"
+    href="/docs/learning/roadmaps"
+    description="Structured paths for skill development"
+  />
+</Cards>
+
+## Need Help?
+
+<Cards>
+  <Card
+    title="🔧 Troubleshooting"
+    href="/docs/help/troubleshooting"
+    description="Common problems and proven solutions"
+  />
+  <Card
+    title="❓ FAQ"
+    href="/docs/help/faq"
+    description="Frequently asked questions"
+  />
+  <Card
+    title="🆘 Getting Help"
+    href="/docs/help/getting-help"
+    description="How to ask questions and get support"
   />
 </Cards>
 
 ---
 
 <Callout type="tip">
-  **Pro Tip**: Bookmark this page and check back regularly for updates. We're
-  constantly improving our documentation based on team feedback and new
-  learnings.
+  **Pro Tip**: Use the search bar (Ctrl/Cmd + K) to quickly find what you're
+  looking for across all documentation.
 </Callout>

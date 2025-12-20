@@ -1,0 +1,268 @@
+---
+title: Common Issues
+description: Quick solutions to frequently encountered problems
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# Common Issues
+
+Quick reference for the most frequently encountered issues and their solutions.
+
+## Build Errors
+
+### "Module not found" Error
+
+```bash
+# Error
+Module not found: Can't resolve '@/components/Button'
+```
+
+**Solutions:**
+
+1. Check the import path matches the file location exactly
+2. Verify `tsconfig.json` path aliases are correct:
+   ```json
+   {
+     "compilerOptions": {
+       "paths": {
+         "@/*": ["./src/*"]
+       }
+     }
+   }
+   ```
+3. Restart the development server after path changes
+
+### "Cannot find module" for Node Modules
+
+```bash
+pnpm install  # Reinstall dependencies
+rm -rf node_modules pnpm-lock.yaml && pnpm install  # Full reinstall
+```
+
+### Out of Memory During Build
+
+```bash
+# Increase Node.js memory limit
+NODE_OPTIONS=--max_old_space_size=4096 pnpm build
+```
+
+---
+
+## TypeScript Errors
+
+### Property Does Not Exist on Type 'unknown'
+
+```typescript
+// ❌ Problem
+const { data } = useQuery({ queryKey: ["user"], queryFn: fetchUser });
+console.log(data.name); // Error: 'data' is of type 'unknown'
+
+// ✅ Solution: Add type parameter
+const { data } = useQuery<User>({
+  queryKey: ["user"],
+  queryFn: fetchUser,
+});
+```
+
+### Type 'X' is Not Assignable to Type 'Y'
+
+```typescript
+// ❌ Problem
+interface Props {
+  status: "active" | "inactive";
+}
+const status = "active"; // Type is 'string', not 'active' | 'inactive'
+
+// ✅ Solution: Use const assertion
+const status = "active" as const;
+// Or define variable with explicit type
+const status: Props["status"] = "active";
+```
+
+### Cannot Use JSX Unless '--jsx' Flag is Provided
+
+Ensure `tsconfig.json` has:
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "preserve"
+  }
+}
+```
+
+---
+
+## React Errors
+
+### "Rendered more hooks than during the previous render"
+
+```typescript
+// ❌ Problem: Conditional hook
+function Component({ show }) {
+  if (!show) return null;
+  const [state, setState] = useState(); // Called conditionally!
+}
+
+// ✅ Solution: Move condition after hooks
+function Component({ show }) {
+  const [state, setState] = useState();
+  if (!show) return null;
+  // Use state here
+}
+```
+
+### "Cannot update a component while rendering a different component"
+
+```typescript
+// ❌ Problem: State update during render
+function Parent() {
+  const [count, setCount] = useState(0);
+  return <Child onRender={() => setCount((c) => c + 1)} />;
+}
+
+// ✅ Solution: Use useEffect for side effects
+function Child({ onMount }) {
+  useEffect(() => {
+    onMount();
+  }, [onMount]);
+}
+```
+
+### Maximum Update Depth Exceeded
+
+```typescript
+// ❌ Problem: useEffect triggers itself
+useEffect(() => {
+  setData({ ...data, updated: true }); // Creates new object every time
+}, [data]);
+
+// ✅ Solution: Use functional update
+useEffect(() => {
+  setData((prev) => ({ ...prev, updated: true }));
+}, []); // Empty deps or specific trigger
+```
+
+---
+
+## Next.js Errors
+
+### Hydration Mismatch
+
+<Callout type="warn">
+  Hydration errors occur when server and client render different content.
+</Callout>
+
+**Common Causes:**
+
+- Using `Date.now()` or `Math.random()` during render
+- Accessing `window` or `localStorage` without checks
+- Extensions modifying the DOM
+
+```typescript
+// ✅ Solution: Suppress hydration warning for dynamic content
+<time dateTime={date} suppressHydrationWarning>
+  {formatDate(date)}
+</time>;
+
+// ✅ Solution: Client-only rendering
+const [mounted, setMounted] = useState(false);
+useEffect(() => setMounted(true), []);
+
+if (!mounted) return <Skeleton />;
+return <ClientOnlyContent />;
+```
+
+### "useSearchParams() should be wrapped in a suspense boundary"
+
+```tsx
+import { Suspense } from "react";
+
+// Wrap the component using useSearchParams
+<Suspense fallback={<Loading />}>
+  <SearchResults />
+</Suspense>;
+```
+
+---
+
+## Styling Issues
+
+### Tailwind Classes Not Applying
+
+1. **Check `tailwind.config.js` content paths:**
+
+   ```js
+   content: [
+     "./src/**/*.{js,ts,jsx,tsx,mdx}",
+     "./components/**/*.{js,ts,jsx,tsx,mdx}",
+   ];
+   ```
+
+2. **Restart dev server after config changes**
+
+3. **Check for typos in class names**
+
+4. **Use Tailwind IntelliSense extension**
+
+### CSS Modules Not Working
+
+Ensure file is named correctly: `Component.module.css`
+
+```typescript
+// ✅ Correct import
+import styles from "./Component.module.css";
+
+<div className={styles.container}>Content</div>;
+```
+
+---
+
+## Package/Dependency Issues
+
+### Peer Dependency Warnings
+
+```bash
+# Check what's causing the warning
+pnpm why <package-name>
+
+# If safe to ignore, add to .npmrc
+legacy-peer-deps=true
+```
+
+### Version Conflicts
+
+```bash
+# Check for duplicate packages
+pnpm dedupe
+
+# Force resolution in package.json
+"pnpm": {
+  "overrides": {
+    "react": "^19.0.0"
+  }
+}
+```
+
+---
+
+## Quick Fix Commands
+
+```bash
+# Clear all caches and rebuild
+rm -rf .next node_modules/.cache && pnpm dev
+
+# Full clean install
+rm -rf node_modules .next pnpm-lock.yaml && pnpm install && pnpm dev
+
+# Check for TypeScript errors
+pnpm tsc --noEmit
+
+# Fix auto-fixable lint errors
+pnpm lint --fix
+
+# Update all dependencies
+pnpm update --interactive --latest
+```
