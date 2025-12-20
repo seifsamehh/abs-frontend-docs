@@ -100,7 +100,7 @@ export function NewYearCelebration() {
   };
 
   // Don't render on server to avoid hydration mismatch
-  if (!isMounted || !isVisible) {
+  if (!isMounted) {
     return null;
   }
 
@@ -109,7 +109,7 @@ export function NewYearCelebration() {
 
   return (
     <>
-      {/* Snowfall Effect - covers entire viewport */}
+      {/* Snowfall Effect - covers entire viewport (always visible) */}
       <div className="z-40 fixed inset-0 pointer-events-none">
         <Snowfall
           color={snowColor}
@@ -120,70 +120,72 @@ export function NewYearCelebration() {
         />
       </div>
 
-      {/* Professional Celebration Banner */}
-      <div className="right-4 bottom-4 z-50 fixed max-w-sm">
-        <div className="relative bg-fd-card shadow-lg border border-fd-border rounded-xl overflow-hidden">
-          {/* Top accent bar */}
-          <div className="bg-gradient-to-r from-fd-primary via-amber-500 to-fd-primary h-1" />
+      {/* Professional Celebration Banner - only visible when not dismissed */}
+      {isVisible && (
+        <div className="right-4 bottom-4 z-50 fixed max-w-sm">
+          <div className="relative bg-fd-card shadow-lg border border-fd-border rounded-xl overflow-hidden">
+            {/* Top accent bar */}
+            <div className="bg-gradient-to-r from-fd-primary via-amber-500 to-fd-primary h-1" />
 
-          <div className="p-4">
-            {/* Header with dismiss */}
-            <div className="flex justify-between items-start mb-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">🎄</span>
-                <span className="font-medium text-fd-foreground text-sm">
-                  {isNewYear ? "Happy New Year!" : "New Year Countdown"}
-                </span>
-              </div>
-              <button
-                onClick={handleDismiss}
-                className="hover:bg-fd-muted -m-1 p-1 rounded-md text-fd-muted-foreground hover:text-fd-foreground transition-colors"
-                aria-label="Dismiss"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            {/* Content */}
-            {isNewYear ? (
-              <div className="py-2 text-center">
-                <h3 className="mb-1 font-bold text-fd-primary text-xl">
-                  🎉 2025 🎉
-                </h3>
-                <p className="text-fd-muted-foreground text-sm">
-                  Wishing you a year of clean code and zero bugs!
-                </p>
-              </div>
-            ) : (
-              <>
-                {/* Countdown Grid */}
-                <div className="gap-2 grid grid-cols-4 mb-3">
-                  <TimeBlock value={timeLeft.days} label="Days" />
-                  <TimeBlock value={timeLeft.hours} label="Hrs" />
-                  <TimeBlock value={timeLeft.minutes} label="Min" />
-                  <TimeBlock value={timeLeft.seconds} label="Sec" />
+            <div className="p-4">
+              {/* Header with dismiss */}
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🎄</span>
+                  <span className="font-medium text-fd-foreground text-sm">
+                    {isNewYear ? "Happy New Year!" : "New Year Countdown"}
+                  </span>
                 </div>
+                <button
+                  onClick={handleDismiss}
+                  className="hover:bg-fd-muted -m-1 p-1 rounded-md text-fd-muted-foreground hover:text-fd-foreground transition-colors"
+                  aria-label="Dismiss"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
 
-                <p className="text-fd-muted-foreground text-xs text-center">
-                  ✨ Here&apos;s to a productive 2025!
-                </p>
-              </>
-            )}
+              {/* Content */}
+              {isNewYear ? (
+                <div className="py-2 text-center">
+                  <h3 className="mb-1 font-bold text-fd-primary text-xl">
+                    🎉 2025 🎉
+                  </h3>
+                  <p className="text-fd-muted-foreground text-sm">
+                    Wishing you a year of clean code and zero bugs!
+                  </p>
+                </div>
+              ) : (
+                <>
+                  {/* Countdown Grid */}
+                  <div className="gap-2 grid grid-cols-4 mb-3">
+                    <TimeBlock value={timeLeft.days} label="Days" />
+                    <TimeBlock value={timeLeft.hours} label="Hrs" />
+                    <TimeBlock value={timeLeft.minutes} label="Min" />
+                    <TimeBlock value={timeLeft.seconds} label="Sec" />
+                  </div>
+
+                  <p className="text-fd-muted-foreground text-xs text-center">
+                    ✨ Here&apos;s to a productive 2025!
+                  </p>
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
