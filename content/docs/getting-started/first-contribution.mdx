@@ -112,11 +112,23 @@ Once approved and merged, you've made your first contribution!
 </Tab>
   <Tab value="Examples">
     ```bash
-    # Feature
+    # Single Feature
+    feat: add Feature 1
+
+    # Feature with scope
     feat(auth): add login form validation
+
+    # Multiple related features (comma-separated scopes)
+    feat(ship, pickup): add part of pickup related to shipment
 
     # Bug fix
     fix(ui): resolve button hover state on mobile
+
+    # Bug fix with scope
+    fix(auth): resolve login redirect issue
+
+    # Multiple related bug fixes (comma-separated scopes)
+    fix(auth, ui): resolve login redirect and button hover issues
 
     # Documentation
     docs: update installation instructions
@@ -145,12 +157,55 @@ Once approved and merged, you've made your first contribution!
 
 ## Pull Request Guidelines
 
+### When to Create a Pull Request
+
+**For Features:**
+- Create a PR when you've completed a feature or a meaningful part of a feature
+- Each feature should have its own PR with a clear, descriptive title
+- Example: `feat: add Feature 1`
+
+**For Related Features:**
+- If you're adding multiple related features in the same PR, include all scopes in the title
+- Use comma-separated scopes to indicate multiple related areas
+- Example: `feat(ship, pickup): add part of pickup related to shipment`
+
+**For Bug Fixes:**
+- Create a PR for each bug fix or related group of bug fixes
+- Use the `fix` type with appropriate scope
+- Example: `fix(auth): resolve login redirect issue`
+
+**For Multiple Related Bug Fixes:**
+- If you're fixing multiple related bugs in the same PR, include all scopes in the title
+- Use comma-separated scopes to indicate multiple related areas
+- Example: `fix(auth, ui): resolve login redirect and button hover issues`
+
 ### PR Title
 
 Follow the same format as commit messages:
 
+**Single Feature:**
 ```
-feat(auth): add social login buttons
+feat: add Feature 1
+```
+
+**Multiple Related Features:**
+```
+feat(ship, pickup): add part of pickup related to shipment
+```
+
+**Bug Fix:**
+```
+fix(ui): resolve button hover state on mobile
+```
+
+**Multiple Related Bug Fixes:**
+```
+fix(auth, ui): resolve login redirect and button hover issues
+```
+
+**General Format:**
+```
+<type>(<scope>): <description>
 ```
 
 ### PR Description Template
