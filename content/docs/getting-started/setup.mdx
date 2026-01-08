@@ -208,12 +208,28 @@ Before starting work:
 
 ### 3. Set Up Your Development Environment
 
-```bash
-# Pull latest changes
-git checkout main
-git pull origin main
+<Callout type="warn">
+  **Daily Workflow Tip:** At the start of each day before you begin working, always pull the latest changes from the `stage` branch to ensure your local environment is up to date with the team's latest features.
+</Callout>
 
-# Create a feature branch
+#### Our Branching Strategy
+
+| Branch | Owner | Purpose |
+|--------|-------|---------|
+| `main` | Frontend Leader | Production-ready, stable code only |
+| `stage` | Coordinator | Integration branch where features are tested before production |
+| `feature/*` | Developers | Individual feature development |
+
+**Workflow:** `feature/*` → `stage` → `main`
+
+All feature branches should be created from and merged into `stage` first. The coordinator reviews and tests features in `stage`, then the frontend leader promotes stable code to `main`.
+
+```bash
+# Start of day: Pull latest from stage to get team's latest work
+git checkout stage
+git pull origin stage
+
+# Create your feature branch FROM stage (not main)
 git checkout -b feature/your-task-name
 
 # Install dependencies (if needed)
