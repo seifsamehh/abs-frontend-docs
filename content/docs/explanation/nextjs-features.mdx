@@ -1,0 +1,555 @@
+---
+title: What's New in Next.js 16
+description: Complete guide to Next.js 16 features including stable Turbopack, use cache directive, and React Compiler integration
+keywords:
+  [
+    "Next.js 16",
+    "Turbopack",
+    "use cache",
+    "React Compiler",
+    "PPR",
+    "Partial Prerendering",
+  ]
+difficulty: intermediate
+estimatedTime: "30 min"
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+
+# 🚀 What's New in Next.js 16
+
+<Callout type="info">
+  Next.js 16 brings major improvements including stable Turbopack for production, 
+  the new `use cache` directive for granular caching, and first-class React Compiler 
+  integration. **Updated January 2026**
+</Callout>
+
+## 📋 Quick Overview
+
+| Feature                    | Status        | Impact                                    |
+| -------------------------- | ------------- | ----------------------------------------- |
+| **Turbopack (Production)** | ✅ Stable     | 10x faster builds, drop-in replacement    |
+| **`use cache` Directive**  | ✅ Stable     | Granular caching at function level        |
+| **React Compiler**         | ✅ Integrated | Automatic memoization, no manual useMemo  |
+| **Partial Prerendering**   | ✅ Stable     | Mix static & dynamic in single route      |
+| **View Transitions API**   | ✅ Supported  | Native page transitions                   |
+| **Improved Error DX**      | ✅ Enhanced   | Better error messages and stack traces    |
+
+## ⚡ Turbopack Production (Stable)
+
+Turbopack is now stable for both development and production builds. It's a Rust-based bundler that replaces Webpack.
+
+### Enable Turbopack
+
+```bash
+# Development (default in Next.js 16)
+next dev
+
+# Production builds
+next build --turbopack
+```
+
+### Performance Comparison
+
+| Build Type  | Webpack     | Turbopack   | Improvement |
+| ----------- | ----------- | ----------- | ----------- |
+| Cold Start  | 15s         | 1.5s        | **10x**     |
+| HMR         | 500ms       | 50ms        | **10x**     |
+| Production  | 120s        | 25s         | **5x**      |
+
+<Callout type="tip">
+  Turbopack is now the default for `next dev`. For production, add `--turbopack` 
+  to your build command or set it in `next.config.ts`.
+</Callout>
+
+```ts
+// next.config.ts
+import type { NextConfig } from "next";
+
+const config: NextConfig = {
+  // Enable Turbopack for production builds
+  turbopack: {
+    // Optional: Configure module resolution
+    resolveAlias: {
+      "@": "./src",
+    },
+  },
+};
+
+export default config;
+```
+
+## 🗃️ The `use cache` Directive
+
+The new `use cache` directive provides granular caching control at the function or component level.
+
+### Basic Usage
+
+```tsx
+// Cache a server function
+async function getProducts() {
+  "use cache";
+  
+  const products = await db.product.findMany();
+  return products;
+}
+
+// Cache with specific profile
+async function getUser(id: string) {
+  "use cache: user";
+  
+  const user = await db.user.findUnique({ where: { id } });
+  return user;
+}
+```
+
+### Cache Profiles
+
+```ts
+// next.config.ts
+import type { NextConfig } from "next";
+
+const config: NextConfig = {
+  experimental: {
+    cacheLife: {
+      // Custom cache profiles
+      user: {
+        stale: 300,      // 5 minutes stale time
+        revalidate: 60,  // Revalidate every minute
+        expire: 3600,    // Expire after 1 hour
+      },
+      products: {
+        stale: 60,
+        revalidate: 30,
+        expire: 600,
+      },
+    },
+  },
+};
+
+export default config;
+```
+
+### Using `cacheTag` for Invalidation
+
+```tsx
+import { cacheTag, revalidateTag } from "next/cache";
+
+async function getProduct(id: string) {
+  "use cache";
+  cacheTag(`product-${id}`, "products");
+  
+  return db.product.findUnique({ where: { id } });
+}
+
+// Invalidate specific product
+async function updateProduct(id: string, data: ProductData) {
+  "use server";
+  
+  await db.product.update({ where: { id }, data });
+  revalidateTag(`product-${id}`);
+}
+
+// Invalidate all products
+async function refreshProducts() {
+  "use server";
+  
+  revalidateTag("products");
+}
+```
+
+### Cache in Components
+
+```tsx
+async function ProductCard({ id }: { id: string }) {
+  "use cache";
+  cacheTag(`product-card-${id}`);
+  
+  const product = await getProduct(id);
+  
+  return (
+    <div className="rounded-lg border p-4">
+      <h3>{product.name}</h3>
+      <p>${product.price}</p>
+    </div>
+  );
+}
+```
+
+## ⚛️ React Compiler Integration
+
+Next.js 16 has built-in support for the React Compiler, which automatically optimizes your components.
+
+### Enable React Compiler
+
+```ts
+// next.config.ts
+import type { NextConfig } from "next";
+
+const config: NextConfig = {
+  experimental: {
+    reactCompiler: true,
+  },
+};
+
+export default config;
+```
+
+### What It Does
+
+<Cards>
+  <Card
+    title="Auto Memoization"
+    description="No more manual useMemo, useCallback, or React.memo"
+  />
+  <Card
+    title="Optimized Re-renders"
+    description="Compiler detects and prevents unnecessary re-renders"
+  />
+  <Card
+    title="Smaller Bundle"
+    description="Dead code elimination and tree shaking improvements"
+  />
+  <Card
+    title="Zero Config"
+    description="Works automatically with existing React code"
+  />
+</Cards>
+
+### Before vs After
+
+```tsx
+// ❌ Before: Manual memoization
+function ProductList({ products, onSelect }: Props) {
+  const sortedProducts = useMemo(
+    () => products.sort((a, b) => a.price - b.price),
+    [products]
+  );
+  
+  const handleSelect = useCallback(
+    (id: string) => onSelect(id),
+    [onSelect]
+  );
+  
+  return (
+    <ul>
+      {sortedProducts.map(product => (
+        <ProductItem 
+          key={product.id} 
+          product={product} 
+          onSelect={handleSelect}
+        />
+      ))}
+    </ul>
+  );
+}
+
+// ✅ After: React Compiler handles it automatically
+function ProductList({ products, onSelect }: Props) {
+  const sortedProducts = products.sort((a, b) => a.price - b.price);
+  
+  return (
+    <ul>
+      {products.map(product => (
+        <ProductItem 
+          key={product.id} 
+          product={product} 
+          onSelect={(id) => onSelect(id)}
+        />
+      ))}
+    </ul>
+  );
+}
+```
+
+<Callout type="warn">
+  Remove existing `useMemo`, `useCallback`, and `React.memo` calls gradually 
+  when enabling the compiler. The compiler will handle optimization automatically.
+</Callout>
+
+## 🎨 Partial Prerendering (Stable)
+
+PPR allows you to combine static and dynamic content in a single route, getting the best of both worlds.
+
+### Enable PPR
+
+```ts
+// next.config.ts
+import type { NextConfig } from "next";
+
+const config: NextConfig = {
+  experimental: {
+    ppr: true,
+  },
+};
+
+export default config;
+```
+
+### How It Works
+
+```tsx
+// app/products/[id]/page.tsx
+import { Suspense } from "react";
+
+// This page uses PPR - static shell with dynamic content
+export default async function ProductPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { id } = await params;
+  
+  return (
+    <div>
+      {/* Static: Rendered at build time */}
+      <Header />
+      <Navigation />
+      
+      {/* Dynamic: Rendered on request, streamed in */}
+      <Suspense fallback={<ProductSkeleton />}>
+        <ProductDetails id={id} />
+      </Suspense>
+      
+      {/* Dynamic: User-specific content */}
+      <Suspense fallback={<RecommendationsSkeleton />}>
+        <PersonalizedRecommendations />
+      </Suspense>
+      
+      {/* Static: Rendered at build time */}
+      <Footer />
+    </div>
+  );
+}
+```
+
+### PPR Benefits
+
+| Aspect          | Static Only | Dynamic Only | PPR                    |
+| --------------- | ----------- | ------------ | ---------------------- |
+| **TTFB**        | ⚡ Instant  | 🐌 Slow      | ⚡ Instant             |
+| **Fresh Data**  | ❌ Stale    | ✅ Fresh     | ✅ Fresh (in shell)    |
+| **SEO**         | ✅ Great    | ⚠️ Depends   | ✅ Great               |
+| **Cacheability**| ✅ CDN      | ❌ No CDN    | ✅ Static parts cached |
+
+## 🔄 View Transitions API
+
+Next.js 16 supports native View Transitions for smooth page transitions.
+
+### Enable View Transitions
+
+```ts
+// next.config.ts
+import type { NextConfig } from "next";
+
+const config: NextConfig = {
+  experimental: {
+    viewTransition: true,
+  },
+};
+
+export default config;
+```
+
+### Usage with Link
+
+```tsx
+import Link from "next/link";
+
+export function Navigation() {
+  return (
+    <nav>
+      {/* View transitions work automatically with Link */}
+      <Link href="/products">Products</Link>
+      <Link href="/about">About</Link>
+    </nav>
+  );
+}
+```
+
+### Custom Transition Styles
+
+```css
+/* global.css */
+::view-transition-old(root) {
+  animation: fade-out 0.2s ease-out;
+}
+
+::view-transition-new(root) {
+  animation: fade-in 0.2s ease-in;
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Named transitions for specific elements */
+.product-image {
+  view-transition-name: product-image;
+}
+
+::view-transition-old(product-image),
+::view-transition-new(product-image) {
+  animation-duration: 0.3s;
+}
+```
+
+### Programmatic Transitions
+
+```tsx
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+
+export function ProductCard({ product }: { product: Product }) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  
+  function handleClick() {
+    startTransition(() => {
+      router.push(`/products/${product.id}`);
+    });
+  }
+  
+  return (
+    <button 
+      onClick={handleClick}
+      className={isPending ? "opacity-50" : ""}
+    >
+      <img 
+        src={product.image} 
+        alt={product.name}
+        style={{ viewTransitionName: `product-${product.id}` }}
+      />
+    </button>
+  );
+}
+```
+
+## 📦 Migration Guide
+
+<Steps>
+  <Step>
+    ### Update Dependencies
+    
+    ```bash
+    npm install next@16 react@19 react-dom@19
+    ```
+  </Step>
+  
+  <Step>
+    ### Update next.config
+    
+    Rename `next.config.js` to `next.config.ts` if not already done:
+    
+    ```ts
+    import type { NextConfig } from "next";
+    
+    const config: NextConfig = {
+      // Your config
+    };
+    
+    export default config;
+    ```
+  </Step>
+  
+  <Step>
+    ### Enable New Features
+    
+    ```ts
+    const config: NextConfig = {
+      experimental: {
+        ppr: true,
+        reactCompiler: true,
+      },
+    };
+    ```
+  </Step>
+  
+  <Step>
+    ### Update Build Scripts
+    
+    ```json
+    {
+      "scripts": {
+        "dev": "next dev",
+        "build": "next build --turbopack",
+        "start": "next start"
+      }
+    }
+    ```
+  </Step>
+  
+  <Step>
+    ### Test Thoroughly
+    
+    Run your test suite and check for any breaking changes:
+    
+    ```bash
+    npm run test
+    npm run build
+    ```
+  </Step>
+</Steps>
+
+## ⚠️ Breaking Changes
+
+<Callout type="warn">
+  Be aware of these breaking changes when upgrading to Next.js 16:
+</Callout>
+
+| Change | Before | After | Action Required |
+| ------ | ------ | ----- | --------------- |
+| **Async params** | `params.id` | `(await params).id` | Update all dynamic route params |
+| **Default caching** | Cached by default | Explicit opt-in | Add `use cache` where needed |
+| **React 19 required** | React 18+ | React 19 only | Upgrade React |
+| **Node.js 20+** | Node 18+ | Node 20+ | Upgrade Node.js |
+
+### Async Params Migration
+
+```tsx
+// ❌ Before (Next.js 15)
+export default function Page({ params }: { params: { id: string } }) {
+  return <div>{params.id}</div>;
+}
+
+// ✅ After (Next.js 16)
+export default async function Page({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { id } = await params;
+  return <div>{id}</div>;
+}
+```
+
+## 👉 Next Steps
+
+<Cards>
+  <Card
+    title="Server Components"
+    href="/docs/guides/server-components"
+    description="Deep dive into React Server Components patterns"
+  />
+  <Card
+    title="Data Fetching"
+    href="/docs/guides/data-fetching"
+    description="Modern data fetching with Server Actions and TanStack Query"
+  />
+  <Card
+    title="Deployment"
+    href="/docs/guides/deployment"
+    description="Deploy your Next.js 16 app to production"
+  />
+</Cards>

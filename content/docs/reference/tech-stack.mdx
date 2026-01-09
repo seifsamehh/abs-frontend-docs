@@ -44,8 +44,8 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
 | Technology     | Version | Key Features                                     |
 | -------------- | ------- | ------------------------------------------------ |
-| **Next.js**    | 15.5.x  | App Router, Turbopack, Server Actions, PPR       |
-| **React**      | 19.1.x  | Server Components, Actions, `use` hook, Compiler |
+| **Next.js**    | 16.x    | App Router, Turbopack, Server Actions, PPR       |
+| **React**      | 19.x    | Server Components, Actions, `use` hook, Compiler |
 | **TypeScript** | 5.9.x   | Isolated declarations, `--erasableSyntaxOnly`    |
 
 ### React 19 New Features
@@ -106,17 +106,19 @@ function CreateUserForm() {
 }
 ```
 
-### Next.js 15.5 Features
+### Next.js 16 Features
 
 | Feature                              | Description                                                    |
 | ------------------------------------ | -------------------------------------------------------------- |
 | **App Router**                       | File-based routing with layouts, loading states, and streaming |
-| **Turbopack**                        | Rust-based bundler, 5x faster than Webpack (stable in dev)     |
+| **Turbopack (Stable)**               | Rust-based bundler, now stable for production builds           |
 | **Server Actions**                   | Built-in form handling with progressive enhancement            |
-| **Partial Prerendering**             | Combine static and dynamic content in single route             |
+| **Partial Prerendering (Stable)**    | Combine static and dynamic content in single route             |
+| **`use cache` Directive**            | Granular caching control at function/component level           |
 | **`next/form`**                      | Enhanced Form component with client-side navigation            |
 | **`forbidden()` / `unauthorized()`** | New auth-related functions                                     |
-| **Caching Changes**                  | `fetch` and route handlers no longer cached by default         |
+| **React Compiler Support**           | Built-in integration with React Compiler                       |
+| **Improved Caching**                 | More predictable caching with explicit opt-in                  |
 
 ```tsx
 // Next.js 15 Route Handler Example
@@ -409,12 +411,12 @@ describe("LoginForm", () => {
 | **GitHub Actions** | CI/CD pipelines                |
 | **Docker**         | Containerization (when needed) |
 
-## Package Versions (December 2025)
+## Package Versions (January 2026)
 
 ```json
 {
   "dependencies": {
-    "next": "^15.5.0",
+    "next": "^16.1.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "@tanstack/react-query": "^5.62.0",

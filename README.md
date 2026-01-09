@@ -108,7 +108,7 @@ We welcome contributions from all team members! Here's how you can help:
 4. Submit a pull request
 5. Request review from team members
 
-See our [Support Guide](http://localhost:3000/docs/support/overview) for detailed contribution guidelines.
+See our [Contribution Guide](/docs/getting-started/first-contribution) for detailed contribution guidelines.
 
 ## 🛠️ Built With
 
@@ -134,10 +134,14 @@ This documentation follows these principles:
 - [x] Company and technology overviews
 - [x] Development standards and best practices
 - [x] Troubleshooting and support guides
-- [ ] Interactive code examples
+- [x] Interactive code examples
+- [x] API documentation integration
+- [x] Accessibility guidelines
+- [x] Performance monitoring guide
+- [x] Internationalization (i18n) guide
+- [x] Glossary of terms
 - [ ] Video tutorials
-- [ ] API documentation integration
-- [ ] Multi-language support (Arabic)
+- [ ] Multi-language support (Arabic documentation)
 
 ## 📞 Support
 

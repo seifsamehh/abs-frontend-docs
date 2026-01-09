@@ -1,0 +1,305 @@
+---
+title: "ADR-008: Turborepo for Monorepo"
+description: Adopting Turborepo for monorepo build orchestration and caching
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+# ADR-008: Turborepo for Monorepo Management
+
+<Callout type="info">
+  **Status:** Accepted **Date:** September 2025 **Decision Makers:** Platform
+  Engineering Team
+</Callout>
+
+## Context
+
+As our frontend projects grow, we need a monorepo structure to:
+
+- Share code between multiple applications
+- Maintain consistent tooling and configurations
+- Enable atomic changes across packages
+- Improve build performance with intelligent caching
+
+We evaluated several monorepo tools:
+
+1. **Turborepo** - Vercel's incremental build system
+2. **Nx** - Nrwl's build system with extensive plugin ecosystem
+3. **Lerna** - Classic monorepo tool (now maintained by Nx)
+4. **pnpm Workspaces** - Built-in workspace management
+5. **Rush** - Microsoft's scalable monorepo tool
+
+## Decision
+
+**We will use Turborepo with pnpm workspaces for monorepo management.**
+
+## Rationale
+
+### Why Turborepo?
+
+| Feature                 | Turborepo                  | Nx        | Lerna     |
+| ----------------------- | -------------------------- | --------- | --------- |
+| **Setup Complexity**    | Low                        | High      | Medium    |
+| **Build Caching**       | Excellent (local + remote) | Excellent | Limited   |
+| **Next.js Integration** | Native                     | Plugin    | None      |
+| **Learning Curve**      | Low                        | High      | Low       |
+| **Config Files**        | 1 (turbo.json)             | Multiple  | Multiple  |
+| **Community**           | Growing fast               | Large     | Declining |
+
+### Key Reasons
+
+1. **Native Next.js Support**: Built by Vercel, seamless integration
+2. **Zero-Config Caching**: Intelligent task caching out of the box
+3. **Simple Configuration**: Single `turbo.json` file
+4. **Fast Adoption**: Works with existing package.json scripts
+5. **Remote Caching**: Vercel Remote Cache for CI/CD optimization
+6. **Parallel Execution**: Automatic task parallelization
+
+### Why pnpm over npm/yarn?
+
+- **Disk Efficiency**: Hard links prevent duplicate packages
+- **Strict Dependencies**: Prevents phantom dependencies
+- **Speed**: Faster installs with content-addressable storage
+- **Workspaces**: First-class monorepo support
+
+## Implementation
+
+### Repository Structure
+
+```
+abs-monorepo/
+├── apps/
+│   ├── web/                 # Main Next.js application
+│   ├── admin/               # Admin dashboard
+│   └── docs/                # Documentation site
+├── packages/
+│   ├── ui/                  # Shared component library
+│   ├── config/              # Shared configurations
+│   │   ├── eslint/
+│   │   ├── typescript/
+│   │   └── tailwind/
+│   ├── utils/               # Shared utilities
+│   └── types/               # Shared TypeScript types
+├── turbo.json
+├── pnpm-workspace.yaml
+└── package.json
+```
+
+### turbo.json Configuration
+
+```json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    }
+  }
+}
+```
+
+### pnpm-workspace.yaml
+
+```yaml
+packages:
+  - "apps/*"
+  - "packages/*"
+```
+
+### Root package.json
+
+```json
+{
+  "name": "abs-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "typecheck": "turbo typecheck",
+    "clean": "turbo clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}
+```
+
+### Shared Package Example
+
+```json
+// packages/ui/package.json
+{
+  "name": "@abs/ui",
+  "version": "0.1.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./button": {
+      "import": "./dist/button.mjs",
+      "require": "./dist/button.js",
+      "types": "./dist/button.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  }
+}
+```
+
+### Using Shared Packages
+
+```tsx
+// apps/web/src/app/page.tsx
+import { Button, Card } from "@abs/ui";
+import { formatDate } from "@abs/utils";
+
+export default function HomePage() {
+  return (
+    <Card>
+      <h1>Welcome</h1>
+      <p>Today is {formatDate(new Date())}</p>
+      <Button>Get Started</Button>
+    </Card>
+  );
+}
+```
+
+## Remote Caching
+
+### Enable Vercel Remote Cache
+
+```bash
+# Login to Vercel
+npx turbo login
+
+# Link to team
+npx turbo link
+```
+
+### CI/CD Configuration
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm turbo build lint test
+        env:
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+```
+
+## Consequences
+
+### Positive
+
+- **Faster CI/CD**: Remote caching reduces build times by 70-90%
+- **Consistent Tooling**: Shared configs ensure consistency
+- **Code Sharing**: Easy to share components and utilities
+- **Atomic Changes**: Change shared code and apps together
+- **Developer Experience**: `turbo dev` runs all apps in parallel
+
+### Negative
+
+- **Initial Setup**: More complex than single-project setup
+- **Dependency Management**: Need to manage internal package versions
+- **Learning Curve**: Team needs to understand workspace patterns
+- **IDE Performance**: Large monorepos can slow down IDE
+
+### Mitigations
+
+- Document common workflows and patterns
+- Use scoped builds: `turbo build --filter=web`
+- Configure IDE to exclude node_modules from indexing
+- Use `turbo prune` for deployments to reduce container size
+
+## Alternatives Considered
+
+### Nx
+
+**Rejected because:**
+
+- Higher complexity for our needs
+- Heavier configuration requirements
+- Less seamless Next.js integration
+- Steeper learning curve
+
+### Lerna
+
+**Rejected because:**
+
+- Limited caching capabilities
+- Less active development
+- No remote caching support
+
+### pnpm Workspaces Only
+
+**Rejected because:**
+
+- No task orchestration
+- No caching layer
+- Manual dependency ordering
+
+## Migration Path
+
+1. **Phase 1**: Set up monorepo structure with existing apps
+2. **Phase 2**: Extract shared UI components to `@abs/ui`
+3. **Phase 3**: Extract shared configs to `@abs/config`
+4. **Phase 4**: Enable remote caching in CI/CD
+5. **Phase 5**: Migrate remaining shared code
+
+## References
+
+- [Turborepo Documentation](https://turbo.build/repo/docs)
+- [pnpm Workspaces](https://pnpm.io/workspaces)
+- [Vercel Remote Cache](https://turbo.build/repo/docs/core-concepts/remote-caching)
+- [Monorepo Handbook](https://turbo.build/repo/docs/handbook)

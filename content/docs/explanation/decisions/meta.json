@@ -1,0 +1,14 @@
+{
+  "title": "Architecture Decisions",
+  "pages": [
+    "index",
+    "adr-001-tanstack-query",
+    "adr-002-tailwind-css",
+    "adr-003-shadcn-ui",
+    "adr-004-app-router",
+    "adr-005-zod-validation",
+    "adr-006-vitest",
+    "adr-007-zustand",
+    "adr-008-turborepo"
+  ]
+}

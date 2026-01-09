@@ -1,0 +1,16 @@
+{
+  "title": "Explanation",
+  "icon": "Lightbulb",
+  "pages": [
+    "index",
+    "---Core Concepts---",
+    "philosophy",
+    "architecture",
+    "monorepo-strategy",
+    "nextjs-features",
+    "---Decisions---",
+    "decisions",
+    "---Learning Paths---",
+    "learning-paths"
+  ]
+}

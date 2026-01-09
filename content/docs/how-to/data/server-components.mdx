@@ -1,0 +1,645 @@
+---
+title: Server Components & Streaming
+description: Deep dive into React Server Components, streaming, and Suspense patterns for optimal performance
+keywords:
+  [
+    "React Server Components",
+    "RSC",
+    "streaming",
+    "Suspense",
+    "server rendering",
+    "Next.js",
+  ]
+difficulty: advanced
+estimatedTime: "45 min"
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 🌊 Server Components & Streaming
+
+<Callout type="info">
+  React Server Components (RSC) and streaming fundamentally change how we build
+  React applications. This guide covers patterns, best practices, and common
+  pitfalls for production applications.
+</Callout>
+
+## 🎯 Understanding Server Components
+
+### Server vs Client Components
+
+| Aspect            | Server Components         | Client Components            |
+| ----------------- | ------------------------- | ---------------------------- |
+| **Rendering**     | Server only               | Server + Client hydration    |
+| **JavaScript**    | Zero client JS            | Shipped to browser           |
+| **Access to**     | Database, filesystem, env | Browser APIs, event handlers |
+| **State/Hooks**   | ❌ No useState/useEffect  | ✅ Full React hooks          |
+| **Data fetching** | Direct await              | useEffect or TanStack Query  |
+| **Bundle size**   | Not included              | Included in bundle           |
+
+### When to Use What
+
+<Cards>
+  <Card
+    title="🖥️ Server Components"
+    description="Data fetching, database access, heavy computations, static content, SEO-critical pages"
+  />
+  <Card
+    title="🖱️ Client Components"
+    description="Interactivity, event handlers, browser APIs, state management, animations"
+  />
+</Cards>
+
+## 📁 File Structure Patterns
+
+### Recommended Organization
+
+```
+app/
+├── (marketing)/
+│   ├── page.tsx          # Server Component (default)
+│   └── hero.tsx          # Server Component
+├── (dashboard)/
+│   ├── layout.tsx        # Server Component
+│   ├── page.tsx          # Server Component
+│   └── _components/
+│       ├── sidebar.tsx       # Server Component
+│       ├── user-menu.tsx     # Client Component ('use client')
+│       └── data-table.tsx    # Client Component ('use client')
+├── components/
+│   ├── ui/               # Shared UI (mostly client)
+│   └── server/           # Shared server components
+└── lib/
+    ├── db.ts             # Database utilities
+    └── api.ts            # API utilities
+```
+
+### Colocation Strategy
+
+```tsx
+// app/products/page.tsx - Server Component
+import { ProductList } from "./_components/product-list";
+import { ProductFilters } from "./_components/product-filters";
+
+export default async function ProductsPage() {
+  const products = await getProducts();
+
+  return (
+    <div className="grid grid-cols-4 gap-6">
+      <aside>
+        {/* Client Component for interactivity */}
+        <ProductFilters />
+      </aside>
+      <main className="col-span-3">
+        {/* Server Component for data display */}
+        <ProductList products={products} />
+      </main>
+    </div>
+  );
+}
+```
+
+## 🔄 Data Fetching Patterns
+
+### Pattern 1: Direct Database Access
+
+```tsx
+// app/users/page.tsx
+import { db } from "@/lib/db";
+
+export default async function UsersPage() {
+  // Direct database access - no API needed!
+  const users = await db.user.findMany({
+    include: { posts: { take: 5 } },
+  });
+
+  return (
+    <ul>
+      {users.map((user) => (
+        <UserCard key={user.id} user={user} />
+      ))}
+    </ul>
+  );
+}
+```
+
+### Pattern 2: Parallel Data Fetching
+
+```tsx
+// app/dashboard/page.tsx
+import { Suspense } from "react";
+
+export default async function DashboardPage() {
+  // Start all fetches in parallel
+  const userPromise = getUser();
+  const ordersPromise = getOrders();
+  const analyticsPromise = getAnalytics();
+
+  // Await all at once
+  const [user, orders, analytics] = await Promise.all([
+    userPromise,
+    ordersPromise,
+    analyticsPromise,
+  ]);
+
+  return (
+    <div>
+      <UserProfile user={user} />
+      <OrdersSummary orders={orders} />
+      <AnalyticsChart data={analytics} />
+    </div>
+  );
+}
+```
+
+### Pattern 3: Waterfall Prevention with Suspense
+
+```tsx
+// ❌ Bad: Waterfall - each component waits for the previous
+async function Dashboard() {
+  const user = await getUser();
+  const orders = await getOrders(user.id);
+  const analytics = await getAnalytics(user.id);
+
+  return <div>...</div>;
+}
+
+// ✅ Good: Stream independent parts with Suspense
+export default function Dashboard() {
+  return (
+    <div className="grid grid-cols-3 gap-6">
+      <Suspense fallback={<UserSkeleton />}>
+        <UserProfile />
+      </Suspense>
+
+      <Suspense fallback={<OrdersSkeleton />}>
+        <OrdersSummary />
+      </Suspense>
+
+      <Suspense fallback={<AnalyticsSkeleton />}>
+        <AnalyticsChart />
+      </Suspense>
+    </div>
+  );
+}
+
+// Each component fetches its own data
+async function UserProfile() {
+  const user = await getUser();
+  return <div>{user.name}</div>;
+}
+```
+
+## 🌊 Streaming Patterns
+
+### Basic Streaming with Suspense
+
+```tsx
+// app/products/[id]/page.tsx
+import { Suspense } from "react";
+
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
+  return (
+    <div>
+      {/* Critical content - not wrapped */}
+      <ProductHeader id={id} />
+
+      {/* Less critical - streamed in */}
+      <Suspense fallback={<ReviewsSkeleton />}>
+        <ProductReviews productId={id} />
+      </Suspense>
+
+      {/* Personalized - streamed last */}
+      <Suspense fallback={<RecommendationsSkeleton />}>
+        <Recommendations productId={id} />
+      </Suspense>
+    </div>
+  );
+}
+```
+
+### Nested Streaming for Progressive Loading
+
+```tsx
+export default function ProductPage({ params }) {
+  return (
+    <div>
+      {/* Level 1: Product shell loads first */}
+      <Suspense fallback={<ProductPageSkeleton />}>
+        <ProductContent params={params}>
+          {/* Level 2: Reviews stream in */}
+          <Suspense fallback={<ReviewsSkeleton />}>
+            <Reviews />
+          </Suspense>
+
+          {/* Level 2: Related products stream in parallel */}
+          <Suspense fallback={<RelatedSkeleton />}>
+            <RelatedProducts />
+          </Suspense>
+        </ProductContent>
+      </Suspense>
+    </div>
+  );
+}
+```
+
+### Loading UI with loading.tsx
+
+```tsx
+// app/products/loading.tsx
+export default function Loading() {
+  return (
+    <div className="animate-pulse">
+      <div className="h-8 w-64 bg-gray-200 rounded mb-4" />
+      <div className="grid grid-cols-3 gap-4">
+        {Array.from({ length: 9 }).map((_, i) => (
+          <div key={i} className="h-48 bg-gray-200 rounded" />
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+## 🔀 Composition Patterns
+
+### Pattern 1: Server Component with Client Islands
+
+```tsx
+// app/products/page.tsx (Server Component)
+import { ProductGrid } from "./_components/product-grid";
+import { AddToCartButton } from "./_components/add-to-cart-button";
+
+export default async function ProductsPage() {
+  const products = await getProducts();
+
+  return (
+    <div className="grid grid-cols-3 gap-6">
+      {products.map((product) => (
+        <div key={product.id} className="border rounded-lg p-4">
+          {/* Server-rendered content */}
+          <img src={product.image} alt={product.name} />
+          <h3>{product.name}</h3>
+          <p>${product.price}</p>
+
+          {/* Client island for interactivity */}
+          <AddToCartButton productId={product.id} />
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+```tsx
+// _components/add-to-cart-button.tsx
+"use client";
+
+import { useState } from "react";
+import { addToCart } from "@/app/actions/cart";
+
+export function AddToCartButton({ productId }: { productId: string }) {
+  const [isPending, setIsPending] = useState(false);
+
+  async function handleClick() {
+    setIsPending(true);
+    await addToCart(productId);
+    setIsPending(false);
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={isPending}
+      className="w-full bg-blue-500 text-white py-2 rounded"
+    >
+      {isPending ? "Adding..." : "Add to Cart"}
+    </button>
+  );
+}
+```
+
+### Pattern 2: Passing Server Data to Client
+
+```tsx
+// app/dashboard/page.tsx (Server Component)
+import { Chart } from "./_components/chart";
+
+export default async function DashboardPage() {
+  // Fetch data on server
+  const analyticsData = await getAnalytics();
+
+  // Pass as serializable props to client component
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <Chart data={analyticsData} />
+    </div>
+  );
+}
+```
+
+```tsx
+// _components/chart.tsx
+"use client";
+
+import { LineChart, Line, XAxis, YAxis } from "recharts";
+
+interface ChartProps {
+  data: { date: string; value: number }[];
+}
+
+export function Chart({ data }: ChartProps) {
+  // Client-side interactivity with server-fetched data
+  return (
+    <LineChart width={600} height={300} data={data}>
+      <XAxis dataKey="date" />
+      <YAxis />
+      <Line type="monotone" dataKey="value" stroke="#8884d8" />
+    </LineChart>
+  );
+}
+```
+
+### Pattern 3: Children as Server Components
+
+```tsx
+// _components/modal-trigger.tsx
+"use client";
+
+import { useState } from "react";
+
+interface ModalTriggerProps {
+  children: React.ReactNode; // Can be Server Components!
+  trigger: React.ReactNode;
+}
+
+export function ModalTrigger({ children, trigger }: ModalTriggerProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>{trigger}</button>
+
+      {isOpen && (
+        <div className="modal">
+          {children} {/* Server Component rendered here */}
+          <button onClick={() => setIsOpen(false)}>Close</button>
+        </div>
+      )}
+    </>
+  );
+}
+```
+
+```tsx
+// Usage in Server Component
+import { ModalTrigger } from "./_components/modal-trigger";
+import { ProductDetails } from "./_components/product-details"; // Server Component
+
+export default async function ProductsPage() {
+  return (
+    <ModalTrigger trigger="View Details">
+      {/* Server Component as children */}
+      <ProductDetails productId="123" />
+    </ModalTrigger>
+  );
+}
+```
+
+## ⚡ Performance Optimization
+
+### Preloading Data
+
+```tsx
+// lib/preload.ts
+import { cache } from "react";
+
+// Cache the function to dedupe requests
+export const getUser = cache(async (id: string) => {
+  return db.user.findUnique({ where: { id } });
+});
+
+// Preload function to start fetching early
+export const preloadUser = (id: string) => {
+  void getUser(id);
+};
+```
+
+```tsx
+// app/users/[id]/page.tsx
+import { getUser, preloadUser } from "@/lib/preload";
+import Link from "next/link";
+
+export default async function UserPage({ params }) {
+  const { id } = await params;
+  const user = await getUser(id);
+
+  return (
+    <div>
+      <h1>{user.name}</h1>
+
+      {/* Preload next user on hover */}
+      {user.friends.map((friend) => (
+        <Link
+          key={friend.id}
+          href={`/users/${friend.id}`}
+          onMouseEnter={() => preloadUser(friend.id)}
+        >
+          {friend.name}
+        </Link>
+      ))}
+    </div>
+  );
+}
+```
+
+### Request Deduplication
+
+```tsx
+// lib/data.ts
+import { cache } from "react";
+
+// React's cache() deduplicates requests within a single render
+export const getProduct = cache(async (id: string) => {
+  console.log(`Fetching product ${id}`); // Only logs once per render
+  return db.product.findUnique({ where: { id } });
+});
+```
+
+```tsx
+// Multiple components can call getProduct(id)
+// Only one database query will be made
+
+async function ProductTitle({ id }: { id: string }) {
+  const product = await getProduct(id);
+  return <h1>{product.name}</h1>;
+}
+
+async function ProductPrice({ id }: { id: string }) {
+  const product = await getProduct(id); // Deduped!
+  return <p>${product.price}</p>;
+}
+```
+
+## 🚫 Common Pitfalls
+
+### Pitfall 1: Importing Client Components Wrong
+
+```tsx
+// ❌ Wrong: This makes the entire tree a client component
+"use client";
+
+import { ProductCard } from "./product-card"; // Also becomes client!
+
+// ✅ Correct: Only mark components that need client features
+// product-card.tsx (no 'use client' - stays server)
+// add-to-cart.tsx ('use client' - only this is client)
+```
+
+### Pitfall 2: Passing Functions to Client Components
+
+```tsx
+// ❌ Wrong: Functions can't be serialized
+async function ProductPage() {
+  async function handleClick() {
+    // This won't work!
+  }
+
+  return <Button onClick={handleClick} />;
+}
+
+// ✅ Correct: Use Server Actions
+// actions.ts
+("use server");
+
+export async function addToCart(productId: string) {
+  await db.cart.add(productId);
+  revalidatePath("/cart");
+}
+
+// ProductPage.tsx
+import { addToCart } from "./actions";
+
+async function ProductPage() {
+  return <AddToCartButton action={addToCart} />;
+}
+```
+
+### Pitfall 3: Accessing Browser APIs in Server Components
+
+```tsx
+// ❌ Wrong: window doesn't exist on server
+async function Header() {
+  const width = window.innerWidth; // Error!
+  return <header>...</header>;
+}
+
+// ✅ Correct: Move to client component
+("use client");
+
+import { useEffect, useState } from "react";
+
+function ResponsiveHeader() {
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+  }, []);
+
+  return <header>Width: {width}</header>;
+}
+```
+
+## 📊 Streaming Decision Tree
+
+```
+┌─────────────────────────────────────┐
+│ Is this content critical for SEO?  │
+└─────────────────┬───────────────────┘
+                  │
+         ┌────────┴────────┐
+         │                 │
+        Yes               No
+         │                 │
+         ▼                 ▼
+┌─────────────────┐ ┌─────────────────┐
+│ Render directly │ │ Needs user data?│
+│ (no Suspense)   │ └────────┬────────┘
+└─────────────────┘          │
+                    ┌────────┴────────┐
+                    │                 │
+                   Yes               No
+                    │                 │
+                    ▼                 ▼
+           ┌─────────────────┐ ┌─────────────────┐
+           │ Stream with     │ │ Can be static?  │
+           │ Suspense        │ └────────┬────────┘
+           └─────────────────┘          │
+                               ┌────────┴────────┐
+                               │                 │
+                              Yes               No
+                               │                 │
+                               ▼                 ▼
+                      ┌─────────────────┐ ┌─────────────────┐
+                      │ Use 'use cache' │ │ Stream with     │
+                      │ for caching     │ │ Suspense        │
+                      └─────────────────┘ └─────────────────┘
+```
+
+## ✅ Best Practices Summary
+
+<Cards>
+  <Card
+    title="Keep Server Components Default"
+    description="Only add 'use client' when you need interactivity or browser APIs"
+  />
+  <Card
+    title="Fetch Data in Parallel"
+    description="Use Promise.all or Suspense to avoid waterfalls"
+  />
+  <Card
+    title="Stream Non-Critical Content"
+    description="Wrap slow data fetches in Suspense for faster initial load"
+  />
+  <Card
+    title="Push Client Boundaries Down"
+    description="Keep 'use client' as low in the tree as possible"
+  />
+  <Card
+    title="Use React cache()"
+    description="Deduplicate data fetches across components"
+  />
+  <Card
+    title="Preload on User Intent"
+    description="Start fetching data on hover/focus for instant navigation"
+  />
+</Cards>
+
+## 👉 Next Steps
+
+<Cards>
+  <Card
+    title="Data Fetching"
+    href="/docs/guides/data-fetching"
+    description="Learn TanStack Query and Server Actions patterns"
+  />
+  <Card
+    title="Next.js 16 Features"
+    href="/docs/guides/nextjs-16-features"
+    description="Explore use cache, PPR, and React Compiler"
+  />
+  <Card
+    title="Performance"
+    href="/docs/reference/architecture"
+    description="Deep dive into our architecture decisions"
+  />
+</Cards>

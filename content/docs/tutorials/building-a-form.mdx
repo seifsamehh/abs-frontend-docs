@@ -1,0 +1,400 @@
+---
+title: "Tutorial: Building a Form"
+description: Create a complete form with validation, error handling, and submission using React Hook Form and Zod
+difficulty: beginner
+estimatedTime: "45 min"
+keywords: ["form", "validation", "react-hook-form", "zod", "tutorial"]
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# Tutorial: Building a Form
+
+<Callout type="info">
+  In this tutorial, you'll build a contact form from scratch with proper
+  validation, error messages, and submission handling. You'll learn the patterns
+  we use for all forms at ABS.
+</Callout>
+
+## What We're Building
+
+A contact form that:
+
+- Validates input as users type
+- Shows helpful error messages
+- Handles submission properly
+- Uses our standard tech stack (React Hook Form + Zod)
+
+**Time:** ~45 minutes | **Level:** Beginner | **Prerequisites:** [Your First Component](/docs/tutorials/your-first-component)
+
+---
+
+## Step 1: Set Up the Project
+
+<Steps>
+<Step>
+### Install dependencies
+
+If you haven't already, install React Hook Form and Zod:
+
+```bash
+pnpm add react-hook-form zod @hookform/resolvers
+```
+
+</Step>
+
+<Step>
+### Create the form file
+
+Create `src/components/ContactForm.tsx`:
+
+```tsx
+"use client";
+
+export function ContactForm() {
+  return (
+    <form className="space-y-4 max-w-md">
+      <h2 className="text-2xl font-bold">Contact Us</h2>
+      {/* We'll add fields here */}
+    </form>
+  );
+}
+```
+
+</Step>
+</Steps>
+
+---
+
+## Step 2: Define the Validation Schema
+
+Zod schemas define what valid data looks like. Think of them as a contract.
+
+<Steps>
+<Step>
+### Create the schema
+
+Add this above your component:
+
+```tsx
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must be less than 50 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  message: z
+    .string()
+    .min(10, "Message must be at least 10 characters")
+    .max(500, "Message must be less than 500 characters"),
+});
+
+// TypeScript type generated from the schema
+type ContactFormData = z.infer<typeof contactSchema>;
+```
+
+**What's happening:**
+
+- Each field has validation rules with custom error messages
+- `z.infer` creates a TypeScript type automatically - no duplication!
+
+</Step>
+</Steps>
+
+---
+
+## Step 3: Connect React Hook Form
+
+React Hook Form manages form state efficiently without re-rendering on every keystroke.
+
+<Steps>
+<Step>
+### Set up the form hook
+
+```tsx
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+export function ContactForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+  });
+
+  const onSubmit = async (data: ContactFormData) => {
+    // We'll implement this next
+    console.log(data);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-md">
+      <h2 className="text-2xl font-bold">Contact Us</h2>
+      {/* Fields coming next */}
+    </form>
+  );
+}
+```
+
+**Key parts:**
+
+- `register` - connects inputs to form state
+- `handleSubmit` - validates before calling your submit function
+- `errors` - contains validation error messages
+- `isSubmitting` - true while form is submitting
+
+</Step>
+</Steps>
+
+---
+
+## Step 4: Add Form Fields
+
+<Steps>
+<Step>
+### Add the name field
+
+```tsx
+<div>
+  <label htmlFor="name" className="block text-sm font-medium mb-1">
+    Name
+  </label>
+  <input
+    id="name"
+    type="text"
+    {...register("name")}
+    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+    placeholder="Your name"
+  />
+  {errors.name && (
+    <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+  )}
+</div>
+```
+
+The `{...register("name")}` connects this input to the `name` field in your schema.
+
+</Step>
+
+<Step>
+### Add email and message fields
+
+```tsx
+<div>
+  <label htmlFor="email" className="block text-sm font-medium mb-1">
+    Email
+  </label>
+  <input
+    id="email"
+    type="email"
+    {...register("email")}
+    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+    placeholder="you@example.com"
+  />
+  {errors.email && (
+    <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+  )}
+</div>
+
+<div>
+  <label htmlFor="message" className="block text-sm font-medium mb-1">
+    Message
+  </label>
+  <textarea
+    id="message"
+    {...register("message")}
+    rows={4}
+    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+    placeholder="How can we help?"
+  />
+  {errors.message && (
+    <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>
+  )}
+</div>
+```
+
+</Step>
+
+<Step>
+### Add the submit button
+
+```tsx
+<button
+  type="submit"
+  disabled={isSubmitting}
+  className="w-full py-2 px-4 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50"
+>
+  {isSubmitting ? "Sending..." : "Send Message"}
+</button>
+```
+
+The button is disabled during submission to prevent double-clicks.
+
+</Step>
+</Steps>
+
+---
+
+## Step 5: Handle Submission
+
+<Steps>
+<Step>
+### Implement the submit handler
+
+```tsx
+const onSubmit = async (data: ContactFormData) => {
+  try {
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // In real code, you'd call your API:
+    // await fetch('/api/contact', { method: 'POST', body: JSON.stringify(data) });
+
+    alert("Message sent successfully!");
+  } catch (error) {
+    alert("Something went wrong. Please try again.");
+  }
+};
+```
+
+<Callout type="tip">
+  For real API calls, see the [Data Fetching How-To Guide](/docs/how-to/data/fetching-data).
+</Callout>
+</Step>
+</Steps>
+
+---
+
+## Final Code
+
+Here's the complete form component:
+
+```tsx
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must be less than 50 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  message: z
+    .string()
+    .min(10, "Message must be at least 10 characters")
+    .max(500, "Message must be less than 500 characters"),
+});
+
+type ContactFormData = z.infer<typeof contactSchema>;
+
+export function ContactForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+  });
+
+  const onSubmit = async (data: ContactFormData) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      alert("Message sent successfully!");
+    } catch (error) {
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-4 max-w-md p-6 bg-white rounded-lg shadow"
+    >
+      <h2 className="text-2xl font-bold">Contact Us</h2>
+
+      <div>
+        <label htmlFor="name" className="block text-sm font-medium mb-1">
+          Name
+        </label>
+        <input
+          id="name"
+          type="text"
+          {...register("name")}
+          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="Your name"
+        />
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium mb-1">
+          Email
+        </label>
+        <input
+          id="email"
+          type="email"
+          {...register("email")}
+          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="you@example.com"
+        />
+        {errors.email && (
+          <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="message" className="block text-sm font-medium mb-1">
+          Message
+        </label>
+        <textarea
+          id="message"
+          {...register("message")}
+          rows={4}
+          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="How can we help?"
+        />
+        {errors.message && (
+          <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full py-2 px-4 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50"
+      >
+        {isSubmitting ? "Sending..." : "Send Message"}
+      </button>
+    </form>
+  );
+}
+```
+
+---
+
+## What You Learned
+
+✅ **Zod schemas** define validation rules with custom error messages  
+✅ **React Hook Form** manages form state efficiently  
+✅ **zodResolver** connects Zod validation to React Hook Form  
+✅ **register** connects inputs to form state  
+✅ **Proper error display** improves user experience
+
+---
+
+## Next Steps
+
+- **Next tutorial:** [Data Fetching Basics](/docs/tutorials/data-fetching-basics)
+- **How-to guide:** [Forms and Validation](/docs/how-to/building/forms-and-validation) for advanced patterns
+- **Reference:** [Zod ADR](/docs/explanation/decisions/adr-005-zod-validation) for why we chose Zod

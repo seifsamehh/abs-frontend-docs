@@ -1,0 +1,631 @@
+---
+title: Accessibility Guidelines
+description: Building inclusive, accessible applications that work for everyone
+keywords:
+  ["accessibility", "a11y", "wcag", "aria", "screen-reader", "inclusive-design"]
+difficulty: intermediate
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# ♿ Accessibility Guidelines
+
+<Callout type="error">
+  Accessibility is not optional. All ABS applications must meet **WCAG 2.1 AA**
+  compliance standards. Building accessible applications ensures everyone can
+  use our products, regardless of ability.
+</Callout>
+
+## Why Accessibility Matters
+
+<Cards>
+  <Card
+    title="🌍 Inclusive Design"
+    description="15% of the world's population has some form of disability"
+  />
+  <Card
+    title="⚖️ Legal Compliance"
+    description="Many regions require accessible digital products by law"
+  />
+  <Card
+    title="🎯 Better UX for All"
+    description="Accessible design improves usability for everyone"
+  />
+  <Card
+    title="🔍 SEO Benefits"
+    description="Accessible sites rank better in search engines"
+  />
+</Cards>
+
+## WCAG 2.1 Principles (POUR)
+
+### 1. Perceivable
+
+Information must be presentable in ways users can perceive.
+
+```tsx
+// ✅ Good: Image with descriptive alt text
+<Image
+  src="/hero.jpg"
+  alt="Customer service representative helping a client with package tracking"
+/>
+
+// ❌ Bad: Missing or non-descriptive alt text
+<Image src="/hero.jpg" alt="image" />
+<Image src="/hero.jpg" alt="" /> // Only okay for decorative images
+```
+
+### 2. Operable
+
+UI components must be operable by all users.
+
+```tsx
+// ✅ Good: Keyboard-accessible button with focus states
+<Button
+  onClick={handleClick}
+  onKeyDown={(e) => e.key === "Enter" && handleClick()}
+  className="focus:ring-2 focus:ring-primary focus:outline-none"
+>
+  Submit Order
+</Button>
+
+// ❌ Bad: Click-only interaction without keyboard support
+<div onClick={handleClick}>Submit Order</div>
+```
+
+### 3. Understandable
+
+Information and UI operation must be understandable.
+
+```tsx
+// ✅ Good: Clear error message with instructions
+<FormMessage>
+  Email is required. Please enter a valid email address like name@example.com
+</FormMessage>
+
+// ❌ Bad: Vague error message
+<FormMessage>Invalid input</FormMessage>
+```
+
+### 4. Robust
+
+Content must be robust enough to work with assistive technologies.
+
+```tsx
+// ✅ Good: Semantic HTML with ARIA when needed
+<nav aria-label="Main navigation">
+  <ul role="menubar">
+    <li role="none">
+      <a role="menuitem" href="/dashboard">
+        Dashboard
+      </a>
+    </li>
+  </ul>
+</nav>
+
+// ❌ Bad: Non-semantic markup
+<div class="nav">
+  <div class="nav-item" onClick={() => navigate("/dashboard")}>
+    Dashboard
+  </div>
+</div>
+```
+
+---
+
+## Component Accessibility Checklist
+
+### Buttons
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+// ✅ Accessible button implementation
+<Button
+  aria-label="Close dialog"
+  aria-pressed={isPressed}
+  disabled={isLoading}
+  aria-busy={isLoading}
+>
+  {isLoading ? <Spinner aria-hidden="true" /> : null}
+  {isLoading ? "Loading..." : "Submit"}
+</Button>;
+```
+
+**Requirements:**
+
+- [ ] Has visible focus indicator
+- [ ] Has accessible name (text content or `aria-label`)
+- [ ] Disabled state is communicated
+- [ ] Loading state announced to screen readers
+
+### Forms
+
+```tsx
+// ✅ Accessible form field
+<FormField
+  control={form.control}
+  name="email"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel htmlFor="email">
+        Email Address
+        <span className="text-destructive" aria-hidden="true">
+          *
+        </span>
+        <span className="sr-only">(required)</span>
+      </FormLabel>
+      <FormControl>
+        <Input
+          id="email"
+          type="email"
+          aria-required="true"
+          aria-invalid={!!form.formState.errors.email}
+          aria-describedby="email-error email-description"
+          {...field}
+        />
+      </FormControl>
+      <FormDescription id="email-description">
+        We'll never share your email with anyone.
+      </FormDescription>
+      <FormMessage id="email-error" role="alert" />
+    </FormItem>
+  )}
+/>
+```
+
+**Requirements:**
+
+- [ ] Labels are associated with inputs (`htmlFor`/`id`)
+- [ ] Required fields are indicated visually and programmatically
+- [ ] Error messages are linked with `aria-describedby`
+- [ ] Error states use `aria-invalid`
+- [ ] Instructions are provided before form submission
+
+### Modals & Dialogs
+
+```tsx
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+
+// ✅ Accessible dialog
+<Dialog open={open} onOpenChange={setOpen}>
+  <DialogContent
+    aria-labelledby="dialog-title"
+    aria-describedby="dialog-description"
+    onOpenAutoFocus={(e) => {
+      // Focus first interactive element
+      e.preventDefault();
+      firstInputRef.current?.focus();
+    }}
+  >
+    <DialogHeader>
+      <DialogTitle id="dialog-title">Edit Profile</DialogTitle>
+      <DialogDescription id="dialog-description">
+        Make changes to your profile information below.
+      </DialogDescription>
+    </DialogHeader>
+    {/* Dialog content */}
+  </DialogContent>
+</Dialog>;
+```
+
+**Requirements:**
+
+- [ ] Focus trapped within dialog when open
+- [ ] Focus returns to trigger when closed
+- [ ] Can be closed with Escape key
+- [ ] Has accessible title and description
+- [ ] Background content is inert (`aria-hidden`)
+
+### Tables
+
+```tsx
+// ✅ Accessible data table
+<table aria-label="Employee list">
+  <caption className="sr-only">
+    List of employees with their roles and departments
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Role</th>
+      <th scope="col">Department</th>
+      <th scope="col">
+        <span className="sr-only">Actions</span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {employees.map((employee) => (
+      <tr key={employee.id}>
+        <th scope="row">{employee.name}</th>
+        <td>{employee.role}</td>
+        <td>{employee.department}</td>
+        <td>
+          <Button aria-label={`Edit ${employee.name}'s profile`}>Edit</Button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+```
+
+---
+
+## Keyboard Navigation
+
+### Focus Management
+
+```tsx
+// Focus trap hook for modals
+import { useEffect, useRef } from "react";
+
+export function useFocusTrap(isActive: boolean) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isActive || !containerRef.current) return;
+
+    const focusableElements = containerRef.current.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+
+    const firstElement = focusableElements[0] as HTMLElement;
+    const lastElement = focusableElements[
+      focusableElements.length - 1
+    ] as HTMLElement;
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key !== "Tab") return;
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    firstElement?.focus();
+
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isActive]);
+
+  return containerRef;
+}
+```
+
+### Skip Links
+
+```tsx
+// Add to layout.tsx
+<a
+  href="#main-content"
+  className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded"
+>
+  Skip to main content
+</a>
+
+// Main content area
+<main id="main-content" tabIndex={-1}>
+  {children}
+</main>
+```
+
+### Keyboard Shortcuts
+
+| Key           | Action                  |
+| ------------- | ----------------------- |
+| `Tab`         | Move focus forward      |
+| `Shift + Tab` | Move focus backward     |
+| `Enter`       | Activate button/link    |
+| `Space`       | Activate button, toggle |
+| `Escape`      | Close modal, cancel     |
+| `Arrow keys`  | Navigate menus, sliders |
+| `Home/End`    | Jump to first/last item |
+
+---
+
+## Color & Contrast
+
+### Minimum Contrast Ratios (WCAG AA)
+
+| Element            | Ratio | Example                          |
+| ------------------ | ----- | -------------------------------- |
+| Normal text        | 4.5:1 | Body text, labels                |
+| Large text (18px+) | 3:1   | Headings, large buttons          |
+| UI components      | 3:1   | Borders, icons, focus indicators |
+
+### Testing Contrast
+
+```tsx
+// Tailwind classes that meet contrast requirements
+const accessibleColors = {
+  // Text on light backgrounds
+  textPrimary: "text-gray-900", // Contrast: 15.3:1
+  textSecondary: "text-gray-700", // Contrast: 8.5:1
+  textMuted: "text-gray-600", // Contrast: 5.7:1 (minimum for body)
+
+  // Text on dark backgrounds
+  textOnDark: "text-white", // Ensure bg has sufficient contrast
+
+  // Links
+  link: "text-blue-700 hover:text-blue-900", // Contrast: 5.9:1
+
+  // Error states
+  error: "text-red-700", // Contrast: 5.5:1
+};
+```
+
+### Don't Rely on Color Alone
+
+```tsx
+// ✅ Good: Color + icon + text
+<Badge variant="destructive">
+  <AlertCircle className="h-4 w-4 mr-1" aria-hidden="true" />
+  Error: Invalid input
+</Badge>
+
+// ❌ Bad: Color only
+<span className="text-red-500">Invalid input</span>
+```
+
+---
+
+## Screen Reader Support
+
+### Live Regions
+
+```tsx
+// Announce dynamic updates
+<div aria-live="polite" aria-atomic="true" className="sr-only">
+  {statusMessage}
+</div>
+
+// For urgent announcements
+<div role="alert" aria-live="assertive">
+  {errorMessage}
+</div>
+
+// Usage
+function SearchResults({ results, isLoading }) {
+  return (
+    <>
+      <div aria-live="polite" className="sr-only">
+        {isLoading
+          ? "Loading results..."
+          : `Found ${results.length} results`}
+      </div>
+      {/* Results list */}
+    </>
+  );
+}
+```
+
+### Screen Reader Only Text
+
+```tsx
+// Utility class (already in Tailwind)
+// .sr-only - Visually hidden but available to screen readers
+
+<Button>
+  <Trash2 className="h-4 w-4" aria-hidden="true" />
+  <span className="sr-only">Delete item</span>
+</Button>
+
+// Or using aria-label
+<Button aria-label="Delete item">
+  <Trash2 className="h-4 w-4" aria-hidden="true" />
+</Button>
+```
+
+### Semantic HTML Elements
+
+| Use This    | Instead Of             | Why                                       |
+| ----------- | ---------------------- | ----------------------------------------- |
+| `<button>`  | `<div onClick>`        | Built-in keyboard & screen reader support |
+| `<a href>`  | `<span onClick>`       | Native link behavior, keyboard accessible |
+| `<nav>`     | `<div class="nav">`    | Landmark for screen reader navigation     |
+| `<main>`    | `<div class="main">`   | Main content landmark                     |
+| `<header>`  | `<div class="header">` | Banner landmark                           |
+| `<footer>`  | `<div class="footer">` | Contentinfo landmark                      |
+| `<section>` | `<div>`                | Generic landmark (with aria-label)        |
+| `<article>` | `<div>`                | Self-contained content                    |
+
+---
+
+## Testing Accessibility
+
+### Automated Testing
+
+```tsx
+// Install axe-core for testing
+// pnpm add -D @axe-core/react axe-core
+
+// src/test/setup.ts
+import { configureAxe, toHaveNoViolations } from "jest-axe";
+
+expect.extend(toHaveNoViolations);
+
+// Component test example
+import { axe } from "jest-axe";
+import { render } from "@testing-library/react";
+
+describe("Button", () => {
+  it("should have no accessibility violations", async () => {
+    const { container } = render(<Button>Click me</Button>);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+});
+```
+
+### Manual Testing Checklist
+
+<Callout type="info">
+  Run through this checklist before submitting any PR that includes UI changes.
+</Callout>
+
+#### Keyboard Testing
+
+- [ ] Can reach all interactive elements with Tab
+- [ ] Focus order is logical (left-to-right, top-to-bottom)
+- [ ] Focus indicator is visible on all elements
+- [ ] Can activate buttons with Enter and Space
+- [ ] Can navigate menus with arrow keys
+- [ ] Can close modals with Escape
+
+#### Screen Reader Testing
+
+- [ ] All images have appropriate alt text
+- [ ] Form fields have associated labels
+- [ ] Buttons and links have accessible names
+- [ ] Page has proper heading hierarchy (h1 → h2 → h3)
+- [ ] Dynamic content changes are announced
+- [ ] Error messages are announced
+
+#### Visual Testing
+
+- [ ] Content readable at 200% zoom
+- [ ] Text contrast meets minimum ratios
+- [ ] Color is not the only way to convey information
+- [ ] Focus indicators have 3:1 contrast
+
+### Testing Tools
+
+<Cards>
+  <Card
+    title="🔧 axe DevTools"
+    description="Browser extension for automated accessibility testing"
+    href="https://www.deque.com/axe/devtools/"
+  />
+  <Card
+    title="🎨 Contrast Checker"
+    description="WebAIM color contrast checker"
+    href="https://webaim.org/resources/contrastchecker/"
+  />
+  <Card
+    title="📖 NVDA"
+    description="Free screen reader for Windows"
+    href="https://www.nvaccess.org/download/"
+  />
+  <Card
+    title="🍎 VoiceOver"
+    description="Built-in screen reader on macOS/iOS"
+    href="https://support.apple.com/guide/voiceover/welcome/mac"
+  />
+</Cards>
+
+---
+
+## Common Accessibility Issues
+
+### Issue 1: Missing Form Labels
+
+```tsx
+// ❌ Problem
+<input type="email" placeholder="Email" />
+
+// ✅ Solution
+<label htmlFor="email">Email</label>
+<input id="email" type="email" placeholder="you@example.com" />
+
+// Or with visually hidden label
+<label htmlFor="email" className="sr-only">Email</label>
+<input id="email" type="email" placeholder="Email" />
+```
+
+### Issue 2: Low Contrast Text
+
+```tsx
+// ❌ Problem: Light gray on white (ratio ~2:1)
+<p className="text-gray-400">Important information</p>
+
+// ✅ Solution: Darker gray (ratio ~5:1)
+<p className="text-gray-600">Important information</p>
+```
+
+### Issue 3: Missing Alt Text
+
+```tsx
+// ❌ Problem
+<img src="/chart.png" />
+
+// ✅ Solution for informative images
+<img src="/chart.png" alt="Sales increased 25% from Q1 to Q2 2025" />
+
+// ✅ Solution for decorative images
+<img src="/decorative-line.png" alt="" role="presentation" />
+```
+
+### Issue 4: Non-keyboard Accessible Elements
+
+```tsx
+// ❌ Problem: div with click handler
+<div onClick={handleClick} className="cursor-pointer">
+  Click me
+</div>
+
+// ✅ Solution: Use button element
+<button onClick={handleClick}>Click me</button>
+
+// ✅ If you must use div (rare cases)
+<div
+  role="button"
+  tabIndex={0}
+  onClick={handleClick}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleClick();
+    }
+  }}
+>
+  Click me
+</div>
+```
+
+---
+
+## Resources
+
+<Cards>
+  <Card
+    title="📖 WCAG 2.1 Guidelines"
+    description="Official W3C accessibility guidelines"
+    href="https://www.w3.org/WAI/WCAG21/quickref/"
+  />
+  <Card
+    title="📚 MDN Accessibility"
+    description="Mozilla's comprehensive accessibility guide"
+    href="https://developer.mozilla.org/en-US/docs/Web/Accessibility"
+  />
+  <Card
+    title="🎯 A11y Project Checklist"
+    description="Practical accessibility checklist"
+    href="https://www.a11yproject.com/checklist/"
+  />
+  <Card
+    title="⚛️ React Accessibility"
+    description="Official React accessibility documentation"
+    href="https://react.dev/reference/react-dom/components#form-components"
+  />
+</Cards>
+
+---
+
+## 👉 Next Steps
+
+- 🧩 [Component Library](/docs/reference/component-library) - Apply accessibility to your components
+- 📝 [Forms Guide](/docs/guides/forms) - Build accessible forms
+- 🧪 [Testing Guide](/docs/guides/testing) - Test accessibility in your apps

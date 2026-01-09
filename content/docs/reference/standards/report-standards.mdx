@@ -1,0 +1,1198 @@
+---
+title: Report Standards
+description: Weekly performance report templates and guidelines for juniors and coordinators
+keywords:
+  [
+    "report-standards",
+    "performance-reports",
+    "weekly-reports",
+    "team-coordination",
+    "documentation",
+    "best-practices",
+  ]
+difficulty: beginner
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+import { Card, Cards } from "fumadocs-ui/components/card";
+
+# 📊 Report Standards
+
+<Callout type="info">
+  These report templates promote **self-reflection** and **accountability**, key
+  best practices in tech performance reviews. They help track progress, identify
+  blockers, and plan growth effectively.
+</Callout>
+
+## 📋 Overview
+
+Weekly reports are essential for:
+
+- **Tracking progress** and accomplishments
+- **Identifying blockers** early
+- **Planning professional development**
+- **Maintaining team transparency**
+- **Facilitating effective code reviews**
+
+---
+
+## 👨‍💻 Junior Developer Report Template
+
+Junior developers submit a weekly self-report that encourages reflection on accomplishments, challenges, and growth areas.
+
+### Template Structure
+
+```markdown
+# Weekly Self-Report - [Start Date] to [End Date]
+
+**Prepared by:** [Your Name], Junior Frontend Developer  
+**Date Submitted:** [Submission Date]
+
+---
+
+## 🎯 Accomplishments
+
+[List all completed tasks with specific details, evidence, and measurable impact]
+
+### Example Format:
+
+- **Task:** [Brief description]
+  - **Details:** [What you did and how]
+  - **Evidence:** [PR link, commit hash, or deployed feature URL]
+  - **Metrics/Impact:** [Quantifiable results]
+
+---
+
+## 🚧 Blockers/Problems
+
+[Describe challenges encountered, how you addressed them, and any ongoing issues]
+
+### Example Format:
+
+- **Blocker:** [Issue description]
+  - **Impact:** [How it affected your work]
+  - **Resolution:** [Steps taken or help received]
+  - **Status:** [Resolved/Ongoing/Escalated]
+
+---
+
+## ✅ Positives
+
+[Highlight strengths demonstrated this week]
+
+### Example Format:
+
+- **Skill/Behavior:** [What you did well]
+  - **Context:** [Situation where you applied it]
+  - **Impact:** [Positive outcome for team/project]
+
+---
+
+## 📈 Areas for Improvement
+
+[Self-identified gaps with honest reflection and constructive suggestions]
+
+### Example Format:
+
+- **Area:** [Skill or knowledge gap]
+  - **Why It Matters:** [Impact on your work]
+  - **Suggestion:** [How you plan to address it]
+
+---
+
+## 🎓 Development Plans
+
+[Actionable steps for professional growth with clear timelines and success metrics]
+
+### Example Format:
+
+- **Goal:** [What you want to learn/improve]
+  - **Actions:** [Specific steps you'll take]
+  - **Timeline:** [Expected completion date]
+  - **Success Metric:** [How you'll measure progress]
+```
+
+---
+
+## 📝 Junior Report - Detailed Example
+
+<Tabs items={['📘 Example 1', '📗 Example 2']}>
+<Tab value="📘 Example 1">
+
+```markdown
+# Weekly Self-Report - December 29, 2025 to January 4, 2026
+
+**Prepared by:** Ahmed Hassan, Junior Frontend Developer  
+**Date Submitted:** January 5, 2026
+
+---
+
+## 🎯 Accomplishments
+
+### 1. User Authentication Flow Implementation
+
+- **Details:** Implemented login and registration forms using React Hook Form with Zod validation. Created protected route wrapper for authenticated pages.
+- **Evidence:**
+  - PR: [#234 - Add authentication flow](https://github.com/org/project/pull/234)
+  - Deployed: [Staging Environment](https://staging.example.com/login)
+- **Metrics/Impact:**
+  - Reduced form validation errors by 40% through schema-based validation
+  - Improved user experience with real-time feedback
+  - 100% test coverage for authentication components
+
+### 2. Performance Optimization
+
+- **Details:** Implemented lazy loading for dashboard components and optimized image loading using Next.js Image component.
+- **Evidence:**
+  - PR: [#237 - Dashboard performance improvements](https://github.com/org/project/pull/237)
+  - Lighthouse report attached
+- **Metrics/Impact:**
+  - Reduced initial page load time from 3.2s to 1.8s (43.75% improvement)
+  - Improved Core Web Vitals: LCP from 2.8s to 1.5s
+
+### 3. Bug Fixes
+
+- **Details:** Resolved 5 critical bugs reported by QA team related to form submission and data persistence.
+- **Evidence:**
+  - Closed issues: #445, #448, #451, #454, #459
+  - PRs: [#238](https://github.com/org/project/pull/238), [#239](https://github.com/org/project/pull/239)
+- **Metrics/Impact:** Reduced open bug count by 23% for my assigned features
+
+---
+
+## 🚧 Blockers/Problems
+
+### 1. Third-Party API Integration Issues
+
+- **Blocker:** Payment gateway API documentation was outdated, causing integration failures
+- **Impact:** Delayed payment feature by 2 days
+- **Resolution:** Contacted vendor support, received updated documentation, completed integration
+- **Status:** ✅ Resolved
+
+### 2. TypeScript Type Complexity
+
+- **Blocker:** Struggled with complex generic types for the data table component
+- **Impact:** Spent 4 hours debugging type errors
+- **Resolution:** Requested help from senior developer Sara, who explained the pattern. Documented learnings in team wiki.
+- **Status:** ✅ Resolved - now confident with this pattern
+
+### 3. Test Environment Instability
+
+- **Blocker:** CI/CD pipeline failing intermittently due to database connection timeouts
+- **Impact:** Had to re-run tests multiple times, slowing PR reviews
+- **Resolution:** Reported to DevOps team
+- **Status:** 🔄 Ongoing - DevOps investigating
+
+---
+
+## ✅ Positives
+
+### 1. Proactive Problem Solving
+
+- **Context:** Identified potential security vulnerability in authentication flow before code review
+- **Impact:** Prevented security issue from reaching production, added additional validation layer
+
+### 2. Collaboration & Knowledge Sharing
+
+- **Context:** Helped two team members debug React Hook Form issues based on my recent learning
+- **Impact:** Reduced their debugging time by ~2 hours, strengthened team knowledge
+
+### 3. Code Quality
+
+- **Context:** Consistently received approval on first code review iteration
+- **Impact:** Faster merge times, positive feedback from reviewers on code organization and documentation
+
+---
+
+## 📈 Areas for Improvement
+
+### 1. Testing Strategy
+
+- **Why It Matters:** My unit tests are good, but I struggle with integration and E2E test design
+- **Suggestion:** Review existing E2E tests, practice with Testing Library, ask for mentorship on test architecture
+
+### 2. CSS/Styling Efficiency
+
+- **Why It Matters:** Sometimes take longer than expected to implement responsive designs
+- **Suggestion:** Study Tailwind CSS best practices, review team's component library patterns more deeply
+
+### 3. Time Estimation
+
+- **Why It Matters:** Underestimated complexity of authentication implementation by ~30%
+- **Suggestion:** Break down tasks more granularly, consult with senior devs before estimating complex features
+
+---
+
+## 🎓 Development Plans
+
+### 1. Master React Testing Library
+
+- **Actions:**
+  - Complete Kent C. Dodds' Testing JavaScript course (50% done)
+  - Write comprehensive tests for next feature assignment
+  - Present testing best practices to team (if appropriate)
+- **Timeline:** Complete by January 31, 2026
+- **Success Metric:** Achieve 90%+ test coverage on next major feature, reduce test-related PR review cycles
+
+### 2. Improve TypeScript Proficiency
+
+- **Actions:**
+  - Study TypeScript advanced types documentation (30 mins daily)
+  - Refactor one existing component weekly to use better types
+  - Review senior developers' TypeScript patterns in PRs
+- **Timeline:** Ongoing through Q1 2026
+- **Success Metric:** Reduce type-related errors by 50%, contribute to team's TypeScript guidelines document
+
+### 3. Learn State Management Patterns
+
+- **Actions:**
+  - Study Redux Toolkit documentation and team's implementation
+  - Pair program with coordinator on next Redux feature
+  - Create personal notes document on patterns learned
+- **Timeline:** Complete foundation by February 15, 2026
+- **Success Metric:** Successfully implement state management for medium-complexity feature independently
+```
+
+</Tab>
+<Tab value="📗 Example 2">
+
+```markdown
+# Weekly Self-Report - January 6, 2026 to January 12, 2026
+
+**Prepared by:** Fatima Al-Sayed, Junior Frontend Developer  
+**Date Submitted:** January 12, 2026
+
+---
+
+## 🎯 Accomplishments
+
+### 1. Dashboard Data Visualization Components
+
+- **Details:** Built reusable chart components using Recharts library for analytics dashboard. Implemented responsive design and dynamic data fetching.
+- **Evidence:**
+  - PR: [#256 - Dashboard charts implementation](https://github.com/org/project/pull/256)
+  - Figma design match: 98% accuracy
+- **Metrics/Impact:**
+  - Created 4 chart types (line, bar, pie, area) used across 6 dashboard pages
+  - Components now reusable by entire team, reducing development time for future charts by ~60%
+
+### 2. Accessibility Improvements
+
+- **Details:** Conducted accessibility audit of user profile section, fixed 12 WCAG violations including keyboard navigation, ARIA labels, and color contrast issues.
+- **Evidence:**
+  - PR: [#259 - A11y improvements for user profile](https://github.com/org/project/pull/259)
+  - Lighthouse accessibility score: improved from 78 to 96
+- **Metrics/Impact:** Made application accessible to screen reader users, improved overall UX
+
+### 3. Documentation Contribution
+
+- **Details:** Created comprehensive component documentation for the new chart library, including usage examples and props reference.
+- **Evidence:**
+  - Documentation PR: [#260 - Chart components docs](https://github.com/org/project/pull/260)
+  - Added to team Storybook
+- **Metrics/Impact:** 3 team members already successfully implemented charts using the documentation
+
+---
+
+## 🚧 Blockers/Problems
+
+### 1. Complex Data Transformation Logic
+
+- **Blocker:** Needed to transform API response format to match chart library requirements, logic became overly complex
+- **Impact:** Code became hard to test and maintain
+- **Resolution:** Refactored with help from code review, learned about data normalization patterns
+- **Status:** ✅ Resolved - cleaner implementation merged
+
+### 2. Design System Color Tokens
+
+- **Blocker:** Chart color palette wasn't defined in design system, had to make assumptions
+- **Impact:** Design review requested changes, requiring rework
+- **Resolution:** Designer added chart-specific color tokens to design system, updated implementation
+- **Status:** ✅ Resolved
+
+---
+
+## ✅ Positives
+
+### 1. Initiative on Accessibility
+
+- **Context:** Proactively conducted accessibility audit without being asked
+- **Impact:** Improved product quality, set example for team to consider a11y in all features
+
+### 2. Attention to Component Reusability
+
+- **Context:** Designed chart components to be highly configurable and reusable
+- **Impact:** Other team members able to implement similar features 60% faster
+
+### 3. Clear Documentation
+
+- **Context:** Wrote detailed documentation with examples for each component
+- **Impact:** Reduced questions from team members, enabled self-service
+
+---
+
+## 📈 Areas for Improvement
+
+### 1. Performance Optimization Mindset
+
+- **Why It Matters:** Didn't initially consider performance implications of rendering multiple charts simultaneously
+- **Suggestion:** Learn about React performance optimization, memoization, and virtualization techniques
+
+### 2. Git Workflow Efficiency
+
+- **Why It Matters:** Made several commits that should have been squashed, cluttered PR history
+- **Suggestion:** Study git rebase and interactive rebase, review team's git guidelines
+
+---
+
+## 🎓 Development Plans
+
+### 1. Performance Optimization Skills
+
+- **Actions:**
+  - Read React documentation on performance optimization
+  - Experiment with React.memo, useMemo, and useCallback
+  - Profile current chart implementation and optimize
+- **Timeline:** Complete by January 31, 2026
+- **Success Metric:** Reduce dashboard render time by 30%, implement proper memoization patterns
+
+### 2. Advanced Git Techniques
+
+- **Actions:**
+  - Complete interactive git tutorial
+  - Practice rebase workflow on personal projects
+  - Ask for git workflow review from coordinator
+- **Timeline:** Proficient by end of January 2026
+- **Success Metric:** Clean, professional commit history in next 3 PRs
+```
+
+</Tab>
+</Tabs>
+
+---
+
+## 👔 Coordinator Report Template
+
+Coordinators handle both individual contributor tasks (like juniors) and team oversight responsibilities. Their report includes their own self-assessment plus team aggregation.
+
+### Template Structure
+
+```markdown
+# Weekly Team Report - [Start Date] to [End Date]
+
+**Prepared by:** [Your Name], Frontend Coordinator  
+**Date Submitted:** [Submission Date]
+
+---
+
+## 📊 Executive Summary
+
+[High-level overview of team progress, key achievements, and focus areas with metrics]
+
+### Key Metrics:
+
+- **Team Velocity:** [Story points completed]
+- **Bug Fix Rate:** [Bugs resolved vs. new bugs]
+- **PR Merge Rate:** [Average time from PR to merge]
+- **Code Quality:** [Test coverage, linting issues]
+
+---
+
+## 👥 Team Member Reports
+
+### [Junior Name 1]
+
+[Insert full junior self-report here]
+
+**Coordinator Notes:**
+
+- **Verification:** [How you verified accomplishments - code review, testing, etc.]
+- **Additional Context:** [Any context not in their report]
+- **Feedback:** [Constructive feedback or recognition]
+
+---
+
+### [Junior Name 2]
+
+[Insert full junior self-report here]
+
+**Coordinator Notes:**
+
+- **Verification:** [How you verified accomplishments]
+- **Additional Context:** [Any context not in their report]
+- **Feedback:** [Constructive feedback or recognition]
+
+---
+
+## 🔧 Coordinator Self-Report
+
+### 🎯 Accomplishments
+
+[List your individual contributor tasks with details, PR links, and metrics]
+
+### 🚧 Blockers/Problems
+
+[Your challenges and resolutions]
+
+### ✅ Positives
+
+[Your demonstrated strengths]
+
+### 📈 Areas for Improvement
+
+[Your self-identified gaps]
+
+### 🎓 Development Plans
+
+[Your actionable growth steps]
+
+---
+
+## 🔍 Overall Team Evaluation
+
+### Performance Metrics:
+
+- **Average Tasks Completed:** [Number per junior]
+- **Team Velocity:** [Story points]
+- **Quality Metrics:** [Test coverage, bug rate, code review feedback]
+- **Collaboration Score:** [Based on peer interactions, knowledge sharing]
+
+### Team Strengths:
+
+[What the team excelled at this week]
+
+### Team Challenges:
+
+[Systemic issues or patterns across team members]
+
+### Process Improvements:
+
+[Recommendations for better team efficiency]
+
+---
+
+## 🚀 Next Steps
+
+### Priorities for Upcoming Week:
+
+1. [Priority 1 with assigned owner]
+2. [Priority 2 with assigned owner]
+3. [Priority 3 with assigned owner]
+
+### Required Actions:
+
+- **[Team Member]:** [Specific action item]
+- **[Team Member]:** [Specific action item]
+- **Team-wide:** [Action for entire team]
+
+### Upcoming Milestones:
+
+[Major deadlines or deliverables in next 1-2 weeks]
+```
+
+---
+
+## 📝 Coordinator Report - Detailed Example
+
+```markdown
+# Weekly Team Report - December 29, 2025 to January 4, 2026
+
+**Prepared by:** Sarah Chen, Frontend Coordinator  
+**Date Submitted:** January 5, 2026
+
+---
+
+## 📊 Executive Summary
+
+Strong week with successful deployment of authentication system and significant progress on dashboard features. Team completed **32 story points** (target: 30), demonstrating good velocity. All team members showed growth in code quality and collaboration.
+
+**Highlights:**
+
+- ✅ Authentication system deployed to production (zero bugs reported)
+- ✅ Dashboard performance improved by 40% average
+- ⚠️ Some testing gaps identified - addressed with team training plan
+- 📈 Team test coverage increased from 72% to 79%
+
+### Key Metrics:
+
+- **Team Velocity:** 32 story points (107% of target)
+- **Bug Fix Rate:** 15 bugs resolved, 4 new bugs reported (net: -11 bugs)
+- **PR Merge Rate:** Average 18 hours from PR to merge (target: <24hrs)
+- **Code Quality:** 79% test coverage (up from 72%), 98% ESLint compliance
+
+---
+
+## 👥 Team Member Reports
+
+### Ahmed Hassan - Junior Frontend Developer
+
+# Weekly Self-Report - December 29, 2025 to January 4, 2026
+
+**Prepared by:** Ahmed Hassan, Junior Frontend Developer  
+**Date Submitted:** January 5, 2026
+
+## 🎯 Accomplishments
+
+### 1. User Authentication Flow Implementation
+
+- **Details:** Implemented login and registration forms using React Hook Form with Zod validation. Created protected route wrapper for authenticated pages.
+- **Evidence:**
+  - PR: [#234 - Add authentication flow](https://github.com/org/project/pull/234)
+  - Deployed: [Staging Environment](https://staging.example.com/login)
+- **Metrics/Impact:**
+  - Reduced form validation errors by 40% through schema-based validation
+  - Improved user experience with real-time feedback
+  - 100% test coverage for authentication components
+
+### 2. Performance Optimization
+
+- **Details:** Implemented lazy loading for dashboard components and optimized image loading using Next.js Image component.
+- **Evidence:**
+  - PR: [#237 - Dashboard performance improvements](https://github.com/org/project/pull/237)
+- **Metrics/Impact:**
+  - Reduced initial page load time from 3.2s to 1.8s (43.75% improvement)
+  - Improved Core Web Vitals: LCP from 2.8s to 1.5s
+
+### 3. Bug Fixes
+
+- **Details:** Resolved 5 critical bugs reported by QA team
+- **Evidence:** Closed issues: #445, #448, #451, #454, #459
+- **Metrics/Impact:** Reduced open bug count by 23%
+
+## 🚧 Blockers/Problems
+
+### 1. Third-Party API Integration Issues
+
+- **Blocker:** Payment gateway API documentation outdated
+- **Impact:** Delayed payment feature by 2 days
+- **Resolution:** Contacted vendor support, received updated docs
+- **Status:** ✅ Resolved
+
+### 2. TypeScript Type Complexity
+
+- **Blocker:** Struggled with complex generic types
+- **Impact:** Spent 4 hours debugging type errors
+- **Resolution:** Received help from Sara, documented learnings
+- **Status:** ✅ Resolved
+
+### 3. Test Environment Instability
+
+- **Blocker:** CI/CD pipeline failing intermittently
+- **Impact:** Had to re-run tests multiple times
+- **Resolution:** Reported to DevOps
+- **Status:** 🔄 Ongoing
+
+## ✅ Positives
+
+- **Proactive Problem Solving:** Identified security vulnerability before code review
+- **Collaboration:** Helped two team members debug React Hook Form issues
+- **Code Quality:** Consistently approved on first review iteration
+
+## 📈 Areas for Improvement
+
+- **Testing Strategy:** Need to improve integration and E2E test design
+- **CSS/Styling Efficiency:** Takes longer than expected for responsive designs
+- **Time Estimation:** Underestimated authentication complexity by ~30%
+
+## 🎓 Development Plans
+
+### 1. Master React Testing Library
+
+- **Timeline:** Complete by January 31, 2026
+- **Success Metric:** 90%+ test coverage on next major feature
+
+### 2. Improve TypeScript Proficiency
+
+- **Timeline:** Ongoing through Q1 2026
+- **Success Metric:** Reduce type errors by 50%
+
+---
+
+**Coordinator Notes:**
+
+**Verification:**
+
+- ✅ Reviewed all PRs - code quality excellent, well-structured
+- ✅ Tested authentication flow personally - works flawlessly
+- ✅ Verified performance metrics with Lighthouse and WebPageTest
+
+**Additional Context:**
+
+- Ahmed's authentication implementation became the reference for other auth features
+- His proactive security mindset is exceptional for a junior developer
+- Payment API blocker was external, not in his control - handled professionally
+
+**Feedback & Recognition:**
+
+- 🌟 **Outstanding:** Security awareness and code quality
+- 👍 **Good:** Seeking help when blocked instead of struggling alone
+- 📚 **Development:** Focus on testing strategy and time estimation as planned
+- **Action:** Pair with me on next complex feature for better estimation practice
+
+**Growth Trajectory:** Ahmed is progressing faster than expected. Consider for mid-level promotion review in Q2 if current pace continues.
+
+---
+
+### Fatima Al-Sayed - Junior Frontend Developer
+
+# Weekly Self-Report - December 29, 2025 to January 4, 2026
+
+**Prepared by:** Fatima Al-Sayed, Junior Frontend Developer  
+**Date Submitted:** January 5, 2026
+
+## 🎯 Accomplishments
+
+### 1. Dashboard Component Refactoring
+
+- **Details:** Refactored dashboard widgets to use shared component library, improved reusability
+- **Evidence:** PR: [#240 - Dashboard widget refactor](https://github.com/org/project/pull/240)
+- **Metrics/Impact:**
+  - Reduced code duplication by 45%
+  - 3 widgets now share 80% of common code
+
+### 2. Responsive Design Implementation
+
+- **Details:** Implemented mobile-responsive layouts for user settings pages
+- **Evidence:** PR: [#242 - Responsive settings pages](https://github.com/org/project/pull/242)
+- **Metrics/Impact:**
+  - Improved mobile experience score from 68 to 92
+  - Zero layout shift on mobile devices
+
+### 3. Code Review Participation
+
+- **Details:** Provided detailed code reviews for 4 PRs from team members
+- **Evidence:** Review comments on PRs #234, #235, #238, #241
+- **Metrics/Impact:** Helped identify 2 potential bugs before merge
+
+## 🚧 Blockers/Problems
+
+### 1. Design System Inconsistencies
+
+- **Blocker:** Some design specs conflicted with existing design system
+- **Impact:** Required back-and-forth with designer
+- **Resolution:** Clarified with design team, updated components
+- **Status:** ✅ Resolved
+
+## ✅ Positives
+
+- **Attention to Detail:** Caught responsive design edge cases during self-testing
+- **Team Collaboration:** Active code reviewer, provides constructive feedback
+- **Component Design:** Created highly reusable, well-documented components
+
+## 📈 Areas for Improvement
+
+- **Performance Optimization:** Need to learn more about React rendering optimization
+- **Testing Coverage:** E2E tests could be more comprehensive
+
+## 🎓 Development Plans
+
+### 1. Performance Optimization
+
+- **Timeline:** Complete by February 15, 2026
+- **Success Metric:** Implement useMemo/useCallback patterns correctly in next feature
+
+---
+
+**Coordinator Notes:**
+
+**Verification:**
+
+- ✅ Reviewed PRs - excellent component architecture
+- ✅ Tested on multiple devices - responsive design works perfectly
+- ✅ Code review quality is thoughtful and helpful
+
+**Additional Context:**
+
+- Fatima's refactoring saved the team significant technical debt
+- Her component design patterns are becoming team standards
+- Design system blocker was reasonable and handled maturely
+
+**Feedback & Recognition:**
+
+- 🌟 **Outstanding:** Component design and reusability mindset
+- 👍 **Good:** Active participation in code reviews
+- 📚 **Development:** Focus on performance patterns as planned
+- **Action:** Assign performance-critical feature next sprint for growth opportunity
+
+**Growth Trajectory:** Fatima shows strong architectural thinking. Recommend mentoring newer juniors in component design.
+
+---
+
+## 🔧 Coordinator Self-Report
+
+### 🎯 Accomplishments
+
+#### 1. Team Leadership & Code Review
+
+- **Details:** Conducted thorough code reviews for all 8 team PRs this week, provided actionable feedback, mentored on best practices
+- **Evidence:** Review comments on PRs #234-242, average review turnaround: 4 hours
+- **Metrics/Impact:**
+  - 95% of PRs merged with minimal revisions
+  - Zero production bugs from this week's deployments
+  - Team members reported improved understanding of patterns
+
+#### 2. CI/CD Pipeline Improvements
+
+- **Details:** Implemented automated Lighthouse CI checks in pipeline, configured performance budgets
+- **Evidence:**
+  - PR: [#245 - Add Lighthouse CI](https://github.com/org/project/pull/245)
+  - Pipeline configuration in `.github/workflows/lighthouse.yml`
+- **Metrics/Impact:**
+  - Catches performance regressions automatically before merge
+  - Reduced manual performance testing by 80%
+
+#### 3. Technical Architecture Planning
+
+- **Details:** Designed architecture for upcoming multi-tenant feature, documented decision in ADR
+- **Evidence:**
+  - ADR: [docs/adr/007-multi-tenant-architecture.md](link)
+  - Architecture review meeting notes
+- **Metrics/Impact:**
+  - Received approval from senior architects
+  - Provides clear roadmap for Q1 2026 development
+
+#### 4. Team Development Initiatives
+
+- **Details:** Organized team workshop on testing best practices, created testing guide documentation
+- **Evidence:**
+  - Workshop slides and recording
+  - Documentation: [docs/testing-guide.md](link)
+- **Metrics/Impact:**
+  - 100% team attendance
+  - Team test coverage increased from 72% to 79%
+  - Positive feedback from all attendees
+
+### 🚧 Blockers/Problems
+
+#### 1. Resource Allocation Constraint
+
+- **Blocker:** Product requested accelerated timeline for dashboard features, but team at capacity
+- **Impact:** Risk of burnout or quality reduction
+- **Resolution:** Negotiated with product manager to defer non-critical features to next sprint, maintained sustainable pace
+- **Status:** ✅ Resolved - agreed on realistic timeline
+
+#### 2. Cross-Team API Dependency
+
+- **Blocker:** Backend team delayed API endpoint needed for new feature
+- **Impact:** Blocked progress on user activity timeline feature
+- **Resolution:** Implemented mock data layer for frontend development to continue, coordinated with backend lead on timeline
+- **Status:** 🔄 Ongoing - backend API expected by January 10
+
+### ✅ Positives
+
+- **Team Leadership:** Successfully balanced individual work with team support and mentorship
+- **Technical Decision-Making:** Architecture decisions received positive feedback from senior engineering
+- **Process Improvement:** CI/CD enhancements tangibly improved team efficiency
+- **Communication:** Effective negotiation with stakeholders maintained team health
+
+### 📈 Areas for Improvement
+
+- **Delegation:** Could delegate more code review work to senior juniors to scale my impact
+- **Documentation:** Need to improve real-time documentation during architectural decisions
+- **Time Management:** Spent significant time on unexpected production issue, affected planned work
+
+### 🎓 Development Plans
+
+#### 1. Leadership Skills Development
+
+- **Actions:**
+  - Read "The Manager's Path" (started, 30% complete)
+  - Practice more effective delegation with senior juniors
+  - Schedule bi-weekly 1:1s with each team member
+- **Timeline:** Ongoing through Q1 2026
+- **Success Metric:** Team members feel more empowered, my review load reduced by 30%
+
+#### 2. System Architecture Expertise
+
+- **Actions:**
+  - Complete AWS Solutions Architect course
+  - Shadow senior architect in next major design review
+  - Lead architecture design for 2 medium-complexity features
+- **Timeline:** Complete by March 2026
+- **Success Metric:** Independently design and defend architecture for large features
+
+---
+
+## 🔍 Overall Team Evaluation
+
+### Performance Metrics:
+
+**Individual Productivity:**
+
+- **Average Tasks Completed:** 8 tasks per junior (range: 7-9)
+- **Average Story Points:** 16 per developer
+- **PR Quality:** 92% first-time approval rate (excellent)
+
+**Team Velocity:**
+
+- **Total Story Points:** 32 (target: 30) - **107% achievement**
+- **Sprint Goal Achievement:** 100% - all committed features completed
+- **Velocity Trend:** Increasing (last 4 weeks: 25, 28, 30, 32)
+
+**Quality Metrics:**
+
+- **Test Coverage:** 79% (up from 72% last week)
+- **Production Bugs:** 0 new bugs from this week's code
+- **Code Review Cycle Time:** Average 12 hours first review, 18 hours to merge
+- **ESLint Compliance:** 98% (2% minor warnings, no errors)
+
+**Collaboration Metrics:**
+
+- **Cross-Team Reviews:** 8 reviews between team members
+- **Knowledge Sharing:** 1 team workshop, 6 informal pair programming sessions
+- **Documentation Contributions:** 4 new docs, 7 doc updates
+
+### Team Strengths:
+
+1. **Code Quality Excellence**
+
+   - Consistent high-quality code with minimal revisions needed
+   - Strong testing discipline emerging across team
+   - Proactive security and performance considerations
+
+2. **Collaborative Culture**
+
+   - Team members actively help each other
+   - Constructive code reviews with learning focus
+   - Knowledge sharing through documentation and pairing
+
+3. **Growth Mindset**
+
+   - All team members actively working on development plans
+   - Honest self-assessment in reports
+   - Receptive to feedback and coaching
+
+4. **Delivery Reliability**
+   - Met 100% of sprint commitments
+   - Zero last-minute surprises or missed deadlines
+   - Proactive communication about blockers
+
+### Team Challenges:
+
+1. **Testing Strategy Gaps**
+
+   - **Issue:** Integration and E2E testing skills still developing
+   - **Impact:** Some gaps in test coverage for complex workflows
+   - **Action Taken:** Conducted testing workshop this week
+   - **Next Steps:** Pair programming sessions focused on E2E tests
+
+2. **Estimation Accuracy**
+
+   - **Issue:** Some tasks underestimated by 20-30%
+   - **Impact:** Minor sprint planning challenges
+   - **Action Taken:** Introduced more granular task breakdown
+   - **Next Steps:** Review estimates together before sprint commitment
+
+3. **External Dependencies**
+   - **Issue:** Backend and design dependencies occasionally cause blockers
+   - **Impact:** Some waiting time, though team adapted well
+   - **Action Taken:** Improved cross-team communication, mock data strategies
+   - **Next Steps:** Participate in cross-team planning meetings
+
+### Process Improvements:
+
+1. **Implemented Lighthouse CI** - Automated performance checks preventing regressions
+2. **Enhanced Documentation** - Testing guide created, reference for future work
+3. **Improved Code Review Process** - Senior juniors now review each other first, escalate to coordinator
+4. **Better Sprint Planning** - More granular task breakdown improving estimation accuracy
+
+---
+
+## 🚀 Next Steps
+
+### Priorities for Week of January 5-11, 2026:
+
+1. **Complete Multi-Tenant Architecture Implementation (Phase 1)**
+
+   - **Owner:** Sarah (Coordinator) + Ahmed
+   - **Story Points:** 13
+   - **Dependencies:** None
+   - **Target:** Core architecture implemented by EOW
+
+2. **User Activity Timeline Feature**
+
+   - **Owner:** Fatima
+   - **Story Points:** 8
+   - **Dependencies:** Backend API (expected Jan 10)
+   - **Target:** Frontend ready for integration by Jan 11
+
+3. **Dashboard Performance Optimization (Phase 2)**
+
+   - **Owner:** Ahmed
+   - **Story Points:** 5
+   - **Dependencies:** Lighthouse CI metrics
+   - **Target:** Achieve LCP < 1.2s across all dashboards
+
+4. **Component Library Documentation Sprint**
+   - **Owner:** All team members (2 hrs each)
+   - **Story Points:** 3 (team effort)
+   - **Dependencies:** None
+   - **Target:** Document 10 most-used components
+
+### Required Actions:
+
+- **Ahmed Hassan:**
+
+  - Pair with Sarah on multi-tenant architecture (Tuesday AM)
+  - Complete TypeScript advanced types study module
+  - Review E2E testing patterns in preparation for next feature
+
+- **Fatima Al-Sayed:**
+
+  - Implement performance optimization patterns in activity timeline
+  - Lead component documentation sprint coordination
+  - Prepare to mentor new junior starting next week
+
+- **Team-wide:**
+  - Each member: Document one complex component this week
+  - Participate in sprint retrospective (Friday 2 PM)
+  - Review and provide feedback on ADR-007 (multi-tenant architecture)
+
+### Upcoming Milestones:
+
+- **January 15, 2026:** Multi-tenant architecture Phase 1 demo to stakeholders
+- **January 20, 2026:** Dashboard features code freeze for Q1 release
+- **January 22, 2026:** New junior developer (Youssef Ibrahim) starts - onboarding plan ready
+- **February 1, 2026:** Q1 2026 sprint planning - need feature estimates by Jan 25
+
+### Risk Management:
+
+⚠️ **Risk:** Backend API delay could push activity timeline feature  
+**Mitigation:** Mock data layer ready, frontend development continues independently
+
+⚠️ **Risk:** Multi-tenant architecture is complex, could take longer than estimated  
+**Mitigation:** Phased approach, Phase 1 focuses on MVP, contingency buffer in timeline
+
+✅ **Opportunity:** Team velocity trending up - may be able to pull in additional features from backlog
+
+---
+
+## 📝 Coordinator Reflection
+
+This week demonstrated excellent team maturity. The authentication deployment went smoothly due to thorough testing and code review. Team members are becoming more self-sufficient while maintaining strong collaboration.
+
+Key observations:
+
+- Ahmed is ready for more complex architectural challenges
+- Fatima's component design skills could benefit the whole team through mentorship
+- Team velocity increase is sustainable - not from overwork but from improved efficiency
+- Testing workshop had immediate positive impact on code quality
+
+Looking ahead to Q1 2026, this team is well-positioned to tackle more ambitious features while maintaining quality standards.
+```
+
+---
+
+## 📁 File Naming Convention
+
+<Callout type="warn">
+  **Consistent naming is critical** for document management, compliance, and
+  team coordination.
+</Callout>
+
+### Standard Format
+
+```
+Weekly_Performance_Report_[StartDate]_to_[EndDate]_PreparedBy_[Name].pdf
+```
+
+### Examples
+
+**Junior Reports:**
+
+```
+Weekly_Performance_Report_2025-12-28_to_2026-01-02_PreparedBy_AhmedHassan.pdf
+Weekly_Performance_Report_2026-01-04_to_2026-01-09_PreparedBy_FatimaAlSayed.pdf
+```
+
+**Coordinator Reports:**
+
+```
+Weekly_Team_Report_2025-12-28_to_2026-01-02_PreparedBy_SarahChen.pdf
+Weekly_Team_Report_2026-01-04_to_2026-01-09_PreparedBy_MohamedKamal.pdf
+```
+
+### Naming Rules
+
+1. **Date Format:** `YYYY-MM-DD` (e.g., 2026-01-04 for January 4, 2026) - ISO 8601 standard for better readability
+2. **No Spaces in Names:** Use camelCase for names (e.g., AhmedHassan, not Ahmed Hassan)
+3. **Consistent Separator:** Use underscores `_` to separate sections
+4. **File Extension:** Always use `.pdf` for final reports
+5. **Version Control:** If revisions needed, append `_v2`, `_v3`, etc.
+
+---
+
+## ✅ Best Practices
+
+<Cards>
+  <Card title="Be Honest & Specific" icon="🎯">
+    Provide accurate information with concrete examples. Vague statements like
+    "worked on features" are not useful.
+  </Card>
+  <Card title="Use Quantifiable Metrics" icon="📊">
+    Include numbers wherever possible: load times, bug counts, test coverage
+    percentages, time saved.
+  </Card>
+  <Card title="Link Evidence" icon="🔗">
+    Always provide PR links, issue numbers, or deployed URLs to verify your
+    accomplishments.
+  </Card>
+  <Card title="Identify Blockers Early" icon="🚧">
+    Report blockers as soon as they occur - don't wait for the weekly report.
+    But document them formally in reports.
+  </Card>
+  <Card title="Self-Reflect Constructively" icon="💭">
+    Areas for improvement should be honest but framed positively with action
+    plans.
+  </Card>
+  <Card title="Make Plans Actionable" icon="🎓">
+    Development plans must have specific actions, timelines, and measurable
+    success criteria.
+  </Card>
+</Cards>
+
+---
+
+## 🔄 Report Submission Workflow
+
+### Work Schedule
+
+<Callout type="info">
+  **Work Week:** Saturday to Thursday (5 days) **Work Hours:** 9:00 AM - 6:00 PM
+  **Reporting Period:** Each report covers one complete work week (Saturday to
+  Thursday)
+</Callout>
+
+---
+
+### 📅 Simple Timeline
+
+#### **THURSDAY (Last Day of Work Week)**
+
+- **6:00 PM** - Work day ends
+- **By 11:59 PM** - ⏰ **JUNIORS DEADLINE:** Submit your weekly self-report
+  - You have ~6 hours after work to complete and submit
+  - Report covers the work you did from Saturday to Thursday
+
+#### **FRIDAY (Off Day)**
+
+- No work activities - rest day
+
+#### **SATURDAY (First Day of New Work Week)**
+
+- **9:00 AM** - New work week begins
+- **9:00 AM - 12:00 PM** - Coordinators review all junior reports
+- **By 12:00 PM (Noon)** - ⏰ **COORDINATORS DEADLINE:** Submit complete team report
+  - You have 3 hours at the start of work day to review and submit
+- **2:00 PM - 5:00 PM** - Frontend leader reviews all team reports
+
+#### **SUNDAY**
+
+- **9:00 AM - 12:00 PM** - Frontend leader shares feedback with teams
+- New week work continues with priorities set
+
+---
+
+### 📋 Quick Reference
+
+| **Day**      | **Time**           | **Who**          | **What**                        |
+| ------------ | ------------------ | ---------------- | ------------------------------- |
+| **Thursday** | 6:00 PM            | Everyone         | Work week ends                  |
+| **Thursday** | 11:59 PM ⏰        | **Juniors**      | **SUBMIT REPORT DEADLINE**      |
+| **Saturday** | 9:00 AM            | Everyone         | New work week starts            |
+| **Saturday** | 12:00 PM ⏰        | **Coordinators** | **SUBMIT TEAM REPORT DEADLINE** |
+| **Saturday** | 2:00 PM - 5:00 PM  | Frontend Leader  | Review reports                  |
+| **Sunday**   | 9:00 AM - 12:00 PM | Frontend Leader  | Provide feedback                |
+
+---
+
+### Submission Process
+
+1. **Juniors (Due Thursday EOD):**
+
+   - Write report in Markdown following template
+   - Self-review for completeness and accuracy
+   - Export to PDF using naming convention (e.g., `Weekly_Performance_Report_2026-01-04_to_2026-01-09_PreparedBy_YourName.pdf`)
+   - Submit via team's document management system **no later than Thursday 11:59 PM**
+   - Notify coordinator of submission via team channel
+
+2. **Coordinators (Due Saturday 12 PM):**
+   - Review all junior reports by Saturday 10 AM
+   - Add verification notes and feedback
+   - Complete own self-report section
+   - Compile team metrics and evaluation
+   - Export complete report to PDF using naming convention
+   - Submit to frontend leader **no later than Saturday 12:00 PM (noon)**
+   - Schedule any necessary 1:1 discussions based on reports for the following week
+
+---
+
+## 🎯 What Makes a Great Report
+
+### For Juniors:
+
+✅ **Demonstrates Growth:** Shows learning and improvement over time  
+✅ **Provides Context:** Explains not just what you did, but why and how  
+✅ **Includes Metrics:** Quantifies impact wherever possible  
+✅ **Shows Initiative:** Highlights proactive actions and problem-solving  
+✅ **Plans Forward:** Clear development goals with actionable steps  
+✅ **Honest Reflection:** Acknowledges challenges and areas to improve
+
+❌ **Avoid:**
+
+- Vague statements without examples
+- Listing tasks without context or impact
+- Hiding blockers or challenges
+- Exaggerating accomplishments
+- Generic improvement areas without plans
+
+### For Coordinators:
+
+✅ **Comprehensive Team View:** Aggregates individual and team performance  
+✅ **Balanced Feedback:** Recognizes strengths, addresses gaps constructively  
+✅ **Data-Driven Insights:** Uses metrics to support observations  
+✅ **Strategic Planning:** Connects weekly work to larger goals  
+✅ **Actionable Next Steps:** Clear priorities and assignments  
+✅ **Team Development Focus:** Identifies growth opportunities for team members
+
+❌ **Avoid:**
+
+- Rubber-stamping junior reports without verification
+- Generic feedback that doesn't help growth
+- Focusing only on problems without solutions
+- Neglecting your own development in favor of team reporting
+- Missing patterns across team members
+
+---
+
+## 📚 Additional Resources
+
+<Cards>
+  <Card
+    title="Code Review Guide"
+    href="/docs/reference/code-standards#code-review-process"
+  >
+    Learn about effective code review practices to verify accomplishments
+  </Card>
+  <Card title="Testing Standards" href="/docs/guides/testing">
+    Understand testing metrics and coverage expectations
+  </Card>
+  <Card
+    title="Performance Monitoring"
+    href="/docs/reference/tech-stack#performance-monitoring"
+  >
+    Learn how to measure and report performance improvements
+  </Card>
+  <Card title="Career Development" href="/docs/learning/roadmaps">
+    Explore frontend developer roadmaps for development planning
+  </Card>
+</Cards>
+
+---
+
+<Callout type="info">
+  **Questions about reports?** Reach out to your coordinator or engineering
+  manager. These templates are living documents - if you have suggestions for
+  improvement, share them with the team!
+</Callout>

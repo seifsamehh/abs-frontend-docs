@@ -1,0 +1,277 @@
+---
+title: "Tutorial: Your First Component"
+description: Build your first React component and learn the fundamentals of props, state, and rendering
+difficulty: beginner
+estimatedTime: "30 min"
+keywords: ["react", "component", "props", "state", "beginner", "tutorial"]
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# Tutorial: Your First Component
+
+<Callout type="info">
+  In this tutorial, you'll build a greeting card component from scratch. By the
+  end, you'll understand how React components work, how to pass data with props,
+  and how to add interactivity with state.
+</Callout>
+
+## What We're Building
+
+We'll create an interactive greeting card that:
+
+- Displays a customizable message
+- Lets users enter their name
+- Shows a personalized greeting
+
+**Time:** ~30 minutes | **Level:** Beginner | **Prerequisites:** Basic JavaScript
+
+---
+
+## Step 1: Create a Simple Component
+
+<Steps>
+<Step>
+### Create the file
+
+In your project's `src/components` folder, create a new file called `GreetingCard.tsx`:
+
+```tsx
+// src/components/GreetingCard.tsx
+export function GreetingCard() {
+  return (
+    <div className="p-6 rounded-lg bg-white shadow-md">
+      <h2 className="text-2xl font-bold text-gray-800">Hello!</h2>
+      <p className="text-gray-600 mt-2">Welcome to our app.</p>
+    </div>
+  );
+}
+```
+
+You've just created your first component! It's a function that returns JSX (the HTML-like syntax).
+
+</Step>
+
+<Step>
+### Use it in a page
+
+Import and use your component in any page:
+
+```tsx
+// src/app/page.tsx
+import { GreetingCard } from "@/components/GreetingCard";
+
+export default function Home() {
+  return (
+    <main className="p-8">
+      <GreetingCard />
+    </main>
+  );
+}
+```
+
+You should see a simple card with "Hello!" displayed.
+
+</Step>
+</Steps>
+
+---
+
+## Step 2: Add Props for Customization
+
+Props let you pass data to components, making them reusable.
+
+<Steps>
+<Step>
+### Define the props type
+
+Update your component to accept a `title` prop:
+
+```tsx
+// src/components/GreetingCard.tsx
+interface GreetingCardProps {
+  title: string;
+  message?: string; // Optional prop with ?
+}
+
+export function GreetingCard({
+  title,
+  message = "Welcome to our app.",
+}: GreetingCardProps) {
+  return (
+    <div className="p-6 rounded-lg bg-white shadow-md">
+      <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+      <p className="text-gray-600 mt-2">{message}</p>
+    </div>
+  );
+}
+```
+
+Notice how `message` has a default value - it's optional!
+
+</Step>
+
+<Step>
+### Pass different props
+
+Now you can create multiple cards with different content:
+
+```tsx
+<GreetingCard title="Good Morning!" message="Ready to start coding?" />
+<GreetingCard title="Welcome Back!" />
+```
+
+Each card displays different text, but uses the same component code.
+
+</Step>
+</Steps>
+
+---
+
+## Step 3: Add Interactivity with State
+
+State lets your component remember and update information.
+
+<Steps>
+<Step>
+### Import useState
+
+Add the `useState` hook at the top of your file:
+
+```tsx
+"use client"; // Required for client-side interactivity
+
+import { useState } from "react";
+```
+
+<Callout type="warn">
+  The `"use client"` directive is required in Next.js when using hooks like `useState`. 
+  Without it, your component runs on the server where `useState` doesn't work.
+</Callout>
+</Step>
+
+<Step>
+### Add state for the user's name
+
+```tsx
+"use client";
+
+import { useState } from "react";
+
+interface GreetingCardProps {
+  title: string;
+  message?: string;
+}
+
+export function GreetingCard({
+  title,
+  message = "Welcome to our app.",
+}: GreetingCardProps) {
+  const [name, setName] = useState("");
+
+  return (
+    <div className="p-6 rounded-lg bg-white shadow-md">
+      <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+      <p className="text-gray-600 mt-2">{message}</p>
+
+      <div className="mt-4">
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter your name"
+          className="px-3 py-2 border rounded-md w-full"
+        />
+      </div>
+
+      {name && (
+        <p className="mt-4 text-lg text-primary font-medium">
+          Hello, {name}! 👋
+        </p>
+      )}
+    </div>
+  );
+}
+```
+
+**What's happening:**
+
+- `useState("")` creates a state variable `name` starting as empty string
+- `setName` is the function to update it
+- `onChange` calls `setName` whenever the input changes
+- `{name && ...}` only shows the greeting when name isn't empty
+
+</Step>
+</Steps>
+
+---
+
+## Final Result
+
+Your complete component:
+
+```tsx
+"use client";
+
+import { useState } from "react";
+
+interface GreetingCardProps {
+  title: string;
+  message?: string;
+}
+
+export function GreetingCard({
+  title,
+  message = "Welcome to our app.",
+}: GreetingCardProps) {
+  const [name, setName] = useState("");
+
+  return (
+    <div className="p-6 rounded-lg bg-white shadow-md max-w-md">
+      <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+      <p className="text-gray-600 mt-2">{message}</p>
+
+      <div className="mt-4">
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter your name"
+          className="px-3 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+      </div>
+
+      {name && (
+        <p className="mt-4 text-lg text-primary font-medium">
+          Hello, {name}! 👋
+        </p>
+      )}
+    </div>
+  );
+}
+```
+
+---
+
+## What You Learned
+
+✅ **Components** are reusable functions that return JSX  
+✅ **Props** pass data into components (like function parameters)  
+✅ **State** lets components remember and update values  
+✅ **"use client"** is needed for interactive components in Next.js  
+✅ **Conditional rendering** with `{condition && <element>}`
+
+---
+
+## Next Steps
+
+<Callout type="tip">
+  Great job! You've built your first interactive component. Continue your
+  learning:
+</Callout>
+
+- **Next tutorial:** [Building a Form](/docs/tutorials/building-a-form) - Learn validation and form handling
+- **Practice:** Try the [Interactive Examples](/docs/tutorials/interactive-examples) playground
+- **Reference:** Check the [Component Library](/docs/reference/component-library) for pre-built components

@@ -1,0 +1,834 @@
+---
+title: Getting Started
+description: Quick start guide for new team members and contributors
+keywords:
+  [
+    "setup",
+    "installation",
+    "getting-started",
+    "environment",
+    "nodejs",
+    "vscode",
+  ]
+difficulty: beginner
+estimatedTime: "30 min"
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# 🚀 Getting Started
+
+<Callout type="info">
+  Welcome to the ABS frontend team! This guide will help you set up your
+  development environment and make your first contribution. **Updated for
+  Node.js 20+ and Next.js 16!**
+</Callout>
+
+## Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+### Required Software
+
+<Cards>
+  <Card
+    title="📦 Node.js 20+"
+    description="LTS version required (we recommend using nvm for version management)"
+  />
+  <Card
+    title="⚡ pnpm 9+"
+    description="Our preferred package manager (faster, more efficient)"
+  />
+  <Card title="🔧 Git" description="Version control system" />
+  <Card
+    title="💻 VS Code"
+    description="Recommended IDE with our extension pack"
+  />
+</Cards>
+
+### Installation Steps
+
+Select your operating system below for platform-specific instructions:
+
+<Tabs items={['🍎 macOS', '🪟 Windows', '🐧 Linux']}>
+  <Tab value="🍎 macOS">
+    **Step 1: Install Homebrew** (if not already installed)
+    ```bash
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    ```
+
+    **Step 2: Install Node.js via nvm**
+    ```bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+    source ~/.zshrc  # Reload shell configuration
+    nvm install 20
+    nvm use 20
+    ```
+
+    **Step 3: Install pnpm**
+    ```bash
+    npm install -g pnpm
+    ```
+
+    **Step 4: Install Git & VS Code**
+    ```bash
+    brew install git
+    brew install --cask visual-studio-code
+    ```
+
+    **Step 5: Verify Installation**
+    ```bash
+    node --version   # ✓ Should be v20.x.x
+    pnpm --version   # ✓ Should be 9.x.x
+    git --version    # ✓ Should be 2.x.x
+    ```
+
+  </Tab>
+  <Tab value="🪟 Windows">
+    **Step 1: Install nvm-windows**
+    
+    Download and install from: [nvm-windows releases](https://github.com/coreybutler/nvm-windows/releases)
+
+    **Step 2: Install Node.js**
+    ```powershell
+    nvm install 20
+    nvm use 20
+    ```
+
+    **Step 3: Install pnpm**
+    ```powershell
+    npm install -g pnpm
+    ```
+
+    **Step 4: Install Git**
+
+    Download from: [git-scm.com/download/win](https://git-scm.com/download/win)
+
+    **Step 5: Install VS Code**
+
+    Download from: [code.visualstudio.com](https://code.visualstudio.com/)
+
+    **Step 6: Verify Installation**
+    ```powershell
+    node --version   # ✓ Should be v20.x.x
+    pnpm --version   # ✓ Should be 9.x.x
+    git --version    # ✓ Should be 2.x.x
+    ```
+
+  </Tab>
+  <Tab value="🐧 Linux">
+    **Step 1: Install Node.js via nvm**
+    ```bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+    source ~/.bashrc  # or ~/.zshrc if using zsh
+    nvm install 20
+    nvm use 20
+    ```
+
+    **Step 2: Install pnpm**
+    ```bash
+    npm install -g pnpm
+    ```
+
+    **Step 3: Install Git**
+    ```bash
+    sudo apt update && sudo apt install git
+    ```
+
+    **Step 4: Install VS Code**
+    ```bash
+    # Option 1: Via snap (recommended)
+    sudo snap install --classic code
+
+    # Option 2: Via .deb package
+    # Download from: https://code.visualstudio.com/
+    # sudo dpkg -i code_*.deb
+    ```
+
+    **Step 5: Verify Installation**
+    ```bash
+    node --version   # ✓ Should be v20.x.x
+    pnpm --version   # ✓ Should be 9.x.x
+    git --version    # ✓ Should be 2.x.x
+    ```
+
+  </Tab>
+</Tabs>
+
+<Callout type="tip">
+  **Quick Check:** Run `node -v && pnpm -v && git -v` to verify all tools are
+  installed correctly.
+</Callout>
+
+---
+
+## Development Environment Setup
+
+### 1. Clone the Repository
+
+```bash
+# Clone the main repository
+git clone https://github.com/abs/frontend-docs.git
+cd frontend-docs
+
+# Install dependencies
+npm install
+```
+
+Example `.env.local`:
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
+
+### 3. Start Development Server
+
+```bash
+# Start the development server
+npm run dev
+```
+
+Your application should now be running at `http://localhost:3000`!
+
+---
+
+## VS Code Setup
+
+### Recommended Extensions
+
+Install our extension pack for the best development experience:
+
+```json title=".vscode/extensions.json"
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+    "ms-playwright.playwright",
+    "bradlc.vscode-tailwindcss",
+    "unifiedjs.vscode-mdx",
+    "ms-vscode.vscode-json"
+  ]
+}
+```
+
+### Workspace Settings
+
+```json title=".vscode/settings.json"
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.organizeImports": true
+  },
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "emmet.includeLanguages": {
+    "typescript": "html",
+    "typescriptreact": "html"
+  }
+}
+```
+
+---
+
+## Making Your First Contribution
+
+### 1. Get Assigned to a Task
+
+As a new team member, you'll typically start with:
+
+- **Small bug fixes** - Get familiar with the codebase
+- **Documentation updates** - Learn the project structure
+- **UI improvements** - Work on existing components
+- **Feature additions** - Build on existing functionality
+
+Your team lead or mentor will assign you appropriate tasks based on your experience level.
+
+### 2. Understand the Task
+
+Before starting work:
+
+- **Read the task description** thoroughly
+- **Ask questions** if anything is unclear
+- **Review related code** to understand the context
+- **Check existing tests** to understand expected behavior
+- **Discuss approach** with your mentor or team lead
+
+### 3. Set Up Your Development Environment
+
+<Callout type="warn">
+  **Daily Workflow Tip:** At the start of each day before you begin working,
+  always pull the latest changes from the `stage` branch to ensure your local
+  environment is up to date with the team's latest features.
+</Callout>
+
+#### Our Branching Strategy
+
+| Branch      | Owner           | Purpose                                                        |
+| ----------- | --------------- | -------------------------------------------------------------- |
+| `main`      | Frontend Leader | Production-ready, stable code only                             |
+| `stage`     | Coordinator     | Integration branch where features are tested before production |
+| `feature/*` | Developers      | Individual feature development                                 |
+
+**Workflow:** `feature/*` → `stage` → `main`
+
+All feature branches should be created from and merged into `stage` first. The coordinator reviews and tests features in `stage`, then the frontend leader promotes stable code to `main`.
+
+```bash
+# Start of day: Pull latest from stage to get team's latest work
+git checkout stage
+git pull origin stage
+
+# Create your feature branch FROM stage (not main)
+git checkout -b feature/your-task-name
+
+# Install dependencies (if needed)
+npm install
+
+# Start development server
+npm run dev
+```
+
+### 4. Make Your Changes
+
+Follow our development standards:
+
+```typescript
+// Example: Adding a new component
+import { FC } from "react";
+import { cn } from "@/lib/utils";
+
+interface ButtonProps {
+  children: React.ReactNode;
+  variant?: "primary" | "secondary";
+  size?: "sm" | "md" | "lg";
+  disabled?: boolean;
+  onClick?: () => void;
+}
+
+export const Button: FC<ButtonProps> = ({
+  children,
+  variant = "primary",
+  size = "md",
+  disabled = false,
+  onClick,
+}) => {
+  return (
+    <button
+      className={cn("rounded-md font-medium transition-colors", {
+        "bg-blue-600 text-white hover:bg-blue-700": variant === "primary",
+        "bg-gray-200 text-gray-900 hover:bg-gray-300": variant === "secondary",
+        "px-2 py-1 text-sm": size === "sm",
+        "px-4 py-2 text-base": size === "md",
+        "px-6 py-3 text-lg": size === "lg",
+        "opacity-50 cursor-not-allowed": disabled,
+      })}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
+```
+
+### 5. Test Your Changes
+
+```bash
+# Run the development server
+npm run dev
+
+# Check for TypeScript errors
+npm run type-check
+
+# Run linting
+npm run lint
+
+# Run tests
+npm run test
+
+# Format code
+npm run format
+```
+
+### 6. Commit Your Changes
+
+```bash
+# Stage your changes
+git add .
+
+# Commit with conventional commit format
+git commit -m "feat: add new button component with variants"
+
+# Push to your branch
+git push origin feature/your-task-name
+```
+
+### 7. Create Pull Request
+
+1. Go to the repository on GitHub
+2. Click "New Pull Request"
+3. Select your branch
+4. **Follow PR Guidelines:**
+   - Use proper [PR Title Format](/docs/getting-started/first-contribution#pr-title): `feat: add new feature (#123)`
+   - Fill out the [PR Description Template](/docs/getting-started/first-contribution#pr-description-template)
+   - Include **Screenshots** if UI changes
+   - Add **Testing notes** if applicable
+   - Include **Any questions** for reviewers
+5. Request review from your mentor or team lead
+
+### 8. Address Feedback
+
+- **Respond to comments** promptly
+- **Make requested changes** carefully
+- **Ask for clarification** if needed
+- **Test changes** after each update
+- **Update your PR** with new commits
+
+### 9. Celebrate Your First Contribution! 🎉
+
+Once your PR is approved and merged:
+
+- **Update your local main branch**
+- **Delete your feature branch**
+- **Document any learnings** for future reference
+- **Ask for your next task** from your team lead
+
+---
+
+## Development Workflow
+
+### Daily Workflow
+
+1. **Start of Day**
+
+   ```bash
+   # Pull latest from stage to get team's latest work
+   git checkout stage
+   git pull origin stage
+
+   # Create your feature branch FROM stage (not main)
+   git checkout -b feature/your-task-name
+
+   # Install dependencies (if needed)
+   pnpm install
+
+   # Start development server
+   pnpm dev
+   ```
+
+2. **Working on Features**
+
+   ```bash
+   # Make changes and test
+   # Commit regularly with good messages
+   git add .
+   git commit -m "feat: implement new feature"
+
+   # Keep your branch updated with stage
+   git fetch origin stage
+   git rebase origin/stage
+   ```
+
+3. **End of Day**
+
+   ```bash
+   # Push your work
+   git push origin feature/your-task-name
+
+   # Create PR targeting stage branch (not main)
+   ```
+
+### Code Review Process
+
+<Cards>
+  <Card
+    title="📝 Author Responsibilities"
+    description="Clear description, tests, documentation updates"
+  />
+  <Card
+    title="👀 Reviewer Responsibilities"
+    description="Code quality, functionality, best practices"
+  />
+  <Card
+    title="⚡ Response Time"
+    description="24-48 hours for review, prompt responses to feedback"
+  />
+  <Card
+    title="✅ Approval Process"
+    description="At least one approval from senior developer"
+  />
+</Cards>
+
+---
+
+## Common Tasks
+
+### 🆕 Implementing New Features
+
+1. **Plan & Design**
+
+   - Create feature branch from `stage`
+   - Write technical specification
+   - Design component architecture
+   - Identify dependencies and APIs
+
+2. **Development**
+
+   - Write unit tests first (TDD approach)
+   - Implement feature incrementally
+   - Follow coding standards and patterns
+   - Add proper TypeScript types
+
+3. **Testing & Review**
+
+   - Run all tests locally
+   - Test in different browsers/devices
+   - Create pull request with detailed description
+   - Address code review feedback
+
+4. **Deployment**
+   - Merge to `stage` after approval
+   - Monitor deployment and user feedback
+   - Update documentation
+
+### 🔧 Refactoring Code
+
+1. **Assessment**
+
+   - Identify code smells and technical debt
+   - Analyze impact and dependencies
+   - Plan refactoring strategy
+
+2. **Implementation**
+
+   - Create feature branch for refactoring
+   - Make small, incremental changes
+   - Maintain existing functionality
+   - Update tests as needed
+
+3. **Validation**
+   - Run comprehensive test suite
+   - Verify no regression in functionality
+   - Performance testing if applicable
+   - Code review and approval
+
+### 📝 Adding Documentation
+
+1. **Content Creation**
+
+   - Create new `.mdx` files in appropriate sections
+   - Follow documentation standards and templates
+   - Include code examples and screenshots
+   - Add proper frontmatter metadata
+
+2. **Integration**
+   - Update navigation in `meta.json` files
+   - Add cross-references and links
+   - Test documentation locally
+   - Review with team members
+
+### ✏️ Editing & Updating
+
+1. **Content Updates**
+
+   - Identify outdated information
+   - Update code examples and screenshots
+   - Revise procedures and workflows
+   - Check for broken links
+
+2. **Version Control**
+   - Create branch for documentation updates
+   - Make atomic commits for each change
+   - Test changes locally
+   - Submit pull request with clear description
+
+### 🐛 Fixing Bugs
+
+1. **Investigation**
+
+   - Reproduce the issue locally
+   - Identify root cause and scope
+   - Check existing issues and discussions
+   - Create test case (if missing)
+
+2. **Resolution**
+
+   - Implement fix with minimal changes
+   - Add or update tests
+   - Verify fix resolves the issue
+   - Update documentation if needed
+
+3. **Deployment**
+   - Test fix in staging environment
+   - Create pull request with detailed description
+   - Monitor fix in production
+   - Close related issues
+
+### 🎨 UI/UX Improvements
+
+1. **Design Review**
+
+   - Analyze current user experience
+   - Identify improvement opportunities
+   - Create mockups or wireframes
+   - Get design approval
+
+2. **Implementation**
+
+   - Update components and styles
+   - Ensure responsive design
+   - Test accessibility compliance
+   - Validate across browsers
+
+3. **Testing**
+   - User acceptance testing
+   - Performance impact assessment
+   - Cross-browser compatibility
+   - Mobile device testing
+
+### ⚡ Performance Optimization
+
+1. **Analysis**
+
+   - Profile application performance
+   - Identify bottlenecks and slow queries
+   - Measure Core Web Vitals
+   - Set performance budgets
+
+2. **Optimization**
+
+   - Implement code splitting
+   - Optimize images and assets
+   - Improve database queries
+   - Add caching strategies
+
+3. **Validation**
+   - Measure performance improvements
+   - Run Lighthouse audits
+   - Test on slow connections
+   - Monitor production metrics
+
+### 🔒 Security Updates
+
+1. **Assessment**
+
+   - Review security advisories
+   - Audit dependencies for vulnerabilities
+   - Check for security best practices
+   - Identify potential attack vectors
+
+2. **Implementation**
+
+   - Update vulnerable dependencies
+   - Implement security headers
+   - Add input validation and sanitization
+   - Review authentication and authorization
+
+3. **Testing**
+   - Run security scans
+   - Penetration testing if needed
+   - Review with security team
+   - Monitor for security issues
+
+### 🧪 Testing Tasks
+
+1. **Test Development**
+
+   - Write unit tests for new features
+   - Create integration tests
+   - Add end-to-end test scenarios
+   - Update test documentation
+
+2. **Test Maintenance**
+
+   - Fix failing tests
+   - Update outdated test data
+   - Improve test coverage
+   - Optimize test performance
+
+3. **Test Execution**
+   - Run test suites locally
+   - Debug test failures
+   - Monitor CI/CD test results
+   - Report test issues
+
+---
+
+## Getting Help
+
+### Quick Support
+
+<Cards>
+  <Card
+    title="💬 Whatsapp"
+    description="#frontend-help for technical questions"
+  />
+  <Card
+    title="👥 Pair Programming"
+    description="Schedule sessions with teammates"
+  />
+  <Card title="📚 Documentation" description="Search existing docs first" />
+  <Card title="🎯 Office Hours" description="Daily 2-3 PM for open questions" />
+</Cards>
+
+### Onboarding Checklist
+
+Use this checklist for your first two weeks:
+
+#### **Week 1: Foundation & Setup**
+
+**Day 1: Environment & Access**
+
+- [ ] **Environment setup** - Complete development environment configuration
+- [ ] **Repository access** - Get access to all necessary repositories
+- [ ] **VS Code configuration** - Install recommended extensions and settings
+- [ ] **Team communication** - Join Slack/WhatsApp channels and introduce yourself
+- [ ] **Account setup** - Set up accounts for project management tools (Jira, Linear, etc.)
+
+**Day 2: Documentation & Learning**
+
+- [ ] **Read main documentation** - Go through all documentation sections
+- [ ] **Review codebase structure** - Understand project organization and architecture
+- [ ] **Study coding standards** - Read development guide and best practices
+- [ ] **Explore tech stack** - Familiarize yourself with our technology choices
+- [ ] **Set up learning goals** - Define what you want to focus on learning
+
+**Day 3: Team Integration**
+
+- [ ] **Attend team standup** - Join daily standup and introduce yourself
+- [ ] **Meet your mentor** - Have initial meeting with assigned mentor
+- [ ] **Review current projects** - Understand active projects and their status
+- [ ] **Ask questions** - Don't hesitate to ask about anything unclear
+- [ ] **Shadow a team member** - Observe how experienced developers work
+
+**Day 4: First Task Assignment**
+
+- [ ] **Get first task** - Receive your first assigned task from team lead
+- [ ] **Task discussion** - Review task requirements with your mentor
+- [ ] **Plan approach** - Break down the task into manageable steps
+- [ ] **Set up development branch** - Create feature branch for your work
+- [ ] **Start implementation** - Begin working on your first task
+
+**Day 5: First Contribution**
+
+- [ ] **Complete first task** - Finish your assigned task
+- [ ] **Test thoroughly** - Run all tests and verify functionality
+- [ ] **Code review preparation** - Prepare your code for review
+- [ ] **Create pull request** - Submit your first PR with detailed description
+- [ ] **Celebrate milestone** - Acknowledge your first contribution! 🎉
+
+#### **Week 2: Deep Dive & Integration**
+
+**Day 6-7: Advanced Learning**
+
+- [ ] **Study component library** - Learn our design system and components
+- [ ] **Review testing strategies** - Understand our testing approach
+- [ ] **Explore deployment process** - Learn how we deploy applications
+- [ ] **Study performance guidelines** - Understand optimization practices
+- [ ] **Review accessibility standards** - Learn WCAG compliance requirements
+
+**Day 8-9: Project Integration**
+
+- [ ] **Join project meetings** - Attend project planning and review sessions
+- [ ] **Contribute to discussions** - Share ideas and ask questions
+- [ ] **Take on more complex tasks** - Work on slightly more challenging assignments
+- [ ] **Pair programming** - Work alongside experienced team members
+- [ ] **Code review participation** - Review others' code and learn from feedback
+
+**Day 10: Reflection & Planning**
+
+- [ ] **Week 1 reflection** - Review what you've learned and accomplished
+- [ ] **Identify knowledge gaps** - Determine areas that need more focus
+- [ ] **Set learning goals** - Plan what to focus on in the coming weeks
+- [ ] **Schedule regular check-ins** - Set up recurring meetings with mentor
+- [ ] **Plan next steps** - Discuss career development and growth opportunities
+
+#### **Ongoing: Continuous Learning**
+
+**Week 2+**
+
+- [ ] **Regular 1-on-1s** - Weekly meetings with your mentor
+- [ ] **Team meetings** - Attend all relevant team and project meetings
+- [ ] **Learning sessions** - Join team learning groups and tech talks
+- [ ] **Code review sessions** - Participate in code review processes
+- [ ] **Documentation updates** - Contribute to improving team documentation
+- [ ] **Mentor others** - Start helping newer team members when ready
+- [ ] **Share knowledge** - Present learnings to the team
+- [ ] **Career development** - Discuss growth opportunities and career path
+
+### Next Steps
+
+After completing the basics:
+
+1. **Choose a Learning Path**: Focus on areas you want to improve
+2. **Join a Project**: Contribute to active development projects
+3. **Attend Team Events**: Participate in code reviews and tech talks
+4. **Share Knowledge**: Write about what you learn
+5. **Mentor Others**: Help new team members when you're ready
+
+<Callout type="note">
+  Remember: Everyone learns differently and at their own pace. Don't hesitate to
+  ask questions or request help when you need it!
+</Callout>
+
+---
+
+## Useful Commands
+
+### Development
+
+```bash
+# Start development server
+npm dev
+
+# Build for production
+npm build
+
+# Start production server
+npm start
+
+# Type checking
+npm type-check
+
+# Linting
+npm lint
+npm lint --fix
+
+# Testing
+npm test
+npm test --watch
+npm test --coverage
+```
+
+### Git Workflow
+
+```bash
+# Create and switch to new branch (from stage)
+git checkout stage
+git checkout -b feature/branch-name
+
+# Stage all changes
+git add .
+
+# Commit with message
+git commit -m "type: description"
+
+# Push to remote
+git push origin feature/branch-name
+
+# Switch branches
+git checkout stage
+git checkout other-branch
+
+# Pull latest changes
+git pull origin stage
+
+# Merge branch (after PR approval - into stage)
+git checkout stage
+git merge feature/branch-name
+```
+
+Welcome to the team! 🎉

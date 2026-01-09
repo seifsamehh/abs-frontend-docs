@@ -1,0 +1,552 @@
+---
+title: Glossary
+description: Definitions of common frontend development terms used throughout the documentation
+keywords: ["glossary", "terms", "definitions", "vocabulary", "terminology"]
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+# 📖 Glossary
+
+<Callout type="info">
+  A comprehensive list of technical terms used throughout our documentation.
+  Press <kbd>Ctrl</kbd> + <kbd>F</kbd> (or <kbd>⌘</kbd> + <kbd>F</kbd> on Mac)
+  to search for specific terms.
+</Callout>
+
+## A
+
+### A11y
+
+Numeronym for "accessibility" (11 letters between 'a' and 'y'). Refers to designing products usable by people with disabilities.
+
+### ADR (Architecture Decision Record)
+
+A document that captures an important architectural decision along with its context and consequences. See our [ADR documentation](/docs/reference/decisions).
+
+### API (Application Programming Interface)
+
+A set of protocols and tools that allow different software applications to communicate with each other.
+
+### App Router
+
+Next.js routing system (introduced in v13) that uses the `app/` directory. Supports React Server Components, layouts, and streaming. This is our primary routing approach.
+
+### Atomic Design
+
+Design methodology by Brad Frost organizing components into atoms, molecules, organisms, templates, and pages.
+
+---
+
+## B
+
+### Barrel Export
+
+A pattern where a single `index.ts` file re-exports modules from a directory, simplifying imports.
+
+```typescript
+// features/users/index.ts (barrel export)
+export { UserCard } from "./components/UserCard";
+export { useUser } from "./hooks/useUser";
+export type { User } from "./types";
+```
+
+### Bundle
+
+The final JavaScript file(s) produced by a bundler (like webpack or Turbopack) containing all code needed to run an application.
+
+### Bundle Size
+
+The total size of JavaScript files sent to the browser. Smaller bundles = faster load times.
+
+---
+
+## C
+
+### Cache Invalidation
+
+The process of marking cached data as stale or removing it, triggering a fresh fetch from the server.
+
+### Client Component
+
+React component that runs in the browser. Required for interactivity, hooks, and browser APIs. Marked with `"use client"` directive.
+
+### Code Splitting
+
+Technique of splitting code into smaller bundles loaded on demand, improving initial page load performance.
+
+### Composition
+
+Design pattern where complex components are built by combining simpler ones, rather than using inheritance.
+
+### CSR (Client-Side Rendering)
+
+Rendering that happens entirely in the browser. The server sends minimal HTML and JavaScript renders the content.
+
+### CSS-in-JS
+
+Approach where CSS is written inside JavaScript files. Examples: styled-components, Emotion.
+
+### CVA (Class Variance Authority)
+
+Library for creating component variants with Tailwind CSS. Used extensively in our component library.
+
+```typescript
+const buttonVariants = cva("rounded px-4 py-2", {
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white",
+      secondary: "bg-gray-200 text-black",
+    },
+  },
+});
+```
+
+---
+
+## D
+
+### Dark Mode
+
+UI theme with light text on dark backgrounds. Implemented via CSS variables and Tailwind's `dark:` modifier.
+
+### Debouncing
+
+Technique that delays function execution until a pause in calls. Used for search inputs and resize handlers.
+
+### Dependency Injection
+
+Design pattern where components receive their dependencies rather than creating them internally.
+
+### DevTools
+
+Browser extensions or built-in tools for debugging. Examples: React DevTools, Redux DevTools, TanStack Query DevTools.
+
+### DRY (Don't Repeat Yourself)
+
+Principle of reducing code duplication by abstracting common logic.
+
+---
+
+## E
+
+### E2E (End-to-End) Testing
+
+Testing that simulates real user scenarios across the entire application. We use Playwright for E2E tests.
+
+### Edge Runtime
+
+Lightweight JavaScript runtime that runs closer to users (at CDN edge locations). Used by Next.js for faster responses.
+
+### ESLint
+
+JavaScript linter that finds and fixes code problems. Part of our standard toolchain.
+
+### Event Delegation
+
+Pattern where a single event listener handles events for multiple child elements using event bubbling.
+
+---
+
+## F
+
+### Feature Flag
+
+Configuration that enables/disables features without deploying new code. Used for gradual rollouts.
+
+### First Contentful Paint (FCP)
+
+Performance metric measuring time until first content appears on screen.
+
+### Fumadocs
+
+The documentation framework powering this site. Built on Next.js with MDX support.
+
+---
+
+## G
+
+### gcTime (Garbage Collection Time)
+
+TanStack Query setting determining how long inactive queries remain in cache. Previously called `cacheTime`.
+
+### Git Flow
+
+Branching model for Git. Our variation uses `main`, `stage`, and feature branches.
+
+---
+
+## H
+
+### HOC (Higher-Order Component)
+
+Function that takes a component and returns a new component with added functionality. Less common now due to hooks.
+
+### Hooks
+
+React functions (prefixed with `use`) that let you use state and other React features in functional components.
+
+### Hydration
+
+Process where React attaches event listeners and makes server-rendered HTML interactive in the browser.
+
+### Hydration Error
+
+Mismatch between server-rendered HTML and client-rendered content causing React warnings or broken UI.
+
+---
+
+## I
+
+### i18n (Internationalization)
+
+Numeronym for "internationalization" (18 letters between 'i' and 'n'). Designing software to support multiple languages.
+
+### Immutability
+
+Pattern where data is never modified directly; instead, new copies are created with changes.
+
+### ISR (Incremental Static Regeneration)
+
+Next.js feature that updates static pages after deployment without rebuilding the entire site.
+
+---
+
+## J
+
+### JSDoc
+
+Documentation format using special comments in JavaScript/TypeScript files.
+
+```typescript
+/**
+ * Calculates the total price including tax.
+ * @param price - The base price
+ * @param taxRate - Tax rate as decimal (e.g., 0.15 for 15%)
+ * @returns The total price with tax
+ */
+function calculateTotal(price: number, taxRate: number): number {
+  return price * (1 + taxRate);
+}
+```
+
+### JSX
+
+Syntax extension allowing HTML-like code in JavaScript. Transformed to JavaScript function calls.
+
+---
+
+## K
+
+### Key (React)
+
+Unique identifier helping React track list items. Critical for performance and correct behavior.
+
+---
+
+## L
+
+### Lazy Loading
+
+Technique of loading resources (code, images) only when needed.
+
+### Layout
+
+Next.js component that wraps pages and persists across navigation. Defined in `layout.tsx` files.
+
+### LCP (Largest Contentful Paint)
+
+Core Web Vital measuring when the largest content element becomes visible.
+
+### Lint / Linting
+
+Static code analysis to catch errors and enforce code style.
+
+---
+
+## M
+
+### MDX
+
+Markdown with JSX support. Allows using React components in documentation.
+
+### Memoization
+
+Optimization technique caching function results based on inputs. See `useMemo`, `useCallback`, `React.memo`.
+
+### Middleware
+
+Code that runs before a request is completed. In Next.js, used for auth, redirects, headers.
+
+### Monorepo
+
+Repository containing multiple related projects. We use Turborepo for monorepo management.
+
+### MSW (Mock Service Worker)
+
+Library for mocking API requests in tests and development.
+
+### Mutation
+
+Operation that modifies server data (POST, PUT, DELETE). Handled by TanStack Query's `useMutation`.
+
+---
+
+## N
+
+### Next.js
+
+React framework we use for building full-stack web applications. Current version: 16.x.
+
+### npm / pnpm
+
+Package managers for JavaScript. We use pnpm for faster installs and disk efficiency.
+
+---
+
+## O
+
+### Optimistic Update
+
+UI pattern where changes appear immediately before server confirmation, then reconciled.
+
+---
+
+## P
+
+### Page
+
+Next.js component defining a unique route. Created as `page.tsx` in the `app/` directory.
+
+### Parallel Routes
+
+Next.js feature for rendering multiple pages simultaneously in the same layout.
+
+### Prefetching
+
+Loading resources before they're needed. Next.js prefetches linked pages automatically.
+
+### Props
+
+Properties passed from parent to child components.
+
+---
+
+## Q
+
+### Query
+
+TanStack Query term for a data-fetching operation. Includes data, loading state, and error state.
+
+### Query Key
+
+Unique identifier for a query used for caching and invalidation.
+
+```typescript
+const queryKey = ["users", { status: "active" }];
+```
+
+---
+
+## R
+
+### React Server Component (RSC)
+
+Component that renders only on the server. Cannot use hooks or browser APIs. Default in App Router.
+
+### Ref
+
+React feature for directly accessing DOM elements or persisting values across renders.
+
+### Rehydration
+
+See Hydration.
+
+### Render
+
+Process of React creating/updating the DOM based on component output.
+
+### Route Handler
+
+Next.js API endpoint defined in `route.ts` files. Replaces `pages/api`.
+
+### RSC Payload
+
+Serialized data format React Server Components use to send UI from server to client.
+
+---
+
+## S
+
+### Server Action
+
+Async function that runs on the server, callable from client components. Used for form submissions and mutations.
+
+```typescript
+"use server";
+
+async function createUser(formData: FormData) {
+  // Runs on the server
+  await db.users.create({...});
+}
+```
+
+### Server Component
+
+See React Server Component.
+
+### shadcn/ui
+
+Component library we use. Provides accessible, customizable components built on Radix UI.
+
+### SPA (Single Page Application)
+
+Application that loads once and dynamically updates content without full page reloads.
+
+### SSG (Static Site Generation)
+
+Pre-rendering pages at build time. Best for content that doesn't change frequently.
+
+### SSR (Server-Side Rendering)
+
+Generating HTML on each request. Provides fresh data but slower than static.
+
+### staleTime
+
+TanStack Query setting for how long data is considered fresh. Fresh data won't refetch.
+
+### State
+
+Data that changes over time and triggers re-renders when updated.
+
+### Streaming
+
+Sending HTML in chunks as it's generated, improving Time to First Byte. Supported by App Router.
+
+### Suspense
+
+React feature for handling async operations with fallback UI.
+
+```tsx
+<Suspense fallback={<Loading />}>
+  <AsyncComponent />
+</Suspense>
+```
+
+---
+
+## T
+
+### Tailwind CSS
+
+Utility-first CSS framework we use for styling. Current version: 4.x.
+
+### TanStack Query
+
+Data-fetching library (formerly React Query) for server state management. Current version: 5.x.
+
+### Tree Shaking
+
+Build optimization removing unused code from bundles.
+
+### Turborepo
+
+Monorepo build system we use for managing multiple packages.
+
+### Type Guard
+
+TypeScript function that narrows a type within its scope.
+
+```typescript
+function isUser(value: unknown): value is User {
+  return typeof value === "object" && value !== null && "id" in value;
+}
+```
+
+---
+
+## U
+
+### Unit Testing
+
+Testing individual components or functions in isolation. We use Vitest.
+
+### useCallback
+
+React hook that memoizes a function to prevent unnecessary re-renders.
+
+### useEffect
+
+React hook for side effects (data fetching, subscriptions, DOM manipulation).
+
+### useMemo
+
+React hook that memoizes a computed value.
+
+### useQuery
+
+TanStack Query hook for fetching and caching data.
+
+### useRef
+
+React hook for mutable values that don't cause re-renders.
+
+### useState
+
+React hook for component state management.
+
+---
+
+## V
+
+### Validation
+
+Checking data meets requirements. We use Zod for schema validation.
+
+### Virtual DOM
+
+React's in-memory representation of the DOM used for efficient updates.
+
+### Vitest
+
+Testing framework we use. Jest-compatible with better ESM support and Vite integration.
+
+---
+
+## W
+
+### WCAG (Web Content Accessibility Guidelines)
+
+International accessibility standards. We target WCAG 2.1 AA compliance.
+
+### Web Vitals
+
+Google's metrics for user experience: LCP, FID/INP, CLS.
+
+---
+
+## Z
+
+### Zod
+
+TypeScript-first schema validation library we use.
+
+```typescript
+const userSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  age: z.number().positive().optional(),
+});
+
+type User = z.infer<typeof userSchema>;
+```
+
+### Zustand
+
+Lightweight state management library we use for client state.
+
+---
+
+## Need More?
+
+Can't find a term? [Open an issue](https://github.com/seifsamehh/abs-frontend-docs/issues/new) to request additions to this glossary.

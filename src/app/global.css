@@ -8,6 +8,15 @@
 @source "../../mdx-components.tsx";
 @source "../../node_modules/fumadocs-ui/dist/**/*.js";
 
+/* ===== FUMADOCS LAYOUT VARIANT ===== */
+/* This variant allows layout components to set CSS variables on parent container */
+@variant layout {
+  #nd-docs-layout:has(&),
+  #nd-notebook-layout:has(&) {
+    @slot;
+  }
+}
+
 /* ===== ABS BRAND THEME - Orange #EA8303 ===== */
 
 /* Fumadocs Theme Variables (Tailwind CSS v4) */
@@ -206,20 +215,24 @@ figure.shiki [role="tablist"],
   background-image: linear-gradient(
     135deg,
     #ea8303 0%,
+    #fbbf24 25%,
     #f59e0b 50%,
+    #fbbf24 75%,
     #ea8303 100%
   );
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  background-size: 200% auto;
+  background-size: 300% auto;
 }
 
 .dark .gradient-text {
   background-image: linear-gradient(
     135deg,
     #fbbf24 0%,
+    #f59e0b 25%,
     #ea8303 50%,
+    #f59e0b 75%,
     #fbbf24 100%
   );
 }
@@ -307,9 +320,8 @@ figure.shiki [role="tablist"],
   background-color: hsl(142 71% 45% / 0.12);
 }
 
-/* ===== SMOOTH SCROLL ===== */
+/* ===== SCROLL SETTINGS ===== */
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 5rem;
 }
 
@@ -326,29 +338,34 @@ html {
 }
 
 /* ===== CUSTOM SCROLLBAR ===== */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+/* Simple scrollbar styling - avoid layout shifts */
+
+/* Webkit scrollbar - main page only */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-::-webkit-scrollbar-track {
-  background: hsl(var(--muted) / 0.5);
-  border-radius: 5px;
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
   background-color: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 5px;
-  border: 2px solid transparent;
-  background-clip: content-box;
+  border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
   background-color: hsl(var(--muted-foreground) / 0.5);
 }
 
 /* Firefox scrollbar */
-* {
+html,
+body {
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
 }
@@ -413,28 +430,139 @@ html {
 /* ===== HERO GRADIENT BACKGROUNDS ===== */
 .hero-gradient {
   background: radial-gradient(
-      ellipse 60% 50% at 50% -10%,
-      hsl(var(--primary) / 0.12),
-      transparent 70%
+      ellipse 80% 60% at 50% -20%,
+      hsl(var(--primary) / 0.15),
+      transparent 60%
     ),
     radial-gradient(
-      ellipse 80% 60% at 80% 0%,
-      hsl(33 100% 60% / 0.08),
+      ellipse 60% 50% at 80% 20%,
+      hsl(33 100% 60% / 0.1),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 20% 30%,
+      hsl(33 100% 70% / 0.08),
       transparent 50%
     );
 }
 
 .dark .hero-gradient {
   background: radial-gradient(
-      ellipse 60% 50% at 50% -10%,
-      hsl(var(--primary) / 0.15),
-      transparent 70%
+      ellipse 80% 60% at 50% -20%,
+      hsl(var(--primary) / 0.2),
+      transparent 60%
     ),
     radial-gradient(
-      ellipse 80% 60% at 80% 0%,
-      hsl(33 100% 50% / 0.1),
+      ellipse 60% 50% at 80% 20%,
+      hsl(33 100% 50% / 0.12),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 20% 30%,
+      hsl(33 100% 60% / 0.1),
       transparent 50%
     );
+}
+
+/* ===== MODERN ANIMATIONS ===== */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(2deg);
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  33% {
+    transform: translateY(-15px) translateX(10px);
+  }
+  66% {
+    transform: translateY(-25px) translateX(-5px);
+  }
+}
+
+@keyframes float-slower {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-30px) translateX(-15px) scale(1.05);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-float-slower {
+  animation: float-slower 10s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-gradient {
+  animation: gradient-shift 8s ease-in-out infinite;
+}
+
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+/* ===== GPU ACCELERATION FOR SMOOTH ANIMATIONS ===== */
+.animate-float,
+.animate-float-slow,
+.animate-float-slower {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* ===== NAVIGATION ENHANCEMENTS ===== */
@@ -729,11 +857,55 @@ kbd {
 /* ===== SIDEBAR STYLING ===== */
 /* Clean sidebar - minimal overrides to match Fumadocs default */
 
+/* Sidebar scroll fix - prevent zoom/glitch effect */
+aside#nd-sidebar,
+#nd-sidebar {
+  /* Force simple rendering - no compositing layers */
+  transform: none !important;
+  will-change: auto !important;
+  -webkit-transform: none !important;
+  /* Prevent font smoothing changes during scroll */
+  -webkit-font-smoothing: subpixel-antialiased !important;
+  /* Native scroll behavior */
+  scroll-behavior: auto !important;
+  /* Contain scroll to this element */
+  overscroll-behavior: contain;
+  /* Prevent backface visibility issues */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Sidebar inner content - also prevent transforms */
+aside#nd-sidebar > *,
+#nd-sidebar > * {
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* Sidebar uses thin native scrollbar */
+aside#nd-sidebar::-webkit-scrollbar,
+#nd-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+aside#nd-sidebar::-webkit-scrollbar-track,
+#nd-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+aside#nd-sidebar::-webkit-scrollbar-thumb,
+#nd-sidebar::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--border));
+  border-radius: 3px;
+}
+
 /* Sidebar navigation items */
 aside#nd-sidebar a,
 aside#nd-sidebar button {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   border-radius: 0.375rem;
-  transition: all 150ms ease;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
 aside#nd-sidebar a:hover,
@@ -756,26 +928,6 @@ aside#nd-sidebar > div > div:last-child {
   padding: 0.5rem 0.75rem !important;
 }
 
-aside#nd-sidebar a,
-aside#nd-sidebar button {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  border-radius: 0.375rem;
-  transition: all 150ms ease;
-}
-
-aside#nd-sidebar a:hover,
-aside#nd-sidebar button:hover {
-  background-color: hsl(var(--accent));
-}
-
-aside#nd-sidebar a[aria-current="page"],
-aside#nd-sidebar a[data-active="true"] {
-  background-color: hsl(var(--primary) / 0.1);
-  color: hsl(var(--primary));
-  font-weight: 500;
-}
-
 /* ===== DOCS LAYOUT - LET FUMADOCS HANDLE GRID ===== */
 /* Minimal overrides - don't break the grid system */
 
@@ -786,6 +938,36 @@ article,
 }
 
 /* ===== TOC (Table of Contents) STYLING ===== */
+
+/* Make TOC fixed/sticky like the sidebar on large screens */
+#nd-toc {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border)) transparent;
+}
+
+/* Inner TOC container - ensure proper sticky behavior */
+#nd-toc > div,
+#nd-toc > nav {
+  position: sticky;
+  top: 0;
+}
+
+#nd-toc::-webkit-scrollbar {
+  width: 4px;
+}
+
+#nd-toc::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#nd-toc::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--border));
+  border-radius: 2px;
+}
+
+#nd-toc::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--primary) / 0.5);
+}
 
 /* TOC title styling */
 #toc-title,
@@ -940,10 +1122,10 @@ footer {
 
 /* ===== RESPONSIVE STYLES ===== */
 
-/* Global overflow prevention */
+/* Global overflow prevention - use clip to preserve sticky behavior */
 html,
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
 }
 
@@ -1073,7 +1255,38 @@ body {
 
 /* Desktop: 1024px+ - Let Fumadocs handle the grid */
 @media (min-width: 1024px) {
-  /* No CSS variable overrides - let Fumadocs handle the layout */
+  /* Basic desktop layout adjustments */
+}
+
+/* Extra large screens (1280px+) - TOC is visible here */
+@media (min-width: 1280px) {
+  /* TOC fixed/sticky positioning on xl screens */
+  #nd-toc {
+    position: sticky !important;
+    top: var(--fd-docs-row-1, 0px) !important;
+    height: calc(
+      var(--fd-docs-height, 100dvh) - var(--fd-docs-row-1, 0px)
+    ) !important;
+    max-height: calc(
+      var(--fd-docs-height, 100dvh) - var(--fd-docs-row-1, 0px)
+    ) !important;
+    overflow-y: auto !important;
+    padding-bottom: 2rem;
+    align-self: start !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Ensure TOC grid area stays at top */
+  [style*="grid-area: toc"],
+  [style*="grid-area:toc"],
+  div[id="nd-toc"] {
+    align-self: start !important;
+  }
+
+  /* Ensure docs layout container allows sticky */
+  #nd-docs-layout {
+    overflow: visible !important;
+  }
 }
 
 /* ===== PRINT STYLES ===== */

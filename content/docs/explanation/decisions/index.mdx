@@ -1,0 +1,125 @@
+---
+title: Architecture Decisions
+description: Architecture Decision Records (ADRs) documenting key technical decisions
+keywords: ["adr", "architecture", "decisions", "technical", "documentation"]
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+
+# 📜 Architecture Decision Records
+
+<Callout type="info">
+  Architecture Decision Records (ADRs) document the key architectural decisions
+  made during the development of our frontend projects. They help new team
+  members understand **why** certain choices were made.
+</Callout>
+
+## What are ADRs?
+
+ADRs are short documents that capture important architectural decisions along with their context and consequences. They help teams:
+
+- **Remember** why decisions were made
+- **Onboard** new team members quickly
+- **Evaluate** past decisions in new contexts
+- **Avoid** repeating discussions
+
+## ADR Index
+
+<Cards>
+  <Card
+    title="ADR-001: TanStack Query"
+    description="Using TanStack Query for server state management"
+    href="/docs/reference/decisions/adr-001-tanstack-query"
+  />
+  <Card
+    title="ADR-002: Tailwind CSS"
+    description="Adopting Tailwind CSS as the primary styling solution"
+    href="/docs/reference/decisions/adr-002-tailwind-css"
+  />
+  <Card
+    title="ADR-003: Shadcn/ui"
+    description="Using Shadcn/ui for base UI components"
+    href="/docs/reference/decisions/adr-003-shadcn-ui"
+  />
+  <Card
+    title="ADR-004: App Router"
+    description="Migrating to Next.js App Router"
+    href="/docs/reference/decisions/adr-004-app-router"
+  />
+  <Card
+    title="ADR-005: Zod Validation"
+    description="Using Zod for runtime validation"
+    href="/docs/reference/decisions/adr-005-zod-validation"
+  />
+  <Card
+    title="ADR-006: Vitest Testing"
+    description="Choosing Vitest over Jest for testing"
+    href="/docs/reference/decisions/adr-006-vitest"
+  />
+  <Card
+    title="ADR-007: Zustand"
+    description="Using Zustand for client state management"
+    href="/docs/reference/decisions/adr-007-zustand"
+  />
+  <Card
+    title="ADR-008: Turborepo"
+    description="Adopting Turborepo for monorepo management"
+    href="/docs/reference/decisions/adr-008-turborepo"
+  />
+</Cards>
+
+## ADR Template
+
+When creating a new ADR, use this template:
+
+```markdown
+---
+title: "ADR-XXX: [Short Title]"
+---
+
+# ADR-XXX: [Title]
+
+## Status
+
+[Proposed | Accepted | Deprecated | Superseded by ADR-XXX]
+
+## Context
+
+[Describe the issue that motivated this decision]
+
+## Decision
+
+[Describe the decision that was made]
+
+## Consequences
+
+### Positive
+
+- [Benefit 1]
+- [Benefit 2]
+
+### Negative
+
+- [Drawback 1]
+- [Drawback 2]
+
+### Neutral
+
+- [Side effect 1]
+
+## References
+
+- [Link to relevant documentation]
+- [Link to discussions]
+```
+
+---
+
+## How to Propose a New ADR
+
+1. **Create a branch** named `docs/adr-xxx-short-title`
+2. **Copy the template** and fill in the details
+3. **Submit a PR** for team review
+4. **Discuss** in the PR comments
+5. **Update status** to "Accepted" once approved

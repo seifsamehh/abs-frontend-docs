@@ -4,21 +4,17 @@
   "pages": [
     "index",
     "---Standards---",
-    "code-standards",
-    "report-standards",
-    "architecture",
-    "monorepo",
-    "---Components---",
-    "component-library",
-    "component-showcase",
+    "standards",
     "---API---",
-    "api-reference",
-    "---Resources---",
+    "api",
+    "---Components---",
+    "components",
+    "---Quick Reference---",
     "tech-stack",
+    "glossary",
+    "error-reference",
     "changelog",
-    "---Policies---",
     "security",
-    "---Decisions---",
-    "decisions"
+    "accessibility"
   ]
 }

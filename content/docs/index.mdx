@@ -12,9 +12,9 @@ import { Steps, Step } from "fumadocs-ui/components/steps";
 # Frontend Development Guide
 
 <Callout type="info">
-  Welcome to the ABS frontend documentation. This guide covers everything from
-  initial setup to advanced patterns, helping you build exceptional user
-  experiences with our modern tech stack.
+  Welcome to the ABS frontend documentation. This guide is organized using the
+  **Diátaxis framework** to help you find exactly what you need, whether you're
+  learning, doing, or looking something up.
 </Callout>
 
 ## Quick Start
@@ -23,72 +23,79 @@ import { Steps, Step } from "fumadocs-ui/components/steps";
   <Step>
     ### Set Up Your Environment Get your development environment ready with our
     recommended tools and configurations. [Start Setup
-    →](/docs/getting-started/setup)
+    →](/docs/how-to/setup/environment-setup)
   </Step>
   <Step>
-    ### Read the Standards Understand our code standards and best practices.
-    [View Standards →](/docs/reference/code-standards)
+    ### Learn the Basics New to our stack? Start with hands-on tutorials. [Start
+    Learning →](/docs/tutorials)
   </Step>
   <Step>
-    ### Build a Feature Follow our step-by-step guides to build components and
-    features. [Explore Guides →](/docs/guides)
+    ### Build Something Follow practical guides to accomplish specific tasks.
+    [Browse How-To Guides →](/docs/how-to)
   </Step>
   <Step>
     ### Make Your First Contribution Learn the workflow and submit your first
-    pull request. [Contribute →](/docs/getting-started/first-contribution)
+    pull request. [Contribute →](/docs/how-to/setup/first-contribution)
   </Step>
 </Steps>
 
 ## Documentation Sections
 
+Our documentation follows the **Diátaxis** framework - four distinct types of documentation for different needs:
+
 <Cards>
   <Card
-    title="🚀 Getting Started"
-    href="/docs/getting-started"
-    description="New here? Set up your environment and make your first contribution"
+    title="🎓 Tutorials"
+    href="/docs/tutorials"
+    description="Learning-oriented: Step-by-step lessons that teach you skills through hands-on practice"
   />
   <Card
-    title="📚 Guides"
-    href="/docs/guides"
-    description="Step-by-step tutorials for building features, forms, data fetching, and more"
+    title="🔧 How-To Guides"
+    href="/docs/how-to"
+    description="Task-oriented: Practical directions to help you accomplish specific goals"
   />
   <Card
-    title="📖 Reference"
+    title="📚 Reference"
     href="/docs/reference"
-    description="Technical specifications: code standards, architecture, tech stack"
+    description="Information-oriented: Technical specifications, API docs, and code standards"
   />
   <Card
-    title="🎓 Learning"
-    href="/docs/learning"
-    description="Deep dives into concepts, philosophy, and learning roadmaps"
+    title="💡 Explanation"
+    href="/docs/explanation"
+    description="Understanding-oriented: Concepts, architecture decisions, and the 'why' behind choices"
   />
   <Card
-    title="📦 Projects"
-    href="/docs/projects/overview"
-    description="Current projects, status, and contribution opportunities"
-  />
-  <Card
-    title="🆘 Help"
-    href="/docs/help"
-    description="Troubleshooting, FAQ, and support resources"
+    title="📦 Resources"
+    href="/docs/resources"
+    description="Quick access: FAQs, external links, and support channels"
   />
 </Cards>
+
+## Find What You Need
+
+| I want to...                    | Go to                            |
+| ------------------------------- | -------------------------------- |
+| **Learn** something new         | [Tutorials](/docs/tutorials)     |
+| **Do** a specific task          | [How-To Guides](/docs/how-to)    |
+| **Look up** technical details   | [Reference](/docs/reference)     |
+| **Understand** why we do things | [Explanation](/docs/explanation) |
+| **Get help** or resources       | [Resources](/docs/resources)     |
 
 ## Our Tech Stack
 
 We use modern, battle-tested technologies to build fast, scalable applications:
 
-| Technology         | Version | Purpose                                       |
-| ------------------ | ------- | --------------------------------------------- |
-| **React**          | 19.x    | UI component library with concurrent features |
-| **Next.js**        | 15.x    | Full-stack framework with App Router          |
-| **TypeScript**     | 5.x     | Type-safe JavaScript                          |
-| **Tailwind CSS**   | 4.x     | Utility-first styling                         |
-| **TanStack Query** | 5.x     | Server state management                       |
-| **Redux Toolkit**  | 2.x     | Client state management                       |
-| **shadcn/ui**      | Latest  | Accessible component library                  |
-| **Vitest**         | 3.x     | Unit testing                                  |
-| **Playwright**     | 1.x     | E2E testing                                   |
+| Technology         | Version | Purpose                                     |
+| ------------------ | ------- | ------------------------------------------- |
+| **React**          | 19.x    | UI library with Server Components & Actions |
+| **Next.js**        | 16.x    | Full-stack framework with App Router        |
+| **TypeScript**     | 5.9.x   | Type-safe JavaScript                        |
+| **Tailwind CSS**   | 4.x     | CSS-first utility framework                 |
+| **TanStack Query** | 5.x     | Server state management & caching           |
+| **Zustand**        | 5.x     | Simple client state management              |
+| **shadcn/ui**      | Latest  | Accessible component library                |
+| **Vitest**         | 2.x     | Unit & integration testing                  |
+| **Playwright**     | 1.x     | E2E testing                                 |
 
 [Learn more about our tech stack →](/docs/reference/tech-stack)
 
@@ -104,68 +111,72 @@ We use modern, battle-tested technologies to build fast, scalable applications:
 - **Accessibility** — Inclusive design for all users
 - **Type Safety** — Catch errors at compile time, not runtime
 
-## Popular Guides
+[Read our full philosophy →](/docs/explanation/philosophy)
+
+## Popular Starting Points
+
+### 🚀 Just Getting Started?
 
 <Cards>
   <Card
-    title="🎮 Interactive Examples"
-    href="/docs/guides/examples"
-    description="Learn by doing with playgrounds and code sandboxes"
+    title="Your First Component"
+    href="/docs/tutorials/your-first-component"
+    description="Build your first React component with props and state"
   />
   <Card
-    title="🏗️ Real-World Examples"
-    href="/docs/guides/real-world-examples"
-    description="Production-ready code patterns from our projects"
+    title="Building a Form"
+    href="/docs/tutorials/building-a-form"
+    description="Create forms with validation using our stack"
   />
   <Card
-    title="📦 Monorepo Architecture"
-    href="/docs/reference/monorepo"
-    description="Our monorepo setup with Turborepo and pnpm"
-  />
-  <Card
-    title="🎨 Component Showcase"
-    href="/docs/reference/component-showcase"
-    description="Interactive UI component gallery"
+    title="Environment Setup"
+    href="/docs/how-to/setup/environment-setup"
+    description="Get your dev environment ready"
   />
 </Cards>
 
-## Core Guides
+### 🔧 Need to Do Something Specific?
 
 <Cards>
   <Card
-    title="Building Components"
-    href="/docs/guides/components"
-    description="Create reusable, accessible UI components"
-  />
-  <Card
-    title="Data Fetching"
-    href="/docs/guides/data-fetching"
+    title="Fetch Data"
+    href="/docs/how-to/data/fetching-data"
     description="TanStack Query patterns for server state"
   />
   <Card
-    title="Forms & Validation"
-    href="/docs/guides/forms"
-    description="React Hook Form with Zod validation"
+    title="Write Tests"
+    href="/docs/how-to/quality/testing"
+    description="Unit and E2E testing strategies"
   />
   <Card
-    title="Testing"
-    href="/docs/guides/testing"
-    description="Unit and integration testing strategies"
+    title="Deploy"
+    href="/docs/how-to/operations/deployment"
+    description="Deploy to production"
+  />
+  <Card
+    title="Fix Issues"
+    href="/docs/how-to/troubleshooting/troubleshooting-guide"
+    description="Common problems and solutions"
   />
 </Cards>
 
-## Level Up Your Skills
+### 💡 Want to Understand Why?
 
 <Cards>
   <Card
-    title="🚀 Pro Tips & Tricks"
-    href="/docs/learning/tips"
-    description="Battle-tested tips from the ABS team"
+    title="Architecture Overview"
+    href="/docs/explanation/architecture"
+    description="How our applications are structured"
   />
   <Card
-    title="📚 Learning Roadmaps"
-    href="/docs/learning/roadmaps"
-    description="Structured paths for skill development"
+    title="Why TanStack Query?"
+    href="/docs/explanation/decisions/adr-001-tanstack-query"
+    description="Our choice for server state management"
+  />
+  <Card
+    title="Why Tailwind?"
+    href="/docs/explanation/decisions/adr-002-tailwind-css"
+    description="Our approach to styling"
   />
 </Cards>
 
@@ -173,19 +184,19 @@ We use modern, battle-tested technologies to build fast, scalable applications:
 
 <Cards>
   <Card
-    title="🔧 Troubleshooting"
-    href="/docs/help/troubleshooting"
-    description="Common problems and proven solutions"
-  />
-  <Card
     title="❓ FAQ"
-    href="/docs/help/faq"
+    href="/docs/resources/faq"
     description="Frequently asked questions"
   />
   <Card
     title="🆘 Getting Help"
-    href="/docs/help/getting-help"
+    href="/docs/resources/getting-help"
     description="How to ask questions and get support"
+  />
+  <Card
+    title="📖 Glossary"
+    href="/docs/reference/glossary"
+    description="Technical terms and definitions"
   />
 </Cards>
 
@@ -194,4 +205,18 @@ We use modern, battle-tested technologies to build fast, scalable applications:
 <Callout type="tip">
   **Pro Tip**: Use the search bar (Ctrl/Cmd + K) to quickly find what you're
   looking for across all documentation.
+</Callout>
+
+---
+
+## 📣 Feedback
+
+<Callout type="info">
+  **Was this documentation helpful?** We're constantly improving our docs based
+  on your feedback. - 📝 [Report an
+  issue](https://github.com/seifsamehh/abs-frontend-docs/issues/new?labels=documentation&template=doc-issue.md)
+  - 💡 [Suggest an
+  improvement](https://github.com/seifsamehh/abs-frontend-docs/issues/new?labels=enhancement&template=doc-suggestion.md)
+  - ✏️ [Edit this page on
+  GitHub](https://github.com/seifsamehh/abs-frontend-docs/edit/main/content/docs/index.mdx)
 </Callout>

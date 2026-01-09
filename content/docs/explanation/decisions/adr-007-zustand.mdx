@@ -1,0 +1,179 @@
+---
+title: "ADR-007: Client State Management Strategy"
+description: Evaluating Zustand as an alternative to Redux Toolkit for simpler use cases
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+# ADR-007: Client State Management Strategy
+
+<Callout type="info">
+  **Status:** Accepted **Date:** October 2025 **Decision Makers:** Frontend
+  Architecture Team
+</Callout>
+
+## Context
+
+Our applications need to manage client-side state that is not derived from server data. This includes:
+
+- UI state (modals, sidebars, tooltips)
+- User preferences (theme, language, display settings)
+- Form wizard state across multiple steps
+- Shopping cart contents
+- Local filters and sorting preferences
+
+We evaluated several state management solutions:
+
+1. **Redux Toolkit** - Feature-rich, well-established
+2. **Zustand** - Minimal, hooks-based, no boilerplate
+3. **Jotai** - Atomic state model
+4. **React Context** - Built-in, no dependencies
+5. **Recoil** - Facebook's atomic state solution
+
+## Decision
+
+**Our state management strategy follows a tiered approach:**
+
+| Complexity Level | Solution      | Use Cases                                        |
+| ---------------- | ------------- | ------------------------------------------------ |
+| **Simple**       | React Context | Theme, locale, sidebar state                     |
+| **Complex**      | Redux Toolkit | Shopping cart, form wizards, cross-cutting state |
+| **Alternative**  | Zustand       | Consider for new small projects or prototypes    |
+
+For server state (API data), we use TanStack Query (see [ADR-001](/docs/reference/decisions/adr-001-tanstack-query)).
+
+## Rationale
+
+### Why Redux Toolkit for Complex State?
+
+| Aspect               | Redux Toolkit      | Zustand              |
+| -------------------- | ------------------ | -------------------- |
+| **DevTools**         | Built-in, powerful | Optional integration |
+| **Middleware**       | Rich ecosystem     | Basic                |
+| **Time-travel**      | ✅ Built-in        | ❌ Limited           |
+| **Team Familiarity** | High               | Low                  |
+| **Structure**        | Enforced patterns  | Flexible (risk)      |
+| **Large Apps**       | Excellent          | Can get messy        |
+
+### Why React Context for Simple State?
+
+1. **Built-in**: No additional dependencies
+2. **Familiar**: Every React developer knows it
+3. **Sufficient**: For infrequent updates (theme, auth)
+4. **Server Components**: Works naturally with App Router
+
+### When to Consider Zustand
+
+Zustand is a valid alternative when:
+
+- Building a small, standalone project
+- Rapid prototyping where boilerplate is a concern
+- Team explicitly prefers minimal setup
+- Bundle size is critical (~1KB vs ~11KB)
+
+<Callout type="warn">
+  **Note:** Zustand is not our default. Always discuss with the team lead before
+  choosing Zustand over Redux Toolkit for production applications.
+</Callout>
+
+## Comparison: Zustand vs Redux Toolkit
+
+### Zustand Example (For Reference)
+
+```typescript
+// stores/ui-store.ts - Alternative approach
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
+interface UIState {
+  sidebarOpen: boolean;
+  theme: "light" | "dark" | "system";
+  toggleSidebar: () => void;
+  setTheme: (theme: UIState["theme"]) => void;
+}
+
+export const useUIStore = create<UIState>()(
+  persist(
+    (set) => ({
+      sidebarOpen: true,
+      theme: "system",
+      toggleSidebar: () =>
+        set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+      setTheme: (theme) => set({ theme }),
+    }),
+    {
+      name: "ui-storage",
+    }
+  )
+);
+```
+
+### Redux Toolkit Example (Recommended)
+
+```typescript
+// store/slices/ui-slice.ts - Primary approach
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface UIState {
+  sidebarOpen: boolean;
+  theme: "light" | "dark" | "system";
+}
+
+const initialState: UIState = {
+  sidebarOpen: true,
+  theme: "system",
+};
+
+const uiSlice = createSlice({
+  name: "ui",
+  initialState,
+  reducers: {
+    toggleSidebar: (state) => {
+      state.sidebarOpen = !state.sidebarOpen;
+    },
+    setTheme: (state, action: PayloadAction<UIState["theme"]>) => {
+      state.theme = action.payload;
+    },
+  },
+});
+
+export const { toggleSidebar, setTheme } = uiSlice.actions;
+export const uiReducer = uiSlice.reducer;
+```
+
+## Summary: When to Use What
+
+| State Type            | Solution       | Example                         |
+| --------------------- | -------------- | ------------------------------- |
+| **UI toggles, theme** | React Context  | Theme provider, sidebar state   |
+| **Complex app state** | Redux Toolkit  | Shopping cart, multi-step forms |
+| **Server/API data**   | TanStack Query | User profiles, product lists    |
+| **Prototypes only**   | Zustand        | Quick demos, experiments        |
+
+## Consequences
+
+### Positive
+
+- **Clear Guidelines**: Teams know which tool to use
+- **Consistency**: Most projects use Redux Toolkit
+- **Debugging**: Redux DevTools for complex state
+- **Flexibility**: Zustand available for edge cases
+
+### Negative
+
+- **Learning Curve**: Redux requires more initial learning
+- **Boilerplate**: Redux has more setup code
+- **Bundle Size**: Redux is larger (~11KB vs ~1KB)
+
+### Mitigations
+
+- Use Redux Toolkit (not vanilla Redux) to reduce boilerplate
+- Create shared slice templates for common patterns
+- Document clear decision criteria for state management choice
+
+## References
+
+- [Redux Toolkit Documentation](https://redux-toolkit.js.org/)
+- [Zustand Documentation](https://docs.pmnd.rs/zustand)
+- [State Management Guide](/docs/guides/state-management)
+- [TanStack Query ADR](/docs/reference/decisions/adr-001-tanstack-query)

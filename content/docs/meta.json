@@ -2,11 +2,10 @@
   "title": "Frontend Documentation",
   "pages": [
     "index",
-    "getting-started",
-    "guides",
+    "tutorials",
+    "how-to",
     "reference",
-    "learning",
-    "projects",
-    "help"
+    "explanation",
+    "resources"
   ]
 }

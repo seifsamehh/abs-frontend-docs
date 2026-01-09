@@ -1,0 +1,19 @@
+{
+  "title": "How-To Guides",
+  "icon": "Wrench",
+  "pages": [
+    "index",
+    "---Setup---",
+    "setup",
+    "---Building---",
+    "building",
+    "---Data---",
+    "data",
+    "---Quality---",
+    "quality",
+    "---Operations---",
+    "operations",
+    "---Troubleshooting---",
+    "troubleshooting"
+  ]
+}

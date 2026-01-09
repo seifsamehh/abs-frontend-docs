@@ -1,0 +1,12 @@
+{
+  "title": "Resources",
+  "icon": "Package",
+  "pages": [
+    "index",
+    "faq",
+    "getting-help",
+    "external-resources",
+    "learning-materials",
+    "projects-overview"
+  ]
+}

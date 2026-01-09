@@ -1,0 +1,14 @@
+{
+  "title": "Tutorials",
+  "icon": "GraduationCap",
+  "pages": [
+    "index",
+    "---Getting Started---",
+    "your-first-component",
+    "building-a-form",
+    "data-fetching-basics",
+    "---Practice---",
+    "interactive-examples",
+    "real-world-projects"
+  ]
+}
