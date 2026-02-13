@@ -8,82 +8,143 @@ featured: true
 import { Card, Cards } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
 
 # Frontend Development Guide
 
-<Callout type="info">
-  Welcome to the ABS frontend documentation. This guide is organized using the
-  **Diátaxis framework** to help you find exactly what you need, whether you're
-  learning, doing, or looking something up.
+Welcome to the ABS frontend docs — everything you need to build, ship, and maintain modern web applications with our stack.
+
+<Callout type="tip">
+  **Quick tip:** Press <kbd>Ctrl</kbd> + <kbd>K</kbd> (or <kbd>Cmd</kbd> + <kbd>K</kbd>) anywhere to search across all documentation instantly.
 </Callout>
 
-## Quick Start
+## Get Up and Running
 
 <Steps>
   <Step>
-    ### Set Up Your Environment Get your development environment ready with our
-    recommended tools and configurations. [Start Setup
-    →](/docs/how-to/setup/environment-setup)
+    ### Set up your environment
+    Install the required tools and configure your editor for our stack.
+
+    [Start setup →](/docs/getting-started/environment-setup)
   </Step>
   <Step>
-    ### Learn the Basics New to our stack? Start with hands-on tutorials. [Start
-    Learning →](/docs/tutorials)
+    ### Build your first component
+    Learn by doing — create a real React component using TypeScript and Tailwind.
+
+    [Build a component →](/docs/getting-started/your-first-component)
   </Step>
   <Step>
-    ### Build Something Follow practical guides to accomplish specific tasks.
-    [Browse How-To Guides →](/docs/how-to)
-  </Step>
-  <Step>
-    ### Make Your First Contribution Learn the workflow and submit your first
-    pull request. [Contribute →](/docs/how-to/setup/first-contribution)
+    ### Ship your first contribution
+    Learn the branching workflow and submit your first pull request.
+
+    [Make a PR →](/docs/getting-started/first-contribution)
   </Step>
 </Steps>
 
-## Documentation Sections
-
-Our documentation follows the **Diátaxis** framework - four distinct types of documentation for different needs:
+## Browse by Section
 
 <Cards>
   <Card
-    title="🎓 Tutorials"
-    href="/docs/tutorials"
-    description="Learning-oriented: Step-by-step lessons that teach you skills through hands-on practice"
+    title="Getting Started"
+    href="/docs/getting-started"
+    description="Environment setup, first component, and how to contribute"
   />
   <Card
-    title="🔧 How-To Guides"
-    href="/docs/how-to"
-    description="Task-oriented: Practical directions to help you accomplish specific goals"
+    title="Guides"
+    href="/docs/guides"
+    description="Step-by-step tutorials for forms, data fetching, testing, and more"
   />
   <Card
-    title="📚 Reference"
+    title="Reference"
     href="/docs/reference"
-    description="Information-oriented: Technical specifications, API docs, and code standards"
+    description="Code standards, component library, API docs, and specs"
   />
   <Card
-    title="💡 Explanation"
-    href="/docs/explanation"
-    description="Understanding-oriented: Concepts, architecture decisions, and the 'why' behind choices"
+    title="Architecture"
+    href="/docs/architecture"
+    description="System design, philosophy, and Architecture Decision Records"
   />
   <Card
-    title="📦 Resources"
+    title="Resources"
     href="/docs/resources"
-    description="Quick access: FAQs, external links, and support channels"
+    description="Learning paths, curated tools, and project overviews"
+  />
+  <Card
+    title="Help"
+    href="/docs/help"
+    description="FAQ, troubleshooting, and team support"
   />
 </Cards>
 
-## Find What You Need
+## Popular Pages
 
-| I want to...                    | Go to                            |
-| ------------------------------- | -------------------------------- |
-| **Learn** something new         | [Tutorials](/docs/tutorials)     |
-| **Do** a specific task          | [How-To Guides](/docs/how-to)    |
-| **Look up** technical details   | [Reference](/docs/reference)     |
-| **Understand** why we do things | [Explanation](/docs/explanation) |
-| **Get help** or resources       | [Resources](/docs/resources)     |
+<Tabs items={["New to the Team", "Building Features", "Architecture"]}>
+  <Tab value="New to the Team">
+    <Cards>
+      <Card
+        title="Environment Setup"
+        href="/docs/getting-started/environment-setup"
+        description="Get your dev environment ready in minutes"
+      />
+      <Card
+        title="Your First Component"
+        href="/docs/getting-started/your-first-component"
+        description="Build a React component with props, state, and Tailwind"
+      />
+      <Card
+        title="First Contribution"
+        href="/docs/getting-started/first-contribution"
+        description="Fork, clone, branch, and submit your first PR"
+      />
+    </Cards>
+  </Tab>
+  <Tab value="Building Features">
+    <Cards>
+      <Card
+        title="Data Fetching"
+        href="/docs/guides/data-fetching"
+        description="TanStack Query, Server Actions, and caching patterns"
+      />
+      <Card
+        title="Building Forms"
+        href="/docs/guides/building-a-form"
+        description="React Hook Form + Zod validation step-by-step"
+      />
+      <Card
+        title="Testing"
+        href="/docs/guides/testing"
+        description="Unit and E2E testing strategies with Vitest"
+      />
+      <Card
+        title="Deployment"
+        href="/docs/guides/deployment"
+        description="CI/CD and production deployment workflow"
+      />
+    </Cards>
+  </Tab>
+  <Tab value="Architecture">
+    <Cards>
+      <Card
+        title="Architecture Overview"
+        href="/docs/architecture/overview"
+        description="How our applications are structured"
+      />
+      <Card
+        title="ADR: TanStack Query"
+        href="/docs/architecture/decisions/adr-001-tanstack-query"
+        description="Why we chose TanStack Query for server state"
+      />
+      <Card
+        title="ADR: Tailwind CSS"
+        href="/docs/architecture/decisions/adr-002-tailwind-css"
+        description="Our approach to styling with utility-first CSS"
+      />
+    </Cards>
+  </Tab>
+</Tabs>
 
 ## Our Tech Stack
-
-We use modern, battle-tested technologies to build fast, scalable applications:
 
 | Technology         | Version | Purpose                                     |
 | ------------------ | ------- | ------------------------------------------- |
@@ -97,126 +158,69 @@ We use modern, battle-tested technologies to build fast, scalable applications:
 | **Vitest**         | 2.x     | Unit & integration testing                  |
 | **Playwright**     | 1.x     | E2E testing                                 |
 
-[Learn more about our tech stack →](/docs/reference/tech-stack)
+[View full tech stack details →](/docs/reference/tech-stack)
 
-## Development Principles
+## Core Principles
 
-<Callout type="note">
-  Our development approach is guided by these core principles:
-</Callout>
+<Accordions>
+  <Accordion title="Performance First">
+    We build fast, responsive applications. Every component, every route, every bundle is optimized for speed. We measure Core Web Vitals and set performance budgets.
+  </Accordion>
+  <Accordion title="Developer Experience">
+    Great tools make great engineers. We invest in TypeScript, editor configs, linting, and automation so you can focus on building features instead of fighting tooling.
+  </Accordion>
+  <Accordion title="Maintainability">
+    Clean, readable, and well-tested code lasts. We prefer explicit over clever, boring over fancy. Every PR gets reviewed. Every pattern is documented.
+  </Accordion>
+  <Accordion title="Accessibility">
+    We build for everyone. ARIA attributes, keyboard navigation, screen reader support, and WCAG compliance are non-negotiable.
+  </Accordion>
+  <Accordion title="Type Safety">
+    Catch errors at compile time, not runtime. TypeScript strict mode, Zod for runtime validation, and type-safe APIs end-to-end.
+  </Accordion>
+</Accordions>
 
-- **Performance First** — Build fast, responsive applications
-- **Developer Experience** — Tools and patterns that enhance productivity
-- **Maintainability** — Clean, readable, and well-tested code
-- **Accessibility** — Inclusive design for all users
-- **Type Safety** — Catch errors at compile time, not runtime
+[Read our full engineering philosophy →](/docs/architecture/philosophy)
 
-[Read our full philosophy →](/docs/explanation/philosophy)
+## Quick Reference
 
-## Popular Starting Points
-
-### 🚀 Just Getting Started?
-
-<Cards>
-  <Card
-    title="Your First Component"
-    href="/docs/tutorials/your-first-component"
-    description="Build your first React component with props and state"
-  />
-  <Card
-    title="Building a Form"
-    href="/docs/tutorials/building-a-form"
-    description="Create forms with validation using our stack"
-  />
-  <Card
-    title="Environment Setup"
-    href="/docs/how-to/setup/environment-setup"
-    description="Get your dev environment ready"
-  />
-</Cards>
-
-### 🔧 Need to Do Something Specific?
-
-<Cards>
-  <Card
-    title="Fetch Data"
-    href="/docs/how-to/data/fetching-data"
-    description="TanStack Query patterns for server state"
-  />
-  <Card
-    title="Write Tests"
-    href="/docs/how-to/quality/testing"
-    description="Unit and E2E testing strategies"
-  />
-  <Card
-    title="Deploy"
-    href="/docs/how-to/operations/deployment"
-    description="Deploy to production"
-  />
-  <Card
-    title="Fix Issues"
-    href="/docs/how-to/troubleshooting/troubleshooting-guide"
-    description="Common problems and solutions"
-  />
-</Cards>
-
-### 💡 Want to Understand Why?
-
-<Cards>
-  <Card
-    title="Architecture Overview"
-    href="/docs/explanation/architecture"
-    description="How our applications are structured"
-  />
-  <Card
-    title="Why TanStack Query?"
-    href="/docs/explanation/decisions/adr-001-tanstack-query"
-    description="Our choice for server state management"
-  />
-  <Card
-    title="Why Tailwind?"
-    href="/docs/explanation/decisions/adr-002-tailwind-css"
-    description="Our approach to styling"
-  />
-</Cards>
+<Accordions>
+  <Accordion title="I want to set up my dev environment">
+    Head to [Getting Started → Environment Setup](/docs/getting-started/environment-setup) for a complete walkthrough of tools, editor config, and project setup.
+  </Accordion>
+  <Accordion title="I want to learn how to fetch data">
+    Check the [Data Fetching Guide](/docs/guides/data-fetching) for TanStack Query patterns, Server Actions, caching, and error handling.
+  </Accordion>
+  <Accordion title="I want to build a form">
+    Our [Forms Guide](/docs/guides/building-a-form) covers React Hook Form + Zod + shadcn/ui from basic to advanced patterns.
+  </Accordion>
+  <Accordion title="I need to fix something">
+    The [Troubleshooting Guide](/docs/help/troubleshooting) covers common build errors, React issues, and debugging techniques.
+  </Accordion>
+  <Accordion title="I want to understand our architecture">
+    Start with the [Architecture Overview](/docs/architecture/overview) and explore our [Architecture Decision Records](/docs/architecture/decisions).
+  </Accordion>
+  <Accordion title="I want to look up a code standard">
+    See [Code Standards](/docs/reference/code-standards) for naming conventions, file structure, and best practices.
+  </Accordion>
+</Accordions>
 
 ## Need Help?
 
 <Cards>
   <Card
-    title="❓ FAQ"
-    href="/docs/resources/faq"
-    description="Frequently asked questions"
+    title="FAQ"
+    href="/docs/help/faq"
+    description="Common questions answered"
   />
   <Card
-    title="🆘 Getting Help"
-    href="/docs/resources/getting-help"
+    title="Troubleshooting"
+    href="/docs/help/troubleshooting"
+    description="Diagnose and fix common issues"
+  />
+  <Card
+    title="Getting Help"
+    href="/docs/help/getting-help"
     description="How to ask questions and get support"
   />
-  <Card
-    title="📖 Glossary"
-    href="/docs/reference/glossary"
-    description="Technical terms and definitions"
-  />
 </Cards>
-
----
-
-<Callout type="tip">
-  **Pro Tip**: Use the search bar (Ctrl/Cmd + K) to quickly find what you're
-  looking for across all documentation.
-</Callout>
-
----
-
-## 📣 Feedback
-
-<Callout type="info">
-  **Was this documentation helpful?** We're constantly improving our docs based
-  on your feedback. - 📝 [Report an
-  issue](https://github.com/seifsamehh/abs-frontend-docs/issues/new?labels=documentation&template=doc-issue.md)
-  - 💡 [Suggest an
-  improvement](https://github.com/seifsamehh/abs-frontend-docs/issues/new?labels=enhancement&template=doc-suggestion.md)
-  - ✏️ [Edit this page on
-  GitHub](https://github.com/seifsamehh/abs-frontend-docs/edit/main/content/docs/index.mdx)
-</Callout>

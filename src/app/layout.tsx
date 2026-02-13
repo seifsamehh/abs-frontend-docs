@@ -19,7 +19,11 @@ export const viewport: Viewport = {
   ],
 };
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://abs-frontend-docs.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: {
     template: "%s | ABS Frontend Docs",
     default: "ABS Frontend Documentation",
@@ -33,9 +37,33 @@ export const metadata: Metadata = {
     "nextjs",
     "typescript",
     "ABS",
+    "tailwind css",
+    "tanstack query",
+    "shadcn ui",
   ],
+  authors: [{ name: "ABS Frontend Team" }],
+  creator: "ABS Courier",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: BASE_URL,
+    siteName: "ABS Frontend Docs",
+    title: "ABS Frontend Documentation",
+    description:
+      "Complete guide for frontend development at ABS - from setup to deployment. React, Next.js, TypeScript, and best practices.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ABS Frontend Documentation",
+    description:
+      "Complete guide for frontend development at ABS - React, Next.js, TypeScript, and best practices.",
+  },
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo-light.svg", type: "image/svg+xml" },
+    ],
+    apple: "/logo-light.svg",
   },
 };
 

@@ -1,0 +1,886 @@
+---
+title: Troubleshooting
+description: Common frontend problems and their proven solutions
+keywords: ["troubleshooting", "debugging", "errors", "fixes", "common-issues"]
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+# Troubleshooting
+
+<Callout type="info">
+  This guide documents common frontend problems and their proven solutions.
+  If you're stuck, start with the quick diagnosis checklist below, then find your
+  specific issue by category.
+</Callout>
+
+## Quick Diagnosis Checklist
+
+<Callout type="warn">
+  Before diving deep into a specific issue, run through this checklist first. It solves
+  the majority of "it works on their machine" problems.
+</Callout>
+
+1. **Clear caches:** `rm -rf .next node_modules/.cache`
+2. **Reinstall dependencies:** `rm -rf node_modules && pnpm install`
+3. **Check Node version:** `node -v` (should match `.nvmrc`)
+4. **Check for TypeScript errors:** `pnpm tsc --noEmit`
+5. **Check for lint errors:** `pnpm lint`
+6. **Review recent changes:** `git diff HEAD~5`
+7. **Restart TS server in VS Code:** `Ctrl+Shift+P` → "TypeScript: Restart TS Server"
+
+---
+
+## Build & Module Errors
+
+### "Module not found" Error
+
+```bash
+# Error
+Module not found: Can't resolve '@/components/Button'
+```
+
+**Solutions:**
+
+1. Check the import path matches the file location exactly
+2. Verify `tsconfig.json` path aliases are correct:
+
+```json
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+```
+
+3. Restart the development server after path changes
+
+### "Cannot find module" for Node Modules
+
+```bash
+pnpm install  # Reinstall dependencies
+rm -rf node_modules pnpm-lock.yaml && pnpm install  # Full reinstall
+```
+
+### Out of Memory During Build
+
+```bash
+# Increase Node.js memory limit
+NODE_OPTIONS=--max_old_space_size=4096 pnpm build
+```
+
+### TypeScript: Property Does Not Exist on Type 'unknown'
+
+```typescript
+// ❌ Problem
+const { data } = useQuery({ queryKey: ["user"], queryFn: fetchUser });
+console.log(data.name); // Error: 'data' is of type 'unknown'
+
+// ✅ Solution: Add type parameter
+const { data } = useQuery<User>({
+  queryKey: ["user"],
+  queryFn: fetchUser,
+});
+```
+
+### TypeScript: Type 'X' is Not Assignable to Type 'Y'
+
+```typescript
+// ❌ Problem
+interface Props {
+  status: "active" | "inactive";
+}
+const status = "active"; // Type is 'string', not 'active' | 'inactive'
+
+// ✅ Solution: Use const assertion
+const status = "active" as const;
+// Or define variable with explicit type
+const status: Props["status"] = "active";
+```
+
+### Cannot Use JSX Unless '--jsx' Flag is Provided
+
+Ensure `tsconfig.json` has:
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "preserve"
+  }
+}
+```
+
+### Build Failures Summary
+
+| Error              | Cause                          | Solution                                                       |
+| ------------------ | ------------------------------ | -------------------------------------------------------------- |
+| `Type error`       | TypeScript compilation failure | Fix type errors locally first                                  |
+| `Module not found` | Missing dependency             | Check `package.json`, run `pnpm install`                       |
+| `Out of memory`    | Large build                    | Increase Node memory: `NODE_OPTIONS=--max_old_space_size=4096` |
+| `ESLint errors`    | Code quality issues            | Run `pnpm lint --fix` locally                                  |
+
+---
+
+## React Errors
+
+### "Rendered more hooks than during the previous render"
+
+**Cause:** Hooks are being called conditionally, violating the Rules of Hooks.
+
+```typescript
+// ❌ Problem: Conditional hook
+function Component({ show }) {
+  if (!show) return null;
+  const [state, setState] = useState(); // Called conditionally!
+}
+
+// ✅ Solution: Move condition after hooks
+function Component({ show }) {
+  const [state, setState] = useState();
+  if (!show) return null;
+  // Use state here
+}
+```
+
+### Maximum Update Depth Exceeded
+
+**Cause:** A `useEffect` or event handler triggers a re-render that triggers itself again.
+
+```typescript
+// ❌ Problem: useEffect triggers itself
+useEffect(() => {
+  setData({ ...data, updated: true }); // Creates new object every time
+}, [data]);
+
+// ✅ Solution: Use functional update
+useEffect(() => {
+  setData((prev) => ({ ...prev, updated: true }));
+}, []); // Empty deps or specific trigger
+```
+
+### "Cannot update a component while rendering a different component"
+
+**Cause:** A state update is being performed during the render phase of another component.
+
+```typescript
+// ❌ Problem: State update during render
+function Parent() {
+  const [count, setCount] = useState(0);
+  return <Child onRender={() => setCount((c) => c + 1)} />;
+}
+
+// ✅ Solution: Use useEffect for side effects
+function Child({ onMount }) {
+  useEffect(() => {
+    onMount();
+  }, [onMount]);
+}
+```
+
+---
+
+## Next.js Errors
+
+### Hydration Mismatch
+
+<Callout type="warn">
+  Hydration errors occur when server-rendered HTML doesn't match what the client
+  renders. These are among the most common Next.js issues.
+</Callout>
+
+**Common Causes:**
+
+- Using `Date.now()` or `Math.random()` during render
+- Accessing `window` or `localStorage` without checks
+- Browser extensions modifying the DOM
+
+<Tabs items={['useEffect Guard', 'Dynamic Import', 'Suppress Warning']}>
+  <Tab value="useEffect Guard">
+    ```typescript
+    // ❌ Problem: window is undefined on server
+    function Component() {
+      const width = window.innerWidth; // Crashes on server!
+    }
+
+    // ✅ Solution: Guard with useEffect
+    function Component() {
+      const [width, setWidth] = useState(0);
+
+      useEffect(() => {
+        setWidth(window.innerWidth);
+      }, []);
+    }
+    ```
+
+</Tab>
+  <Tab value="Dynamic Import">
+    ```typescript
+    import dynamic from 'next/dynamic';
+
+    // ✅ Skip SSR entirely for client-only components
+    const ClientOnlyComponent = dynamic(
+      () => import('./ClientOnlyComponent'),
+      { ssr: false }
+    );
+    ```
+
+</Tab>
+  <Tab value="Suppress Warning">
+    ```tsx
+    // ✅ For truly dynamic content like dates
+    <time dateTime={date} suppressHydrationWarning>
+      {formatDate(date)}
+    </time>
+    ```
+
+</Tab>
+</Tabs>
+
+### "useSearchParams() should be wrapped in a suspense boundary"
+
+**Cause:** Next.js App Router requires components using `useSearchParams` to be wrapped in Suspense.
+
+```tsx
+import { Suspense } from "react";
+
+// ✅ Wrap the component using useSearchParams
+<Suspense fallback={<Loading />}>
+  <SearchResults />
+</Suspense>;
+```
+
+### Environment Variables Not Available
+
+**Symptom:** `process.env.MY_VAR` is `undefined` on the client.
+
+**Cause:** Only variables prefixed with `NEXT_PUBLIC_` are exposed to the browser.
+
+```typescript
+// ❌ Not available on client
+const secret = process.env.DATABASE_URL;
+
+// ✅ Available on client (prefixed with NEXT_PUBLIC_)
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+```
+
+For build-time validation, use Zod:
+
+```typescript
+// src/lib/env.ts
+import { z } from "zod";
+
+const envSchema = z.object({
+  DATABASE_URL: z.string().url(),
+  NEXTAUTH_SECRET: z.string().min(32),
+  NEXT_PUBLIC_API_URL: z.string().url(),
+});
+
+// Throws at build time if invalid
+export const env = envSchema.parse(process.env);
+```
+
+---
+
+## Data Fetching Issues
+
+### Race Conditions
+
+**Symptom:** Data flickers or shows stale results when rapidly changing filters/params.
+
+**Cause:** Multiple concurrent requests resolve out of order.
+
+<Tabs items={['TanStack Query', 'AbortController']}>
+  <Tab value="TanStack Query">
+    ```typescript
+    // ✅ TanStack Query handles deduplication automatically
+    const { data } = useQuery({
+      queryKey: ['user', userId],
+      queryFn: () => fetchUser(userId),
+      // Automatic deduplication, caching, and cancellation
+    });
+    ```
+
+</Tab>
+  <Tab value="AbortController">
+    ```typescript
+    // ✅ Manual approach with AbortController
+    useEffect(() => {
+      const controller = new AbortController();
+      let cancelled = false;
+
+      async function fetchData() {
+        try {
+          const response = await fetch(`/api/users/${userId}`, {
+            signal: controller.signal,
+          });
+          const data = await response.json();
+          if (!cancelled) setUser(data);
+        } catch (error) {
+          if (error.name !== 'AbortError') {
+            setError(error);
+          }
+        }
+      }
+
+      fetchData();
+      return () => {
+        cancelled = true;
+        controller.abort();
+      };
+    }, [userId]);
+    ```
+
+</Tab>
+</Tabs>
+
+### Infinite Re-renders from Data Fetching
+
+**Symptom:** The page freezes or console shows hundreds of repeated fetch calls.
+
+**Cause:** Object references in `useEffect` dependencies change every render.
+
+```typescript
+// ❌ Problem: Object reference changes each render
+useEffect(() => {
+  fetchData(options); // options = { limit: 10 } recreated each render
+}, [options]); // Triggers infinite loop
+
+// ✅ Solution 1: Memoize the options object
+const memoizedOptions = useMemo(() => ({ limit: 10 }), []);
+useEffect(() => {
+  fetchData(memoizedOptions);
+}, [memoizedOptions]);
+
+// ✅ Solution 2: Use individual primitives as dependencies
+useEffect(() => {
+  fetchData({ limit, offset });
+}, [limit, offset]);
+```
+
+---
+
+## State Management Issues
+
+### Prop Drilling
+
+**Problem:** Passing props through multiple component levels that don't use them.
+
+<Tabs items={['Context API', 'Redux Toolkit', 'Composition']}>
+  <Tab value="Context API">
+    ```typescript
+    // Create focused context
+    const UserContext = createContext<User | null>(null);
+
+    // Provider component
+    export function UserProvider({ children }: { children: React.ReactNode }) {
+      const [user, setUser] = useState<User | null>(null);
+
+      return (
+        <UserContext.Provider value={user}>
+          {children}
+        </UserContext.Provider>
+      );
+    }
+
+    // Custom hook for consuming
+    export function useUser() {
+      const context = useContext(UserContext);
+      if (context === undefined) {
+        throw new Error('useUser must be used within UserProvider');
+      }
+      return context;
+    }
+    ```
+
+</Tab>
+  <Tab value="Redux Toolkit">
+    ```typescript
+    // Use Redux for complex global state
+    import { createSlice } from '@reduxjs/toolkit';
+
+    const userSlice = createSlice({
+      name: 'user',
+      initialState: { data: null, loading: false },
+      reducers: {
+        setUser: (state, action) => {
+          state.data = action.payload;
+        },
+      },
+    });
+    ```
+
+</Tab>
+  <Tab value="Composition">
+    ```tsx
+    // Use composition to avoid drilling
+    function Dashboard() {
+      const user = useUser();
+
+      return (
+        <Layout>
+          <Header user={user} />
+          <Sidebar>
+            <UserProfile user={user} />
+          </Sidebar>
+          <Content>
+            <UserDashboard user={user} />
+          </Content>
+        </Layout>
+      );
+    }
+    ```
+
+</Tab>
+</Tabs>
+
+### Stale State in Closures
+
+**Symptom:** Event handlers or callbacks see outdated state values.
+
+**Cause:** Closures capture variable values at creation time.
+
+```typescript
+// ❌ Problem: count is always 0 in the handler
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const handler = () => {
+      console.log(count); // Always 0!
+    };
+    window.addEventListener("click", handler);
+    return () => window.removeEventListener("click", handler);
+  }, []); // Empty deps = stale closure
+}
+
+// ✅ Solution 1: Include dependency
+useEffect(() => {
+  const handler = () => console.log(count);
+  window.addEventListener("click", handler);
+  return () => window.removeEventListener("click", handler);
+}, [count]); // Re-subscribe when count changes
+
+// ✅ Solution 2: Use ref for latest value
+const countRef = useRef(count);
+useEffect(() => {
+  countRef.current = count;
+}, [count]);
+```
+
+---
+
+## Performance Issues
+
+### Slow Page Load Times
+
+**Symptoms:**
+
+- High First Contentful Paint (FCP) times
+- Poor Lighthouse scores
+- User complaints about slow loading
+
+<Tabs items={['Code Splitting', 'Image Optimization', 'Bundle Analysis']}>
+  <Tab value="Code Splitting">
+    ```typescript
+    // Use dynamic imports for code splitting
+    import dynamic from 'next/dynamic';
+
+    const DashboardChart = dynamic(() => import('./DashboardChart'), {
+      ssr: false,
+      loading: () => <div>Loading chart...</div>
+    });
+
+    // Route-based code splitting with React.lazy
+    const LazyComponent = lazy(() => import('./LazyComponent'));
+    ```
+
+</Tab>
+  <Tab value="Image Optimization">
+    ```tsx
+    import Image from 'next/image';
+
+    // Always use Next.js Image component
+    <Image
+      src="/hero-image.jpg"
+      alt="Hero Image"
+      width={800}
+      height={400}
+      priority // For above-the-fold images
+      placeholder="blur"
+      blurDataURL="data:image/jpeg;base64,..."
+    />
+    ```
+
+</Tab>
+  <Tab value="Bundle Analysis">
+    ```bash
+    # Install bundle analyzer
+    pnpm add -D @next/bundle-analyzer
+
+    # In next.config.js
+    const withBundleAnalyzer = require('@next/bundle-analyzer')({
+      enabled: process.env.ANALYZE === 'true'
+    });
+
+    # Run analysis
+    ANALYZE=true pnpm build
+    ```
+
+</Tab>
+</Tabs>
+
+### Memory Leaks
+
+**Symptoms:**
+
+- Increasing memory usage over time
+- Browser tab crashes
+- Slow interactions after extended use
+
+**Solutions:** Always clean up subscriptions, timers, and event listeners:
+
+```typescript
+// 1. Cleanup timers
+useEffect(() => {
+  const timer = setInterval(() => {
+    // Timer logic
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, []);
+
+// 2. Cleanup event listeners
+useEffect(() => {
+  const handleScroll = () => {
+    /* scroll logic */
+  };
+  window.addEventListener("scroll", handleScroll);
+
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
+// 3. Use AbortController for API calls
+useEffect(() => {
+  const controller = new AbortController();
+
+  fetch("/api/data", { signal: controller.signal })
+    .then((res) => res.json())
+    .then(setData);
+
+  return () => controller.abort();
+}, []);
+```
+
+---
+
+## Styling Issues
+
+### Tailwind Classes Not Applying
+
+1. **Check `tailwind.config.js` content paths:**
+
+```js
+content: [
+  "./src/**/*.{js,ts,jsx,tsx,mdx}",
+  "./components/**/*.{js,ts,jsx,tsx,mdx}",
+];
+```
+
+2. **Restart dev server** after config changes
+3. **Check for typos** in class names
+4. **Install Tailwind IntelliSense** VS Code extension for autocomplete
+
+### CSS Modules Not Working
+
+Ensure file is named correctly with `.module.css` extension:
+
+```typescript
+// ✅ Correct import
+import styles from "./Component.module.css";
+
+<div className={styles.container}>Content</div>;
+```
+
+### Package / Dependency Issues
+
+```bash
+# Check what's causing peer dependency warnings
+pnpm why <package-name>
+
+# Deduplicate packages
+pnpm dedupe
+
+# Force resolution in package.json
+"pnpm": {
+  "overrides": {
+    "react": "^19.0.0"
+  }
+}
+```
+
+---
+
+## Testing Issues
+
+### Tests Failing Intermittently
+
+**Common Causes:**
+
+- Async operations not properly awaited
+- Test isolation issues (shared state between tests)
+- Timer-dependent code
+
+```typescript
+// ✅ Proper async testing
+it("should load user data", async () => {
+  render(<UserProfile userId="123" />);
+
+  // Wait for element to appear
+  await waitFor(() => {
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
+  });
+});
+
+// ✅ Mock timers for time-dependent tests
+it("should debounce search", async () => {
+  vi.useFakeTimers();
+
+  render(<SearchInput />);
+  await userEvent.type(screen.getByRole("textbox"), "test");
+
+  // Fast-forward debounce timer
+  vi.advanceTimersByTime(300);
+
+  await waitFor(() => {
+    expect(mockSearch).toHaveBeenCalledWith("test");
+  });
+
+  vi.useRealTimers();
+});
+```
+
+### Mocking Not Working
+
+```typescript
+// ✅ Proper module mocking
+vi.mock("@/lib/api", () => ({
+  fetchUser: vi.fn(),
+}));
+
+// Import AFTER mocking
+import { fetchUser } from "@/lib/api";
+
+beforeEach(() => {
+  vi.mocked(fetchUser).mockResolvedValue({ id: "1", name: "Test" });
+});
+
+afterEach(() => {
+  vi.clearAllMocks();
+});
+```
+
+---
+
+## TanStack Query v5 Migration
+
+<Callout type="warn">
+  TanStack Query v5 has significant breaking changes from v4. These are the most
+  common issues encountered during migration.
+</Callout>
+
+### `isLoading` Always False
+
+**Symptom:** `isLoading` is always `false`, even during initial fetch.
+
+**Cause:** In v5, `isLoading` was renamed to `isPending` for initial loading state.
+
+```tsx
+// ❌ v4 code (broken in v5)
+const { data, isLoading } = useQuery({
+  queryKey: ["users"],
+  queryFn: fetchUsers,
+});
+
+if (isLoading) return <Skeleton />; // Never shows!
+
+// ✅ v5 fix
+const { data, isPending } = useQuery({
+  queryKey: ["users"],
+  queryFn: fetchUsers,
+});
+
+if (isPending) return <Skeleton />; // Works correctly
+```
+
+### `cacheTime` Not Working
+
+**Symptom:** Cache seems to expire immediately or `cacheTime` has no effect.
+
+**Cause:** `cacheTime` was renamed to `gcTime` (garbage collection time).
+
+```tsx
+// ❌ v4 code (broken in v5)
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      cacheTime: 5 * 60 * 1000, // Ignored in v5!
+    },
+  },
+});
+
+// ✅ v5 fix
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 5 * 60 * 1000, // Garbage collection time
+      staleTime: 60 * 1000, // When data becomes stale
+    },
+  },
+});
+```
+
+### TypeScript Errors with Query Options
+
+**Symptom:** TypeScript errors about query options shape.
+
+**Cause:** v5 requires options to be passed as a single object.
+
+```tsx
+// ❌ v4 syntax (broken in v5)
+useQuery(["users"], fetchUsers, { staleTime: 5000 });
+
+// ✅ v5 syntax
+useQuery({
+  queryKey: ["users"],
+  queryFn: fetchUsers,
+  staleTime: 5000,
+});
+```
+
+### `onSuccess`/`onError` Callbacks Not Firing
+
+**Symptom:** Callbacks defined in `useQuery` options never execute.
+
+**Cause:** Per-query callbacks were removed in v5.
+
+<Tabs items={['Handle in Component', 'Global Callbacks']}>
+  <Tab value="Handle in Component">
+    ```tsx
+    // ✅ Use reactive flags in the component
+    const { data, error, isSuccess, isError } = useQuery({
+      queryKey: ['users'],
+      queryFn: fetchUsers,
+    });
+
+    useEffect(() => {
+      if (isSuccess) toast.success('Users loaded');
+      if (isError) toast.error(error.message);
+    }, [isSuccess, isError, error]);
+    ```
+
+</Tab>
+  <Tab value="Global Callbacks">
+    ```tsx
+    // ✅ Set global callbacks in QueryClient
+    const queryClient = new QueryClient({
+      queryCache: new QueryCache({
+        onError: (error) => {
+          toast.error(`Error: ${error.message}`);
+        },
+      }),
+    });
+    ```
+
+</Tab>
+</Tabs>
+
+### `isInitialLoading` Undefined
+
+**Symptom:** `isInitialLoading` is undefined.
+
+**Cause:** Removed in v5. Use the combination of flags instead.
+
+```tsx
+// ❌ v4 code (removed in v5)
+const { isInitialLoading } = useQuery({...});
+
+// ✅ v5 fix
+const { isPending, isFetching } = useQuery({...});
+
+// isInitialLoading equivalent
+const isInitialLoading = isPending && isFetching;
+
+// Or for showing different states:
+if (isPending) return <Skeleton />;             // Initial load
+if (isFetching) return <RefreshingIndicator />; // Background refetch
+```
+
+### Infinite Query `getNextPageParam` Signature Changed
+
+**Symptom:** Type errors with `getNextPageParam` function.
+
+**Cause:** Signature changed in v5 to include all pages and requires `initialPageParam`.
+
+```tsx
+// ❌ v4 signature
+useInfiniteQuery({
+  queryKey: ["users"],
+  queryFn: fetchUsers,
+  getNextPageParam: (lastPage) => lastPage.nextCursor,
+});
+
+// ✅ v5 signature
+useInfiniteQuery({
+  queryKey: ["users"],
+  queryFn: fetchUsers,
+  initialPageParam: null,
+  getNextPageParam: (lastPage, allPages, lastPageParam) => {
+    return lastPage.hasMore ? lastPage.nextCursor : undefined;
+  },
+});
+```
+
+### Migration Reference Table
+
+| v4 API                 | v5 API                    | Notes                                                                  |
+| ---------------------- | ------------------------- | ---------------------------------------------------------------------- |
+| `cacheTime`            | `gcTime`                  | Garbage collection time                                                |
+| `isLoading` (initial)  | `isPending`               | Initial loading state                                                  |
+| `isInitialLoading`     | `isPending && isFetching` | Removed entirely                                                       |
+| `status: 'loading'`    | `status: 'pending'`       | Status enum change                                                     |
+| `onSuccess` in options | Handle in component       | Removed from query options                                             |
+| `onError` in options   | Handle in component       | Removed from query options                                             |
+| Three arguments        | Single options object     | `useQuery(key, fn, opts)` → `useQuery({ queryKey, queryFn, ...opts })` |
+
+---
+
+## Quick Fix Commands
+
+```bash
+# Clear all caches and rebuild
+rm -rf .next node_modules/.cache && pnpm dev
+
+# Full clean install
+rm -rf node_modules .next pnpm-lock.yaml && pnpm install && pnpm dev
+
+# Check for TypeScript errors
+pnpm tsc --noEmit
+
+# Fix auto-fixable lint errors
+pnpm lint --fix
+
+# Update all dependencies interactively
+pnpm update --interactive --latest
+
+# Check what's causing a dependency issue
+pnpm why <package-name>
+
+# Deduplicate packages
+pnpm dedupe
+
+# Increase memory for large builds
+NODE_OPTIONS=--max_old_space_size=4096 pnpm build
+```

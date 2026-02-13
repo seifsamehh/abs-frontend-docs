@@ -1,0 +1,22 @@
+{
+  "title": "Guides",
+  "icon": "BookOpen",
+  "pages": [
+    "---Fundamentals---",
+    "styling-components",
+    "data-fetching",
+    "building-a-form",
+    "---Data & State---",
+    "state-management",
+    "server-components",
+    "---Features---",
+    "authentication",
+    "internationalization",
+    "---Quality---",
+    "testing",
+    "performance-optimization",
+    "deployment",
+    "---Practice---",
+    "interactive-examples"
+  ]
+}

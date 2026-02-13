@@ -9,7 +9,6 @@
 @source "../../node_modules/fumadocs-ui/dist/**/*.js";
 
 /* ===== FUMADOCS LAYOUT VARIANT ===== */
-/* This variant allows layout components to set CSS variables on parent container */
 @variant layout {
   #nd-docs-layout:has(&),
   #nd-notebook-layout:has(&) {
@@ -17,161 +16,163 @@
   }
 }
 
-/* ===== ABS BRAND THEME - Orange #EA8303 ===== */
+/* ===================================================================
+   ABS BRAND THEME — Orange #EA8303
 
-/* Fumadocs Theme Variables (Tailwind CSS v4) */
+   Design philosophy:
+   - Let Fumadocs handle layout and behavior
+   - Only customize brand colors, typography, and visual polish
+   - Inspired by Mintlify, Cursor, shadcn, and Clerk docs
+   =================================================================== */
+
 @theme {
-  /* Light Mode - Fumadocs Variables */
   --color-fd-background: hsl(0, 0%, 100%);
-  --color-fd-foreground: hsl(240, 4%, 18%);
-  --color-fd-muted: hsl(60, 4.8%, 95.9%);
-  --color-fd-muted-foreground: hsl(25, 5.3%, 44.7%);
+  --color-fd-foreground: hsl(240, 6%, 10%);
+  --color-fd-muted: hsl(240, 5%, 96%);
+  --color-fd-muted-foreground: hsl(240, 4%, 46%);
   --color-fd-popover: hsl(0, 0%, 100%);
-  --color-fd-popover-foreground: hsl(240, 4%, 18%);
+  --color-fd-popover-foreground: hsl(240, 6%, 10%);
   --color-fd-card: hsl(0, 0%, 100%);
-  --color-fd-card-foreground: hsl(240, 4%, 18%);
-  --color-fd-border: hsla(20, 5.9%, 90%, 80%);
+  --color-fd-card-foreground: hsl(240, 6%, 10%);
+  --color-fd-border: hsl(240, 6%, 90%);
   --color-fd-primary: hsl(33, 97%, 46%);
-  --color-fd-primary-foreground: hsl(60, 9.1%, 97.8%);
-  --color-fd-secondary: hsl(60, 4.8%, 95.9%);
-  --color-fd-secondary-foreground: hsl(24, 9.8%, 10%);
-  --color-fd-accent: hsl(33, 100%, 97%);
-  --color-fd-accent-foreground: hsl(24, 9.8%, 10%);
+  --color-fd-primary-foreground: hsl(0, 0%, 100%);
+  --color-fd-secondary: hsl(240, 5%, 96%);
+  --color-fd-secondary-foreground: hsl(240, 6%, 10%);
+  --color-fd-accent: hsl(240, 5%, 96%);
+  --color-fd-accent-foreground: hsl(240, 6%, 10%);
   --color-fd-ring: hsl(33, 97%, 46%);
 }
 
 .dark {
-  --color-fd-background: hsl(0, 0%, 9%);
-  --color-fd-foreground: hsl(60, 9.1%, 97.8%);
-  --color-fd-muted: hsl(0, 0%, 14%);
-  --color-fd-muted-foreground: hsla(24, 5.4%, 63.9%, 0.9);
-  --color-fd-popover: hsl(0, 0%, 12%);
-  --color-fd-popover-foreground: hsl(60, 9.1%, 97.8%);
-  --color-fd-card: hsl(0, 0%, 12%);
-  --color-fd-card-foreground: hsl(60, 9.1%, 97.8%);
-  --color-fd-border: hsla(0, 0%, 100%, 10%);
+  --color-fd-background: hsl(0, 0%, 3.5%);
+  --color-fd-foreground: hsl(0, 0%, 98%);
+  --color-fd-muted: hsl(0, 0%, 9%);
+  --color-fd-muted-foreground: hsl(0, 0%, 64%);
+  --color-fd-popover: hsl(0, 0%, 5%);
+  --color-fd-popover-foreground: hsl(0, 0%, 98%);
+  --color-fd-card: hsl(0, 0%, 5%);
+  --color-fd-card-foreground: hsl(0, 0%, 98%);
+  --color-fd-border: hsl(0, 0%, 12%);
   --color-fd-primary: hsl(33, 97%, 50%);
   --color-fd-primary-foreground: hsl(0, 0%, 100%);
-  --color-fd-secondary: hsl(0, 0%, 14%);
-  --color-fd-secondary-foreground: hsl(60, 9.1%, 97.8%);
-  --color-fd-accent: hsl(33, 50%, 15%);
-  --color-fd-accent-foreground: hsl(33, 97%, 70%);
+  --color-fd-secondary: hsl(0, 0%, 9%);
+  --color-fd-secondary-foreground: hsl(0, 0%, 98%);
+  --color-fd-accent: hsl(0, 0%, 9%);
+  --color-fd-accent-foreground: hsl(0, 0%, 98%);
   --color-fd-ring: hsl(33, 97%, 50%);
 }
 
-/* CSS Variables for Components (Shadcn-compatible) */
+/* Shadcn-compatible CSS variables */
 :root {
   --background: 0 0% 100%;
-  --foreground: 240 4% 18%;
+  --foreground: 240 6% 10%;
   --card: 0 0% 100%;
-  --card-foreground: 240 4% 18%;
+  --card-foreground: 240 6% 10%;
   --popover: 0 0% 100%;
-  --popover-foreground: 240 4% 18%;
+  --popover-foreground: 240 6% 10%;
   --primary: 33 97% 46%;
-  --primary-foreground: 60 9.1% 97.8%;
-  --secondary: 24 9.8% 10%;
-  --secondary-foreground: 60 4.8% 95.9%;
-  --muted: 60 4.8% 95.9%;
-  --muted-foreground: 25 5.3% 44.7%;
-  --accent: 33 100% 97%;
-  --accent-foreground: 24 9.8% 10%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 60 9.1% 97.8%;
-  --border: 20 5.9% 90%;
-  --input: 20 5.9% 90%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 240 5% 96%;
+  --secondary-foreground: 240 6% 10%;
+  --muted: 240 5% 96%;
+  --muted-foreground: 240 4% 46%;
+  --accent: 240 5% 96%;
+  --accent-foreground: 240 6% 10%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 240 6% 90%;
+  --input: 240 6% 90%;
   --ring: 33 97% 46%;
-  --radius: 0.625rem;
-
-  /* Chart Colors */
-  --chart-1: 33 97% 46%;
-  --chart-2: 173 58% 39%;
-  --chart-3: 197 37% 24%;
-  --chart-4: 43 74% 66%;
-  --chart-5: 27 87% 67%;
-
-  /* Sidebar Variables - Light Mode */
-  --sidebar-background: 0 0% 99%;
-  --sidebar-foreground: 240 4% 18%;
-  --sidebar-primary: 33 97% 46%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 33 100% 97%;
-  --sidebar-accent-foreground: 240 4% 18%;
-  --sidebar-border: 20 5.9% 92%;
-  --sidebar-ring: 33 97% 46%;
-
-  /* Logistics Status Colors - Light Mode */
-  --status-pending: 45 93% 47%;
-  --status-pending-foreground: 26 83% 14%;
-  --status-in-transit: 217 91% 60%;
-  --status-in-transit-foreground: 222 47% 11%;
-  --status-delivered: 142 71% 45%;
-  --status-delivered-foreground: 138 76% 97%;
-  --status-failed: 0 84% 60%;
-  --status-failed-foreground: 0 86% 97%;
-  --status-cancelled: 215 14% 34%;
-  --status-cancelled-foreground: 210 20% 98%;
+  --radius: 0.5rem;
 }
 
 .dark {
-  --background: 0 0% 9%;
-  --foreground: 60 9.1% 97.8%;
-  --card: 0 0% 12%;
-  --card-foreground: 60 9.1% 97.8%;
-  --popover: 0 0% 12%;
-  --popover-foreground: 60 9.1% 97.8%;
+  --background: 0 0% 3.5%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 5%;
+  --popover-foreground: 0 0% 98%;
   --primary: 33 97% 50%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 14%;
-  --secondary-foreground: 60 9.1% 97.8%;
-  --muted: 0 0% 14%;
-  --muted-foreground: 24 5.4% 63.9%;
-  --accent: 33 50% 15%;
-  --accent-foreground: 33 97% 70%;
-  --destructive: 0 72.2% 50.6%;
-  --destructive-foreground: 60 9.1% 97.8%;
-  --border: 0 0% 18%;
-  --input: 0 0% 14%;
+  --secondary: 0 0% 9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 9%;
+  --muted-foreground: 0 0% 64%;
+  --accent: 0 0% 9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 12%;
+  --input: 0 0% 12%;
   --ring: 33 97% 50%;
-
-  /* Chart Colors - Dark Mode */
-  --chart-1: 33 97% 55%;
-  --chart-2: 160 60% 45%;
-  --chart-3: 30 80% 55%;
-  --chart-4: 280 65% 60%;
-  --chart-5: 340 75% 55%;
-
-  /* Sidebar Variables - Dark Mode */
-  --sidebar-background: 0 0% 10%;
-  --sidebar-foreground: 60 9.1% 97.8%;
-  --sidebar-primary: 33 97% 55%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 33 50% 15%;
-  --sidebar-accent-foreground: 33 97% 80%;
-  --sidebar-border: 0 0% 16%;
-  --sidebar-ring: 33 97% 55%;
-
-  /* Logistics Status Colors - Dark Mode */
-  --status-pending: 48 96% 53%;
-  --status-pending-foreground: 48 96% 89%;
-  --status-in-transit: 217 91% 65%;
-  --status-in-transit-foreground: 217 91% 95%;
-  --status-delivered: 142 76% 36%;
-  --status-delivered-foreground: 142 76% 96%;
-  --status-failed: 0 84% 60%;
-  --status-failed-foreground: 0 86% 97%;
-  --status-cancelled: 215 14% 46%;
-  --status-cancelled-foreground: 210 20% 98%;
 }
 
-/* ===== ENHANCED TYPOGRAPHY ===== */
+/* ===================================================================
+   GLOBAL RESETS & TYPOGRAPHY
+   =================================================================== */
+
 body {
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
-/* ===== PROSE ENHANCEMENTS ===== */
+html {
+  scroll-padding-top: 5rem;
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  overflow-x: clip;
+  max-width: 100vw;
+}
+
+::selection {
+  background-color: hsl(var(--primary) / 0.2);
+  color: hsl(var(--foreground));
+}
+
+:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* ===================================================================
+   SCROLLBAR — Thin, minimal (like Cursor docs)
+   =================================================================== */
+
+html,
+body {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.15) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted-foreground) / 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--muted-foreground) / 0.3);
+}
+
+/* ===================================================================
+   PROSE & CONTENT TYPOGRAPHY
+   Inspired by: Mintlify, shadcn, Next.js docs
+   =================================================================== */
+
 .prose {
   --tw-prose-links: hsl(var(--primary));
   --tw-prose-counters: hsl(var(--muted-foreground));
@@ -184,33 +185,316 @@ body {
 .prose h4 {
   scroll-margin-top: 5rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-.prose h2 {
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid hsl(var(--border));
-  margin-top: 2.5rem;
+  letter-spacing: -0.025em;
 }
 
 .prose a {
-  text-decoration-color: hsl(var(--primary) / 0.4);
+  text-decoration-color: hsl(var(--primary) / 0.3);
   text-underline-offset: 3px;
-  transition: all 150ms ease;
+  transition: text-decoration-color 150ms ease;
 }
 
 .prose a:hover {
   text-decoration-color: hsl(var(--primary));
 }
 
-/* ===== CODE BLOCK TABS FIX ===== */
-/* Remove duplicate border on tabs list inside code blocks */
+/* ===================================================================
+   HEADER — Glassmorphism nav (like Mintlify/Cursor)
+   =================================================================== */
+
+header {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* ===================================================================
+   CODE BLOCKS — Clean, dark (like Cursor docs)
+   =================================================================== */
+
 figure.shiki [role="tablist"],
 [data-rehype-pretty-code-figure] [role="tablist"] {
   border-bottom: none;
 }
 
-/* ===== BRAND GRADIENT TEXT ===== */
+button[data-copy-button] {
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+pre:hover button[data-copy-button] {
+  opacity: 1;
+}
+
+/* ===================================================================
+   CALLOUTS — Refined with subtle backgrounds
+   Inspired by: Mintlify callout variants
+   =================================================================== */
+
+[data-callout] {
+  border-radius: 0.75rem;
+  border-left-width: 3px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  transition: border-color 200ms ease;
+}
+
+[data-callout] p {
+  margin: 0;
+}
+
+[data-callout="info"] {
+  border-left-color: #3b82f6;
+  background-color: hsl(217 91% 60% / 0.05);
+}
+
+.dark [data-callout="info"] {
+  background-color: hsl(217 91% 60% / 0.08);
+}
+
+[data-callout="warn"],
+[data-callout="warning"] {
+  border-left-color: #f59e0b;
+  background-color: hsl(38 92% 50% / 0.05);
+}
+
+.dark [data-callout="warn"],
+.dark [data-callout="warning"] {
+  background-color: hsl(38 92% 50% / 0.08);
+}
+
+[data-callout="error"],
+[data-callout="danger"] {
+  border-left-color: #ef4444;
+  background-color: hsl(0 84% 60% / 0.05);
+}
+
+.dark [data-callout="error"],
+.dark [data-callout="danger"] {
+  background-color: hsl(0 84% 60% / 0.08);
+}
+
+[data-callout="tip"],
+[data-callout="success"] {
+  border-left-color: #22c55e;
+  background-color: hsl(142 71% 45% / 0.05);
+}
+
+.dark [data-callout="tip"],
+.dark [data-callout="success"] {
+  background-color: hsl(142 71% 45% / 0.08);
+}
+
+/* ===================================================================
+   CARDS — Hover effects inspired by Mintlify/Clerk
+   =================================================================== */
+
+.fd-card,
+[class*="fumadocs-card"] {
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0.75rem;
+}
+
+.fd-card:hover,
+[class*="fumadocs-card"]:hover {
+  border-color: hsl(var(--primary) / 0.4);
+  box-shadow:
+    0 0 0 1px hsl(var(--primary) / 0.1),
+    0 8px 25px -5px hsl(var(--primary) / 0.08);
+  transform: translateY(-2px);
+}
+
+.dark .fd-card:hover,
+.dark [class*="fumadocs-card"]:hover {
+  box-shadow:
+    0 0 0 1px hsl(var(--primary) / 0.15),
+    0 8px 25px -5px hsl(0 0% 0% / 0.4);
+}
+
+/* ===================================================================
+   ACCORDION — Interactive collapsible sections
+   =================================================================== */
+
+[data-accordion] {
+  border-radius: 0.75rem;
+}
+
+/* ===================================================================
+   STEPS — Step-by-step guides with brand accent
+   =================================================================== */
+
+[data-step]::before {
+  background: hsl(var(--primary));
+}
+
+/* ===================================================================
+   FILE TREE — Clean styling
+   =================================================================== */
+
+[data-files] {
+  border-radius: 0.75rem;
+}
+
+/* ===================================================================
+   TABLES — Clean, modern (like Tailwind/shadcn docs)
+   =================================================================== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+th {
+  background-color: hsl(var(--muted));
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+td {
+  border-top: 1px solid hsl(var(--border));
+  padding: 0.75rem 1rem;
+  color: hsl(var(--foreground));
+}
+
+tbody tr {
+  transition: background-color 150ms ease;
+}
+
+tbody tr:hover {
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+/* ===================================================================
+   BADGES — Refined page metadata pills
+   =================================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.2rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: all 200ms ease;
+}
+
+.badge-primary {
+  background-color: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+}
+
+.badge-secondary {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+}
+
+.badge-success {
+  background-color: hsl(142 71% 45% / 0.1);
+  color: #16a34a;
+}
+
+.dark .badge-success {
+  color: #4ade80;
+}
+
+.badge-warning {
+  background-color: hsl(38 92% 50% / 0.1);
+  color: #d97706;
+}
+
+.dark .badge-warning {
+  color: #fbbf24;
+}
+
+.badge-danger {
+  background-color: hsl(0 84% 60% / 0.1);
+  color: #dc2626;
+}
+
+.dark .badge-danger {
+  color: #f87171;
+}
+
+/* ===================================================================
+   KEYBOARD SHORTCUTS
+   =================================================================== */
+
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--muted));
+  padding: 0.125rem 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
+  box-shadow: 0 1px 0 hsl(var(--border));
+}
+
+/* ===================================================================
+   BLOCKQUOTE — Subtle, modern
+   =================================================================== */
+
+blockquote {
+  border-left: 2px solid hsl(var(--primary) / 0.4);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+}
+
+blockquote p {
+  margin: 0;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background: hsl(var(--border));
+  margin: 2.5rem 0;
+}
+
+/* ===================================================================
+   IMAGES — Rounded with zoom support
+   =================================================================== */
+
+.prose img {
+  border-radius: 0.75rem;
+  border: 1px solid hsl(var(--border));
+  transition: border-color 200ms ease;
+}
+
+.prose img:hover {
+  border-color: hsl(var(--primary) / 0.3);
+}
+
+/* ===================================================================
+   SEARCH — Enhanced modal (Mintlify-style)
+   =================================================================== */
+
+[data-search-dialog] {
+  border-radius: 1rem !important;
+  border: 1px solid hsl(var(--border)) !important;
+  box-shadow:
+    0 25px 50px -12px hsl(var(--foreground) / 0.15),
+    0 0 0 1px hsl(var(--border) / 0.5) !important;
+}
+
+/* ===================================================================
+   BRAND GRADIENT TEXT (homepage)
+   =================================================================== */
+
 .gradient-text {
   background-image: linear-gradient(
     135deg,
@@ -237,211 +521,19 @@ figure.shiki [role="tablist"],
   );
 }
 
-/* ===== DOCUMENTATION CARDS ===== */
-.fd-card,
-[class*="fumadocs-card"] {
-  transition: all 200ms ease;
-  background-color: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.625rem;
-}
+/* ===================================================================
+   HERO GRADIENT (homepage)
+   =================================================================== */
 
-.fd-card:hover,
-[class*="fumadocs-card"]:hover {
-  border-color: hsl(var(--primary) / 0.5);
-  box-shadow: 0 0 0 1px hsl(var(--primary) / 0.1),
-    0 4px 12px hsl(var(--primary) / 0.08);
-  transform: translateY(-1px);
-}
-
-.dark .fd-card,
-.dark [class*="fumadocs-card"] {
-  background-color: hsl(var(--card));
-}
-
-.dark .fd-card:hover,
-.dark [class*="fumadocs-card"]:hover {
-  border-color: hsl(var(--primary) / 0.4);
-  box-shadow: 0 0 0 1px hsl(var(--primary) / 0.15),
-    0 4px 16px hsl(0 0% 0% / 0.3);
-}
-
-/* ===== CALLOUT ENHANCEMENTS ===== */
-[data-callout] {
-  border-radius: 0.625rem;
-  border-left-width: 3px;
-  padding: 1rem 1.25rem;
-  margin: 1.5rem 0;
-}
-
-[data-callout] p {
-  margin: 0;
-}
-
-[data-callout="info"] {
-  border-left-color: #3b82f6;
-  background-color: hsl(217 91% 60% / 0.08);
-}
-
-.dark [data-callout="info"] {
-  background-color: hsl(217 91% 60% / 0.12);
-}
-
-[data-callout="warn"],
-[data-callout="warning"] {
-  border-left-color: hsl(var(--primary));
-  background-color: hsl(var(--primary) / 0.08);
-}
-
-.dark [data-callout="warn"],
-.dark [data-callout="warning"] {
-  background-color: hsl(var(--primary) / 0.12);
-}
-
-[data-callout="error"],
-[data-callout="danger"] {
-  border-left-color: #ef4444;
-  background-color: hsl(0 84% 60% / 0.08);
-}
-
-.dark [data-callout="error"],
-.dark [data-callout="danger"] {
-  background-color: hsl(0 84% 60% / 0.12);
-}
-
-[data-callout="tip"],
-[data-callout="success"] {
-  border-left-color: #22c55e;
-  background-color: hsl(142 71% 45% / 0.08);
-}
-
-.dark [data-callout="tip"],
-.dark [data-callout="success"] {
-  background-color: hsl(142 71% 45% / 0.12);
-}
-
-/* ===== SCROLL SETTINGS ===== */
-html {
-  scroll-padding-top: 5rem;
-}
-
-/* ===== SELECTION COLOR ===== */
-::selection {
-  background-color: hsl(var(--primary) / 0.25);
-  color: hsl(var(--foreground));
-}
-
-/* ===== FOCUS STYLES ===== */
-:focus-visible {
-  outline: 2px solid hsl(var(--primary));
-  outline-offset: 2px;
-}
-
-/* ===== CUSTOM SCROLLBAR ===== */
-/* Simple scrollbar styling - avoid layout shifts */
-
-/* Webkit scrollbar - main page only */
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-html::-webkit-scrollbar-track,
-body::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-html::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-thumb {
-  background-color: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 4px;
-}
-
-html::-webkit-scrollbar-thumb:hover,
-body::-webkit-scrollbar-thumb:hover {
-  background-color: hsl(var(--muted-foreground) / 0.5);
-}
-
-/* Firefox scrollbar */
-html,
-body {
-  scrollbar-width: thin;
-  scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
-}
-
-/* ===== BADGES ===== */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 9999px;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  transition: all 150ms ease;
-}
-
-.badge-primary {
-  background-color: hsl(var(--primary) / 0.12);
-  color: hsl(var(--primary));
-  border: 1px solid hsl(var(--primary) / 0.2);
-}
-
-.badge-secondary {
-  background-color: hsl(var(--muted));
-  color: hsl(var(--muted-foreground));
-  border: 1px solid hsl(var(--border));
-}
-
-.badge-success {
-  background-color: hsl(142 71% 45% / 0.12);
-  color: #16a34a;
-  border: 1px solid hsl(142 71% 45% / 0.2);
-}
-
-.dark .badge-success {
-  background-color: hsl(142 71% 45% / 0.15);
-  color: #4ade80;
-}
-
-.badge-warning {
-  background-color: hsl(var(--primary) / 0.12);
-  color: hsl(var(--primary));
-  border: 1px solid hsl(var(--primary) / 0.2);
-}
-
-.dark .badge-warning {
-  background-color: hsl(var(--primary) / 0.15);
-  color: hsl(33 97% 70%);
-}
-
-.badge-danger {
-  background-color: hsl(0 84% 60% / 0.12);
-  color: #dc2626;
-  border: 1px solid hsl(0 84% 60% / 0.2);
-}
-
-.dark .badge-danger {
-  background-color: hsl(0 84% 60% / 0.15);
-  color: #f87171;
-}
-
-/* ===== HERO GRADIENT BACKGROUNDS ===== */
 .hero-gradient {
   background: radial-gradient(
       ellipse 80% 60% at 50% -20%,
-      hsl(var(--primary) / 0.15),
+      hsl(var(--primary) / 0.12),
       transparent 60%
     ),
     radial-gradient(
       ellipse 60% 50% at 80% 20%,
-      hsl(33 100% 60% / 0.1),
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse 50% 40% at 20% 30%,
-      hsl(33 100% 70% / 0.08),
+      hsl(33 100% 60% / 0.08),
       transparent 50%
     );
 }
@@ -449,29 +541,27 @@ body {
 .dark .hero-gradient {
   background: radial-gradient(
       ellipse 80% 60% at 50% -20%,
-      hsl(var(--primary) / 0.2),
+      hsl(var(--primary) / 0.15),
       transparent 60%
     ),
     radial-gradient(
       ellipse 60% 50% at 80% 20%,
-      hsl(33 100% 50% / 0.12),
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse 50% 40% at 20% 30%,
-      hsl(33 100% 60% / 0.1),
+      hsl(33 100% 50% / 0.1),
       transparent 50%
     );
 }
 
-/* ===== MODERN ANIMATIONS ===== */
+/* ===================================================================
+   ANIMATIONS
+   =================================================================== */
+
 @keyframes float {
   0%,
   100% {
-    transform: translateY(0px) rotate(0deg);
+    transform: translateY(0px);
   }
   50% {
-    transform: translateY(-20px) rotate(2deg);
+    transform: translateY(-20px);
   }
 }
 
@@ -501,7 +591,7 @@ body {
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -519,20 +609,27 @@ body {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
-
 .animate-float-slow {
   animation: float-slow 8s ease-in-out infinite;
 }
-
 .animate-float-slower {
   animation: float-slower 10s ease-in-out infinite;
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out forwards;
+  animation: fade-in-up 0.7s ease-out forwards;
   opacity: 0;
 }
 
@@ -540,678 +637,75 @@ body {
   animation: gradient-shift 8s ease-in-out infinite;
 }
 
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+  background-size: 200% 100%;
+}
+
 .animation-delay-100 {
   animation-delay: 100ms;
 }
-
 .animation-delay-200 {
   animation-delay: 200ms;
 }
-
 .animation-delay-300 {
   animation-delay: 300ms;
 }
-
 .animation-delay-400 {
   animation-delay: 400ms;
 }
 
-/* ===== GPU ACCELERATION FOR SMOOTH ANIMATIONS ===== */
+/* GPU acceleration for floating elements only */
 .animate-float,
 .animate-float-slow,
 .animate-float-slower {
   will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }
 
-/* ===== NAVIGATION ENHANCEMENTS ===== */
-/* Active navigation item */
+/* Subtle entrance animations for Fumadocs-UI components */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ===================================================================
+   SIDEBAR NAVIGATION — Subtle active indicator
+   Like Cursor/Clerk: minimal text-based nav with
+   colored accent on the active item
+   =================================================================== */
+
 nav a[aria-current="page"],
 nav a[data-active="true"] {
   color: hsl(var(--primary)) !important;
-  font-weight: 500;
 }
 
-/* Sidebar navigation hover */
-aside a:hover {
-  color: hsl(var(--primary));
-}
-
-/* TOC active indicator */
-[data-toc-item][data-active="true"] {
-  color: hsl(var(--primary));
-  border-left-color: hsl(var(--primary));
-}
-
-/* ===== FUMADOCS CARD SPACING FIX ===== */
-
-/* Cards container spacing - override fumadocs default gap-3 */
-.prose .grid.grid-cols-2,
-[class*="Cards"],
-.fd-cards {
-  gap: 1.5rem !important;
-  margin-top: 1.5rem !important;
-  margin-bottom: 1.5rem !important;
-}
-
-/* Add space between consecutive Cards components */
-.prose .grid.grid-cols-2 + .grid.grid-cols-2,
-[class*="Cards"] + [class*="Cards"],
-.fd-cards + .fd-cards {
-  margin-top: 1.5rem !important;
-}
-
-/* Individual card styling */
-[class*="Cards"] > *,
-.fd-cards > *,
-.prose .grid.grid-cols-2 > a {
-  padding: 1.25rem !important;
-  border-radius: 0.625rem;
-}
-
-/* ===== ANIMATED UNDERLINE ===== */
-.animated-underline {
-  position: relative;
-  text-decoration: none;
-}
-
-.animated-underline::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  height: 2px;
-  width: 0;
-  background: linear-gradient(90deg, hsl(var(--primary)), hsl(33 100% 60%));
-  border-radius: 1px;
-  transition: width 200ms ease;
-}
-
-.animated-underline:hover::after {
-  width: 100%;
-}
-
-/* ===== TABLE ENHANCEMENTS ===== */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1.5rem 0;
-  font-size: 0.875rem;
-}
-
-table {
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.625rem;
-  overflow: hidden;
-}
-
-th {
-  background-color: hsl(var(--muted));
-  padding: 0.875rem 1rem;
-  text-align: left;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: hsl(var(--foreground));
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-td {
-  border-top: 1px solid hsl(var(--border));
-  padding: 0.875rem 1rem;
-  color: hsl(var(--foreground));
-}
-
-tbody tr {
-  transition: background-color 150ms ease;
-}
-
-tbody tr:hover {
-  background-color: hsl(var(--muted) / 0.5);
-}
-
-/* ===== FEATURE GRID ===== */
-.feature-grid {
-  display: grid;
-  gap: 1.25rem;
-}
-
-@media (min-width: 640px) {
-  .feature-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .feature-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.feature-card {
-  position: relative;
-  border-radius: 0.625rem;
-  border: 1px solid hsl(var(--border));
-  background-color: hsl(var(--card));
-  padding: 1.5rem;
-  transition: all 200ms ease;
-}
-
-.feature-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 0.625rem;
-  opacity: 0;
-  background: linear-gradient(135deg, hsl(var(--primary) / 0.05), transparent);
-  transition: opacity 200ms ease;
-}
-
-.feature-card:hover {
-  border-color: hsl(var(--primary) / 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px hsl(var(--primary) / 0.08);
-}
-
-.feature-card:hover::before {
-  opacity: 1;
-}
-
-/* ===== QUICK LINKS ===== */
-.quick-link {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  border-radius: 0.625rem;
-  border: 1px solid hsl(var(--border));
-  padding: 1rem 1.25rem;
-  background-color: hsl(var(--card));
-  transition: all 200ms ease;
-}
-
-.quick-link:hover {
-  border-color: hsl(var(--primary) / 0.4);
-  background-color: hsl(var(--primary) / 0.04);
-  transform: translateX(4px);
-}
-
-.quick-link:hover svg,
-.quick-link:hover .quick-link-icon {
-  color: hsl(var(--primary));
-}
-
-/* ===== MERMAID DIAGRAM STYLING ===== */
-.mermaid {
-  margin: 1.5rem 0;
-  display: flex;
-  justify-content: center;
-  border-radius: 0.625rem;
-  background-color: hsl(var(--muted) / 0.5);
-  padding: 2rem;
-  border: 1px solid hsl(var(--border));
-}
-
-/* ===== KEYBOARD SHORTCUTS ===== */
-kbd {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.375rem;
-  border: 1px solid hsl(var(--border));
-  background: linear-gradient(180deg, hsl(var(--card)), hsl(var(--muted)));
-  padding: 0.15rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-    monospace;
-  box-shadow: 0 1px 2px hsl(var(--foreground) / 0.05);
-}
-
-.dark kbd {
-  background: linear-gradient(180deg, hsl(var(--muted)), hsl(0 0% 10%));
-}
-
-/* ===== SEARCH ENHANCEMENTS ===== */
-[data-search-dialog] {
-  border-radius: 0.75rem !important;
-  border: 1px solid hsl(var(--border)) !important;
-  box-shadow: 0 24px 48px hsl(var(--foreground) / 0.15) !important;
-}
-
-[data-search-dialog] input {
-  border-radius: 0.5rem;
-}
-
-/* ===== BUTTON ENHANCEMENTS ===== */
-.btn-primary {
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  padding: 0.625rem 1.25rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: all 150ms ease;
-  box-shadow: 0 1px 2px hsl(var(--primary) / 0.2);
-}
-
-.btn-primary:hover {
-  background-color: hsl(33 97% 42%);
-  box-shadow: 0 4px 12px hsl(var(--primary) / 0.3);
-  transform: translateY(-1px);
-}
-
-.btn-secondary {
-  background-color: hsl(var(--secondary));
-  color: hsl(var(--secondary-foreground));
-  padding: 0.625rem 1.25rem;
-  border-radius: 0.5rem;
-  border: 1px solid hsl(var(--border));
-  font-weight: 500;
-  transition: all 150ms ease;
-}
-
-.btn-secondary:hover {
-  background-color: hsl(var(--muted));
-  border-color: hsl(var(--primary) / 0.3);
-}
-
-/* ===== STEPS COMPONENT ===== */
-[data-steps] {
-  counter-reset: step;
-  padding-left: 2rem;
-  position: relative;
-}
-
-[data-steps]::before {
-  content: "";
-  position: absolute;
-  left: 0.875rem;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: hsl(var(--border));
-}
-
-[data-steps] > * {
-  position: relative;
-  padding-bottom: 1.5rem;
-}
-
-[data-steps] > *::before {
-  counter-increment: step;
-  content: counter(step);
-  position: absolute;
-  left: -2rem;
-  width: 1.75rem;
-  height: 1.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-/* ===== SIDEBAR STYLING ===== */
-/* Clean sidebar - minimal overrides to match Fumadocs default */
-
-/* Sidebar scroll fix - prevent zoom/glitch effect */
-aside#nd-sidebar,
-#nd-sidebar {
-  /* Force simple rendering - no compositing layers */
-  transform: none !important;
-  will-change: auto !important;
-  -webkit-transform: none !important;
-  /* Prevent font smoothing changes during scroll */
-  -webkit-font-smoothing: subpixel-antialiased !important;
-  /* Native scroll behavior */
-  scroll-behavior: auto !important;
-  /* Contain scroll to this element */
-  overscroll-behavior: contain;
-  /* Prevent backface visibility issues */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-/* Sidebar inner content - also prevent transforms */
-aside#nd-sidebar > *,
-#nd-sidebar > * {
-  transform: none !important;
-  will-change: auto !important;
-}
-
-/* Sidebar uses thin native scrollbar */
-aside#nd-sidebar::-webkit-scrollbar,
-#nd-sidebar::-webkit-scrollbar {
-  width: 6px;
-}
-
-aside#nd-sidebar::-webkit-scrollbar-track,
-#nd-sidebar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-aside#nd-sidebar::-webkit-scrollbar-thumb,
-#nd-sidebar::-webkit-scrollbar-thumb {
-  background-color: hsl(var(--border));
-  border-radius: 3px;
-}
-
-/* Sidebar navigation items */
-aside#nd-sidebar a,
-aside#nd-sidebar button {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  border-radius: 0.375rem;
-  transition: background-color 150ms ease, color 150ms ease;
-}
-
-aside#nd-sidebar a:hover,
-aside#nd-sidebar button:hover {
-  background-color: hsl(var(--accent));
-}
-
-aside#nd-sidebar a[aria-current="page"],
-aside#nd-sidebar a[data-active="true"] {
-  background-color: hsl(var(--primary) / 0.1);
-  color: hsl(var(--primary));
-  font-weight: 500;
-}
-
-/* Sidebar footer - theme switcher aligned right */
-#nd-sidebar footer,
-aside#nd-sidebar > div > div:last-child {
-  display: flex !important;
-  justify-content: flex-end !important;
-  padding: 0.5rem 0.75rem !important;
-}
-
-/* ===== DOCS LAYOUT - LET FUMADOCS HANDLE GRID ===== */
-/* Minimal overrides - don't break the grid system */
-
-/* Article/page content area */
-article,
-[class*="prose"] {
-  max-width: min(58rem, 100%);
-}
-
-/* ===== TOC (Table of Contents) STYLING ===== */
-
-/* Make TOC fixed/sticky like the sidebar on large screens */
-#nd-toc {
-  scrollbar-width: thin;
-  scrollbar-color: hsl(var(--border)) transparent;
-}
-
-/* Inner TOC container - ensure proper sticky behavior */
-#nd-toc > div,
-#nd-toc > nav {
-  position: sticky;
-  top: 0;
-}
-
-#nd-toc::-webkit-scrollbar {
-  width: 4px;
-}
-
-#nd-toc::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-#nd-toc::-webkit-scrollbar-thumb {
-  background-color: hsl(var(--border));
-  border-radius: 2px;
-}
-
-#nd-toc::-webkit-scrollbar-thumb:hover {
-  background-color: hsl(var(--primary) / 0.5);
-}
-
-/* TOC title styling */
-#toc-title,
-[id="toc-title"] {
-  font-size: 0.75rem !important;
-  font-weight: 600 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  color: hsl(var(--muted-foreground)) !important;
-  margin-bottom: 0.75rem !important;
-  padding-bottom: 0.5rem !important;
-  border-bottom: 1px solid hsl(var(--border) / 0.5) !important;
-}
-
-/* TOC container */
-nav[aria-label="Table of Contents"],
-[data-toc] {
-  padding-right: 0.5rem !important;
-}
-
-/* TOC links - improved spacing and hierarchy */
-nav[aria-label="Table of Contents"] a,
-[data-toc] a {
-  display: block;
-  border-left: 2px solid transparent;
-  padding: 0.375rem 0.75rem;
-  margin-left: -2px;
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: hsl(var(--muted-foreground));
-  transition: all 150ms ease;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-/* Level 2 headings (main sections) */
-nav[aria-label="Table of Contents"] a[data-depth="2"],
-[data-toc] a[data-depth="2"] {
-  font-weight: 500;
-  color: hsl(var(--foreground) / 0.9);
-  margin-top: 0.5rem;
-}
-
-/* Level 3+ headings (sub-sections) - indented */
-nav[aria-label="Table of Contents"] a[data-depth="3"],
-[data-toc] a[data-depth="3"] {
-  padding-left: 1.25rem;
-  font-size: 0.78125rem;
-}
-
-nav[aria-label="Table of Contents"] a[data-depth="4"],
-[data-toc] a[data-depth="4"] {
-  padding-left: 1.75rem;
-  font-size: 0.75rem;
-}
-
-nav[aria-label="Table of Contents"] a:hover,
-[data-toc] a:hover {
-  color: hsl(var(--primary));
-  border-left-color: hsl(var(--primary) / 0.4);
-  background-color: hsl(var(--primary) / 0.04);
-}
-
-nav[aria-label="Table of Contents"] a[data-active="true"],
-[data-toc] a[data-active="true"],
-[data-toc-item][data-active="true"] {
-  color: hsl(var(--primary)) !important;
-  border-left-color: hsl(var(--primary)) !important;
-  font-weight: 500 !important;
-  background-color: hsl(var(--primary) / 0.06) !important;
-}
-
-/* ===== HEADER/NAV BAR STYLING ===== */
-header {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-/* ===== BLOCKQUOTE STYLING ===== */
-blockquote {
-  border-left: 3px solid hsl(var(--primary) / 0.5);
-  padding-left: 1rem;
-  margin: 1.5rem 0;
-  color: hsl(var(--muted-foreground));
-  font-style: italic;
-}
-
-blockquote p {
-  margin: 0;
-}
-
-/* ===== HORIZONTAL RULE ===== */
-hr {
-  border: none;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    hsl(var(--border)),
-    transparent
-  );
-  margin: 2rem 0;
-}
-
-/* ===== LOADING SKELETON ===== */
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    hsl(var(--muted)),
-    hsl(var(--muted) / 0.5),
-    hsl(var(--muted))
-  );
-  background-size: 200% 100%;
-  animation: skeleton-loading 1.5s ease-in-out infinite;
-  border-radius: 0.375rem;
-}
-
-@keyframes skeleton-loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-/* ===== COPY BUTTON STYLING ===== */
-button[data-copy-button] {
-  opacity: 0;
-  transition: opacity 150ms ease;
-}
-
-pre:hover button[data-copy-button] {
-  opacity: 1;
-}
-
-button[data-copy-button]:hover {
-  background-color: hsl(var(--muted)) !important;
-}
-
-/* ===== FOOTER STYLING ===== */
-footer {
-  border-top: 1px solid hsl(var(--border));
-  background-color: hsl(var(--muted) / 0.3);
-}
-
-/* ===== IMAGES ===== */
-.prose img {
-  border-radius: 0.625rem;
-  border: 1px solid hsl(var(--border));
-}
-
-/* ===== RESPONSIVE STYLES ===== */
-
-/* Global overflow prevention - use clip to preserve sticky behavior */
-html,
-body {
-  overflow-x: clip;
-  max-width: 100vw;
-}
+/* ===================================================================
+   RESPONSIVE
+   =================================================================== */
 
-/* Mobile: 0-639px */
 @media (max-width: 639px) {
-  /* Article content */
   article,
   [class*="prose"] {
-    max-width: 100% !important;
     overflow-wrap: break-word;
     word-wrap: break-word;
   }
 
-  /* Cards grid - single column on mobile */
-  .prose .grid.grid-cols-2,
-  [class*="Cards"],
-  .fd-cards {
-    grid-template-columns: 1fr !important;
-    gap: 1rem !important;
-  }
-
-  /* Table horizontal scroll */
   table {
     display: block;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    max-width: 100%;
   }
 
-  /* Code blocks horizontal scroll */
   pre {
-    max-width: 100%;
-    overflow-x: auto;
-    font-size: 0.8125rem !important;
+    font-size: 0.8125rem;
   }
 
-  /* Inline code wrapping */
   code {
     word-break: break-word;
-  }
-
-  /* Heading sizes on mobile */
-  .prose h1 {
-    font-size: 1.75rem !important;
-    line-height: 1.2 !important;
-  }
-
-  .prose h2 {
-    font-size: 1.5rem !important;
-    line-height: 1.3 !important;
-  }
-
-  .prose h3 {
-    font-size: 1.25rem !important;
-    line-height: 1.4 !important;
-  }
-
-  /* Search dialog mobile */
-  [data-search-dialog] {
-    width: calc(100vw - 2rem) !important;
-    max-width: calc(100vw - 2rem) !important;
-    margin: 1rem !important;
-  }
-
-  /* Callouts on mobile */
-  [data-callout] {
-    padding: 0.75rem 1rem !important;
-    margin: 1rem 0 !important;
-  }
-
-  /* Images responsive */
-  .prose img {
-    max-width: 100% !important;
-    height: auto !important;
-  }
-
-  /* Blockquote mobile */
-  blockquote {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 0.75rem !important;
-  }
-
-  /* Feature grid single column on mobile */
-  .feature-grid {
-    grid-template-columns: 1fr !important;
   }
 
   /* Sandpack/Playground responsiveness */
@@ -1225,71 +719,12 @@ body {
     width: 100% !important;
     max-width: 100% !important;
   }
-
-  /* Step indicators on mobile */
-  [data-steps] {
-    padding-left: 1.5rem;
-  }
-
-  [data-steps] > *::before {
-    left: -1.5rem;
-    width: 1.5rem;
-    height: 1.5rem;
-    font-size: 0.6875rem;
-  }
-
-  [data-steps]::before {
-    left: 0.6875rem;
-  }
 }
 
-/* Tablet: 640px-1023px */
-@media (min-width: 640px) and (max-width: 1023px) {
-  /* Cards grid - 2 columns on tablet */
-  .prose .grid.grid-cols-2,
-  [class*="Cards"],
-  .fd-cards {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
+/* ===================================================================
+   PRINT
+   =================================================================== */
 
-/* Desktop: 1024px+ - Let Fumadocs handle the grid */
-@media (min-width: 1024px) {
-  /* Basic desktop layout adjustments */
-}
-
-/* Extra large screens (1280px+) - TOC is visible here */
-@media (min-width: 1280px) {
-  /* TOC fixed/sticky positioning on xl screens */
-  #nd-toc {
-    position: sticky !important;
-    top: var(--fd-docs-row-1, 0px) !important;
-    height: calc(
-      var(--fd-docs-height, 100dvh) - var(--fd-docs-row-1, 0px)
-    ) !important;
-    max-height: calc(
-      var(--fd-docs-height, 100dvh) - var(--fd-docs-row-1, 0px)
-    ) !important;
-    overflow-y: auto !important;
-    padding-bottom: 2rem;
-    align-self: start !important;
-    flex-shrink: 0 !important;
-  }
-
-  /* Ensure TOC grid area stays at top */
-  [style*="grid-area: toc"],
-  [style*="grid-area:toc"],
-  div[id="nd-toc"] {
-    align-self: start !important;
-  }
-
-  /* Ensure docs layout container allows sticky */
-  #nd-docs-layout {
-    overflow: visible !important;
-  }
-}
-
-/* ===== PRINT STYLES ===== */
 @media print {
   aside,
   nav[aria-label="Table of Contents"],

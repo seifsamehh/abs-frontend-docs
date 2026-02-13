@@ -1,0 +1,9 @@
+{
+  "title": "Getting Started",
+  "icon": "Rocket",
+  "pages": [
+    "environment-setup",
+    "your-first-component",
+    "first-contribution"
+  ]
+}

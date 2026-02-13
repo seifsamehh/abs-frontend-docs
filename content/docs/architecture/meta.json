@@ -1,0 +1,13 @@
+{
+  "title": "Architecture",
+  "icon": "Layers",
+  "pages": [
+    "---Core Concepts---",
+    "overview",
+    "philosophy",
+    "monorepo-strategy",
+    "nextjs-features",
+    "---Decisions---",
+    "decisions"
+  ]
+}

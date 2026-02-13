@@ -2,19 +2,22 @@
   "title": "Reference",
   "icon": "FileText",
   "pages": [
-    "index",
     "---Standards---",
-    "standards",
-    "---API---",
-    "api",
+    "code-standards",
+    "documentation-standards",
+    "report-standards",
     "---Components---",
-    "components",
-    "---Quick Reference---",
+    "component-library",
+    "component-showcase",
+    "---API---",
+    "api-reference",
+    "---Foundations---",
     "tech-stack",
+    "security",
+    "accessibility",
+    "---Quick Lookup---",
     "glossary",
     "error-reference",
-    "changelog",
-    "security",
-    "accessibility"
+    "changelog"
   ]
 }

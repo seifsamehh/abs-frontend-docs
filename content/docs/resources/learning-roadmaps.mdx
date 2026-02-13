@@ -1,0 +1,584 @@
+---
+title: Learning Roadmaps & Tips
+description: Structured learning paths and pro tips for mastering our tech stack
+keywords: ["learning", "roadmaps", "tips", "progression", "career"]
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+import { Step, Steps } from "fumadocs-ui/components/steps";
+
+# Learning Roadmaps & Tips
+
+<Callout type="info">
+  Structured learning paths from beginner to advanced for each technology in our
+  stack, plus battle-tested tips to level up your productivity.
+</Callout>
+
+## Choose Your Path
+
+<Cards>
+  <Card
+    title="New to Frontend"
+    description="Start from HTML/CSS basics to React"
+  />
+  <Card
+    title="Know React"
+    description="Learn Next.js and our specific patterns"
+  />
+  <Card
+    title="Know Next.js"
+    description="Deep dive into advanced patterns"
+  />
+  <Card
+    title="Full Stack"
+    description="Complete frontend mastery"
+  />
+</Cards>
+
+---
+
+## Technology Learning Paths
+
+### React Learning Path
+
+<Tabs items={["Beginner", "Intermediate", "Advanced"]}>
+  <Tab value="Beginner">
+    **Duration: 4-6 weeks**
+
+    **Week 1-2: JavaScript Fundamentals**
+    - ES6+ features (arrow functions, destructuring, spread)
+    - Promises and async/await
+    - Array methods (map, filter, reduce)
+
+    **Resources:** [javascript.info](https://javascript.info/), [MDN JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide)
+
+    **Week 3-4: React Basics**
+    - Components and JSX
+    - Props and state
+    - Event handling
+    - Conditional rendering
+    - Lists and keys
+
+    **Resources:** [react.dev/learn](https://react.dev/learn)
+
+    **Week 5-6: React Hooks**
+    - useState and useEffect
+    - useRef and useCallback
+    - Custom hooks basics
+
+    **Project:** Build a todo app with local storage
+  </Tab>
+  <Tab value="Intermediate">
+    **Duration: 4-6 weeks**
+
+    **Week 1-2: Advanced State**
+    - useReducer for complex state
+    - Context API for global state
+    - State management patterns
+
+    **Week 3-4: Performance**
+    - React.memo and useMemo
+    - useCallback optimization
+    - Code splitting with lazy/Suspense
+    - React DevTools profiling
+
+    **Week 5-6: Testing**
+    - React Testing Library
+    - Testing hooks
+    - Mocking and async tests
+
+    **Project:** Build a dashboard with data fetching, filtering, and pagination
+  </Tab>
+  <Tab value="Advanced">
+    **Duration: 4+ weeks**
+
+    **Week 1-2: Architecture**
+    - Component composition patterns
+    - Render props and HOCs
+    - Compound components
+    - Controlled vs uncontrolled
+
+    **Week 3-4: Advanced Patterns**
+    - Error boundaries
+    - Portals and refs
+    - Server components concepts
+    - Concurrent features
+
+    **Ongoing: Deep Dives**
+    - React internals (fiber, reconciliation)
+    - Custom renderers
+    - Contributing to React ecosystem
+
+    **Project:** Build a design system with Storybook
+  </Tab>
+</Tabs>
+
+### TypeScript Learning Path
+
+| Level        | Topics                                        | Duration  |
+| ------------ | --------------------------------------------- | --------- |
+| Beginner     | Basic types, interfaces, type inference        | 2-3 weeks |
+| Intermediate | Generics, utility types, type guards           | 2-3 weeks |
+| Advanced     | Conditional types, mapped types, infer         | 3-4 weeks |
+| Expert       | Template literal types, distributive types     | 2-3 weeks |
+
+**Resources:**
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/)
+- [Total TypeScript](https://www.totaltypescript.com/)
+- [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/)
+- [Type Challenges](https://github.com/type-challenges/type-challenges)
+
+### Next.js Learning Path
+
+| Level        | Topics                                           | Duration  |
+| ------------ | ------------------------------------------------ | --------- |
+| Beginner     | App Router, pages, layouts, navigation           | 2-3 weeks |
+| Intermediate | Data fetching, API routes, middleware, streaming  | 3-4 weeks |
+| Advanced     | Server Actions, caching, ISR, revalidation       | 3-4 weeks |
+| Expert       | Edge Functions, advanced caching, optimization   | 4-6 weeks |
+
+**Resources:** [Next.js Learn Course](https://nextjs.org/learn), [Next.js Documentation](https://nextjs.org/docs)
+
+### Tailwind CSS Learning Path
+
+| Level        | Topics                                                 | Duration  |
+| ------------ | ------------------------------------------------------ | --------- |
+| Beginner     | Utility classes, flexbox, grid, responsive design      | 1-2 weeks |
+| Intermediate | Custom configuration, plugins, dark mode, animations   | 2-3 weeks |
+| Advanced     | Design systems, CVA patterns, performance optimization | Ongoing   |
+
+**Resources:** [Tailwind CSS Documentation](https://tailwindcss.com/docs), [Tailwind UI Components](https://tailwindui.com/)
+
+---
+
+## Complete Developer Roadmap
+
+### Month 1: Foundations
+
+| Week | Focus                         | Deliverable             |
+| ---- | ----------------------------- | ----------------------- |
+| 1    | Environment setup, Git basics | Dev environment ready   |
+| 2    | TypeScript fundamentals       | Complete type exercises  |
+| 3    | React basics                  | Simple components       |
+| 4    | Tailwind CSS                  | Styled components       |
+
+### Month 2: Core Skills
+
+| Week | Focus                             | Deliverable     |
+| ---- | --------------------------------- | --------------- |
+| 1    | Next.js App Router                | Multi-page app  |
+| 2    | Forms with React Hook Form + Zod  | Form handling   |
+| 3    | Data fetching with TanStack Query | API integration |
+| 4    | Testing basics                    | Test suite      |
+
+### Month 3: Advanced Topics
+
+| Week | Focus                        | Deliverable       |
+| ---- | ---------------------------- | ----------------- |
+| 1    | Authentication with NextAuth | Auth flow         |
+| 2    | State management patterns    | Complex state     |
+| 3    | Performance optimization     | Optimized app     |
+| 4    | Deployment and CI/CD         | Production deploy |
+
+### Month 4+: Mastery
+
+| Focus                         | Goal                            |
+| ----------------------------- | ------------------------------- |
+| Advanced TypeScript patterns  | Complex generics and type-level programming |
+| Accessibility deep dive       | WCAG compliance across projects |
+| Architecture patterns         | Scalable, maintainable codebases |
+| Team lead skills              | Mentoring and technical leadership |
+
+---
+
+## Pro Tips & Tricks
+
+<Callout type="info">
+  Battle-tested tips from the team that will make you more productive and your
+  code more elegant.
+</Callout>
+
+### VS Code Shortcuts
+
+<Tabs items={["Essential", "Navigation", "Refactoring"]}>
+  <Tab value="Essential">
+    | Shortcut              | Action                | Why It's Amazing              |
+    | --------------------- | --------------------- | ----------------------------- |
+    | `Cmd/Ctrl + P`        | Quick file open       | Never touch the sidebar again |
+    | `Cmd/Ctrl + Shift + P`| Command palette       | Access everything             |
+    | `Cmd/Ctrl + D`        | Select next occurrence| Multi-cursor magic            |
+    | `Cmd/Ctrl + Shift + L`| Select all occurrences| Bulk rename variables         |
+    | `Alt + Up/Down`       | Move line up/down     | Reorganize code fast          |
+    | `Cmd/Ctrl + /`        | Toggle comment        | One key to rule them all      |
+    | `Cmd/Ctrl + B`        | Toggle sidebar        | More screen real estate       |
+  </Tab>
+  <Tab value="Navigation">
+    | Shortcut              | Action                | Pro Tip                       |
+    | --------------------- | --------------------- | ----------------------------- |
+    | `Cmd/Ctrl + G`        | Go to line            | Jump to that error line       |
+    | `F12`                 | Go to definition      | See what that function does   |
+    | `Shift + F12`         | Find all references   | Who's using this?             |
+    | `Cmd/Ctrl + Shift + O`| Go to symbol          | Find functions fast           |
+    | `Cmd/Ctrl + Tab`      | Switch tabs           | Navigate open files           |
+    | ``Cmd/Ctrl + \``      | Split editor          | Compare files side by side    |
+  </Tab>
+  <Tab value="Refactoring">
+    | Shortcut              | Action                | Use Case                      |
+    | --------------------- | --------------------- | ----------------------------- |
+    | `F2`                  | Rename symbol         | Safe rename across files      |
+    | `Cmd/Ctrl + .`        | Quick fix             | Let VS Code fix it for you    |
+    | `Cmd/Ctrl + Shift + R`| Refactor              | Extract function, variable    |
+    | `Ctrl + Space`        | Trigger suggestions   | When autocomplete doesn't show|
+  </Tab>
+</Tabs>
+
+### Code Patterns That Save Hours
+
+#### The "Never Loading" Pattern
+
+<Callout type="warn">
+  Stop writing loading states that flash for 200ms. It looks janky!
+</Callout>
+
+```tsx
+// ❌ BAD: Flashing loading states
+function UserProfile({ userId }) {
+  const { data, isLoading } = useQuery(["user", userId], getUser);
+
+  if (isLoading) return <Spinner />; // Flashes for 200ms 😬
+
+  return <Profile user={data} />;
+}
+
+// ✅ GOOD: Use stale-while-revalidate + minimum loading time
+function UserProfile({ userId }) {
+  const { data, isLoading, isFetching } = useQuery(["user", userId], getUser, {
+    staleTime: 5 * 60 * 1000, // Data is "fresh" for 5 mins
+    keepPreviousData: true, // Show old data while fetching new
+  });
+
+  return (
+    <div className="relative">
+      {isFetching && <SubtleSpinner />} {/* Subtle indicator */}
+      <Profile user={data} />
+    </div>
+  );
+}
+```
+
+#### The Compound Component Pattern
+
+```tsx
+// ❌ BAD: Prop drilling nightmare
+<Menu
+  items={items}
+  selectedItem={selected}
+  onSelect={setSelected}
+  renderItem={(item) => <MenuItem {...item} />}
+  renderTrigger={(props) => <Button {...props} />}
+/>
+
+// ✅ GOOD: Compound components are composable
+<Menu>
+  <Menu.Trigger>
+    <Button>Open Menu</Button>
+  </Menu.Trigger>
+  <Menu.Content>
+    <Menu.Item onSelect={() => edit()}>Edit</Menu.Item>
+    <Menu.Item onSelect={() => duplicate()}>Duplicate</Menu.Item>
+    <Menu.Separator />
+    <Menu.Item variant="destructive" onSelect={() => remove()}>
+      Delete
+    </Menu.Item>
+  </Menu.Content>
+</Menu>
+```
+
+### TypeScript Wizardry
+
+#### Utility Types You Should Use More
+
+```typescript
+// 1. Partial<T> - All properties optional
+type User = { id: string; name: string; email: string };
+type PartialUser = Partial<User>;
+
+// Great for update functions
+function updateUser(id: string, updates: Partial<User>) {
+  // Can pass just { name: "New Name" }
+}
+
+// 2. Pick<T, K> - Select specific properties
+type UserPreview = Pick<User, "id" | "name">;
+
+// 3. Omit<T, K> - Remove specific properties
+type CreateUser = Omit<User, "id">;
+
+// 4. Record<K, T> - Dynamic object types
+type StatusColors = Record<"success" | "error" | "warning", string>;
+
+// 5. ReturnType<T> - Extract return type of function
+type ApiResponse = ReturnType<typeof fetchUser>;
+
+// 6. Parameters<T> - Extract parameter types
+type FetchUserParams = Parameters<typeof fetchUser>;
+```
+
+#### Discriminated Unions for Type-Safe State
+
+```typescript
+// ❌ BAD: Optional properties everywhere
+type RequestState = {
+  data?: User;
+  error?: Error;
+  isLoading?: boolean;
+};
+// Problem: Can have data AND error at same time!
+
+// ✅ GOOD: Discriminated union
+type RequestState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; data: User }
+  | { status: "error"; error: Error };
+
+// Now TypeScript knows exactly what's available
+function handleState(state: RequestState) {
+  switch (state.status) {
+    case "loading":
+      return <Spinner />;
+    case "success":
+      return <UserCard user={state.data} />; // TS knows data exists!
+    case "error":
+      return <Error message={state.error.message} />; // TS knows error exists!
+    default:
+      return null;
+  }
+}
+```
+
+#### The `as const` Trick
+
+```typescript
+// Without `as const`
+const ROUTES = {
+  home: "/",
+  dashboard: "/dashboard",
+  profile: "/profile",
+}; // Type: { home: string; dashboard: string; ... }
+
+// With `as const`
+const ROUTES = {
+  home: "/",
+  dashboard: "/dashboard",
+  profile: "/profile",
+} as const; // Type: { readonly home: "/"; readonly dashboard: "/dashboard"; ... }
+
+// Now you can extract literal types!
+type Route = (typeof ROUTES)[keyof typeof ROUTES];
+// "/" | "/dashboard" | "/profile"
+```
+
+---
+
+## Performance Tips
+
+### React Performance Checklist
+
+<Steps>
+<Step>
+**Identify Re-renders with DevTools**
+
+```tsx
+// Add this in development to spot unnecessary re-renders
+import { useEffect, useRef } from "react";
+
+function useWhyDidYouUpdate(name: string, props: Record<string, any>) {
+  const previousProps = useRef<Record<string, any>>({});
+
+  useEffect(() => {
+    if (previousProps.current) {
+      const changedProps = Object.entries(props).filter(
+        ([key, value]) => previousProps.current[key] !== value
+      );
+      if (changedProps.length > 0) {
+        console.log(`[${name}] Changed props:`, changedProps);
+      }
+    }
+    previousProps.current = props;
+  });
+}
+```
+
+</Step>
+
+<Step>
+**Memoize Expensive Calculations**
+
+```tsx
+// ❌ Recalculates on every render
+const sortedItems = items.sort((a, b) => a.name.localeCompare(b.name));
+
+// ✅ Only recalculates when items change
+const sortedItems = useMemo(
+  () => items.sort((a, b) => a.name.localeCompare(b.name)),
+  [items]
+);
+```
+
+</Step>
+
+<Step>
+**Use React.memo for Pure Components**
+
+```tsx
+// For components that render the same output for same props
+const UserCard = React.memo(function UserCard({ user }) {
+  return (
+    <div>
+      <Avatar src={user.avatar} />
+      <span>{user.name}</span>
+    </div>
+  );
+});
+
+// Custom comparison for complex props
+const UserCard = React.memo(
+  function UserCard({ user }) {
+    /* ... */
+  },
+  (prevProps, nextProps) => prevProps.user.id === nextProps.user.id
+);
+```
+
+</Step>
+
+<Step>
+**Virtualize Long Lists**
+
+```tsx
+import { useVirtualizer } from "@tanstack/react-virtual";
+
+function VirtualList({ items }) {
+  const parentRef = useRef(null);
+
+  const virtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 50,
+  });
+
+  return (
+    <div ref={parentRef} className="h-[400px] overflow-auto">
+      <div style={{ height: `${virtualizer.getTotalSize()}px` }}>
+        {virtualizer.getVirtualItems().map((virtualRow) => (
+          <div
+            key={virtualRow.key}
+            style={{
+              height: `${virtualRow.size}px`,
+              transform: `translateY(${virtualRow.start}px)`,
+            }}
+          >
+            {items[virtualRow.index].name}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+</Step>
+</Steps>
+
+---
+
+## Debugging Tips
+
+### Console Methods You're Not Using
+
+```javascript
+// 1. console.table - Beautiful table output
+console.table([
+  { name: "John", age: 25 },
+  { name: "Jane", age: 30 },
+]);
+
+// 2. console.group - Organized logs
+console.group("User Data");
+console.log("Name:", user.name);
+console.log("Email:", user.email);
+console.groupEnd();
+
+// 3. console.time - Measure performance
+console.time("API Call");
+await fetchData();
+console.timeEnd("API Call"); // API Call: 234.5ms
+
+// 4. console.assert - Conditional logging
+console.assert(user.id, "User ID is required!"); // Only logs if falsy
+
+// 5. console.trace - See call stack
+function deepFunction() {
+  console.trace("How did we get here?");
+}
+```
+
+### React DevTools Pro Tips
+
+<Cards>
+  <Card
+    title="Component Search"
+    description="Press Cmd/Ctrl + F in Components tab to search by name"
+  />
+  <Card
+    title="Highlight Updates"
+    description="Enable 'Highlight updates' to see what's re-rendering"
+  />
+  <Card
+    title="Profiler"
+    description="Record and analyze render performance bottlenecks"
+  />
+  <Card
+    title="$r in Console"
+    description="Select a component, then use $r in console to access it"
+  />
+</Cards>
+
+---
+
+## Git Power Moves
+
+```bash
+# 1. Undo last commit but keep changes
+git reset --soft HEAD~1
+
+# 2. Amend last commit message
+git commit --amend -m "New message"
+
+# 3. Interactive rebase (squash commits)
+git rebase -i HEAD~3
+
+# 4. Stash with message
+git stash push -m "WIP: auth feature"
+
+# 5. Cherry-pick specific commit
+git cherry-pick abc123
+
+# 6. See who wrote each line
+git blame filename.ts
+
+# 7. Search all commits for a string
+git log -S "searchTerm" --oneline
+
+# 8. Pretty log with graph
+git log --oneline --graph --all
+
+# 9. Undo a pushed commit (safe)
+git revert abc123
+
+# 10. Clean up local branches
+git branch --merged | grep -v main | xargs git branch -d
+```

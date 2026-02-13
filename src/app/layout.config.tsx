@@ -15,42 +15,30 @@ export const baseOptions: BaseLayoutProps = {
         <Image
           src="/logo-light.svg"
           alt="ABS Logo"
-          width={32}
-          height={32}
+          width={28}
+          height={28}
           className="dark:hidden shrink-0"
         />
         <Image
           src="/logo-dark.svg"
           alt="ABS Logo"
-          width={32}
-          height={32}
+          width={28}
+          height={28}
           className="hidden dark:block shrink-0"
         />
-        <span className="font-semibold">Frontend Guide</span>
+        <span className="font-semibold text-[15px] tracking-tight">
+          Frontend Guide
+        </span>
       </div>
     ),
     url: "/",
   },
-  // see https://fumadocs.dev/docs/ui/navigation/links
+  githubUrl: "https://github.com/ABS-Courier",
   links: [
     {
       text: "Documentation",
       url: "/docs",
       active: "nested-url",
     },
-    {
-      text: "GitHub",
-      url: "https://github.com/ABS-Courier",
-      external: true,
-    },
   ],
-  // Enable search toggle
-  searchToggle: {
-    enabled: true,
-  },
-  // Enable theme switch
-  themeSwitch: {
-    enabled: true,
-    mode: "light-dark-system",
-  },
 };

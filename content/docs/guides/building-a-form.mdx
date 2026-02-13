@@ -1,0 +1,1007 @@
+---
+title: Building Forms
+description: Build accessible, validated forms with React Hook Form and Zod
+difficulty: beginner
+estimatedTime: "35 min"
+keywords: ["forms", "validation", "react-hook-form", "zod", "accessibility"]
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+
+# Building Forms
+
+<Callout type="info">
+  This guide walks you through building a contact form from scratch, then
+  levels up into advanced patterns like dynamic fields, multi-step wizards, and
+  async validation — all using the ABS standard form stack.
+</Callout>
+
+<Callout type="warn">
+  Looking for **Server Actions** with forms? See the [Data Fetching
+  guide](/docs/guides/data-fetching) for `useActionState` and server-side form
+  handling.
+</Callout>
+
+## Our Form Stack
+
+| Library             | Purpose                                                                  |
+| ------------------- | ------------------------------------------------------------------------ |
+| **React Hook Form** | Client-side form state management with minimal re-renders                |
+| **Zod**             | Schema-first validation with automatic TypeScript types                  |
+| **Shadcn Form**     | Accessible form primitives that wire labels, errors, and ARIA attributes |
+| **Server Actions**  | Server-side submissions (see [Data Fetching](/docs/guides/data-fetching)) |
+
+---
+
+## Part 1 — Build a Contact Form Step-by-Step
+
+By the end of this section you will have a working contact form with validation,
+error messages, and proper submission handling.
+
+### Step 1: Install Dependencies
+
+```bash
+pnpm add react-hook-form zod @hookform/resolvers
+```
+
+If you are using shadcn/ui form components (recommended for production), also
+make sure the `Form`, `Input`, `Textarea`, and `Button` components are installed
+in your project via `npx shadcn@latest add form input textarea button`.
+
+### Step 2: Define the Validation Schema
+
+Zod schemas describe what valid data looks like. Think of them as a contract
+between your UI and your API.
+
+```tsx
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must be less than 50 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  message: z
+    .string()
+    .min(10, "Message must be at least 10 characters")
+    .max(500, "Message must be less than 500 characters"),
+});
+
+// TypeScript type generated from the schema — no duplication!
+type ContactFormData = z.infer<typeof contactSchema>;
+```
+
+<Callout type="tip">
+  `z.infer` creates a TypeScript type directly from your schema so the
+  validation rules and the types are always in sync. See
+  [ADR-005](/docs/architecture/decisions/adr-005-zod-validation) for why we
+  chose Zod.
+</Callout>
+
+### Step 3: Connect React Hook Form
+
+React Hook Form manages form state efficiently — it does **not** re-render on
+every keystroke.
+
+```tsx
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+export function ContactForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+  });
+
+  const onSubmit = async (data: ContactFormData) => {
+    console.log(data); // we'll flesh this out next
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-md">
+      <h2 className="text-2xl font-bold">Contact Us</h2>
+      {/* fields coming next */}
+    </form>
+  );
+}
+```
+
+**Key parts of `useForm`:**
+
+- `register` — connects an `<input>` to form state
+- `handleSubmit` — validates before calling your submit function
+- `errors` — contains validation error messages keyed by field name
+- `isSubmitting` — `true` while your async submit handler is running
+
+### Step 4: Add Form Fields
+
+<Steps>
+
+<Step>
+#### Name field
+
+```tsx
+<div>
+  <label htmlFor="name" className="block text-sm font-medium mb-1">
+    Name
+  </label>
+  <input
+    id="name"
+    type="text"
+    {...register("name")}
+    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+    placeholder="Your name"
+  />
+  {errors.name && (
+    <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+  )}
+</div>
+```
+
+`{...register("name")}` connects this input to the `name` field in your schema.
+
+</Step>
+
+<Step>
+#### Email and Message fields
+
+```tsx
+<div>
+  <label htmlFor="email" className="block text-sm font-medium mb-1">
+    Email
+  </label>
+  <input
+    id="email"
+    type="email"
+    {...register("email")}
+    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+    placeholder="you@example.com"
+  />
+  {errors.email && (
+    <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+  )}
+</div>
+
+<div>
+  <label htmlFor="message" className="block text-sm font-medium mb-1">
+    Message
+  </label>
+  <textarea
+    id="message"
+    {...register("message")}
+    rows={4}
+    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+    placeholder="How can we help?"
+  />
+  {errors.message && (
+    <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>
+  )}
+</div>
+```
+
+</Step>
+
+<Step>
+#### Submit button
+
+```tsx
+<button
+  type="submit"
+  disabled={isSubmitting}
+  className="w-full py-2 px-4 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50"
+>
+  {isSubmitting ? "Sending..." : "Send Message"}
+</button>
+```
+
+The button disables itself during submission to prevent double-clicks.
+
+</Step>
+
+</Steps>
+
+### Step 5: Handle Submission
+
+```tsx
+const onSubmit = async (data: ContactFormData) => {
+  try {
+    await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    alert("Message sent successfully!");
+  } catch (error) {
+    alert("Something went wrong. Please try again.");
+  }
+};
+```
+
+<Callout type="tip">
+  For production data fetching patterns (including TanStack Query mutations),
+  see the [Data Fetching guide](/docs/guides/data-fetching).
+</Callout>
+
+### Complete Basic Form
+
+Here is the full component from the steps above in one copy-pasteable block:
+
+```tsx
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must be less than 50 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  message: z
+    .string()
+    .min(10, "Message must be at least 10 characters")
+    .max(500, "Message must be less than 500 characters"),
+});
+
+type ContactFormData = z.infer<typeof contactSchema>;
+
+export function ContactForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+  });
+
+  const onSubmit = async (data: ContactFormData) => {
+    try {
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      alert("Message sent successfully!");
+    } catch (error) {
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-4 max-w-md p-6 bg-white rounded-lg shadow"
+    >
+      <h2 className="text-2xl font-bold">Contact Us</h2>
+
+      <div>
+        <label htmlFor="name" className="block text-sm font-medium mb-1">
+          Name
+        </label>
+        <input
+          id="name"
+          type="text"
+          {...register("name")}
+          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="Your name"
+        />
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium mb-1">
+          Email
+        </label>
+        <input
+          id="email"
+          type="email"
+          {...register("email")}
+          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="you@example.com"
+        />
+        {errors.email && (
+          <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="message" className="block text-sm font-medium mb-1">
+          Message
+        </label>
+        <textarea
+          id="message"
+          {...register("message")}
+          rows={4}
+          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="How can we help?"
+        />
+        {errors.message && (
+          <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full py-2 px-4 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50"
+      >
+        {isSubmitting ? "Sending..." : "Send Message"}
+      </button>
+    </form>
+  );
+}
+```
+
+---
+
+## Part 2 — Shadcn/UI Form Components
+
+The basic form above uses plain HTML inputs. In production we use **shadcn/ui
+Form components** which automatically handle labels, descriptions, error
+messages, and ARIA attributes.
+
+### Why Shadcn Form?
+
+- `FormField` + `FormItem` wire `aria-describedby` and `aria-invalid` for you
+- `FormLabel` highlights in red when its field has an error
+- `FormMessage` renders the Zod error string — no manual `{errors.x?.message}`
+- `FormDescription` provides helper text linked via `aria-describedby`
+
+### Full Example with Shadcn Form
+
+```tsx
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+
+const contactSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+  priority: z.enum(["low", "medium", "high"]),
+});
+
+type ContactFormValues = z.infer<typeof contactSchema>;
+
+export function ContactForm() {
+  const form = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+      priority: "medium",
+    },
+  });
+
+  async function onSubmit(data: ContactFormValues) {
+    try {
+      await submitContactForm(data);
+      form.reset();
+    } catch (error) {
+      form.setError("root", {
+        message: "Failed to submit. Please try again.",
+      });
+    }
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Your name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="you@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="message"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Message</FormLabel>
+              <FormControl>
+                <Textarea placeholder="How can we help?" {...field} />
+              </FormControl>
+              <FormDescription>Minimum 10 characters required.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? "Sending..." : "Send Message"}
+        </Button>
+      </form>
+    </Form>
+  );
+}
+```
+
+---
+
+## Part 3 — Handling Form States
+
+A production form needs to communicate loading, success, and failure clearly.
+
+```tsx
+"use client";
+
+import { useState } from "react";
+
+export function ContactForm() {
+  const [isSuccess, setIsSuccess] = useState(false);
+  const form = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
+  });
+
+  async function onSubmit(data: ContactFormValues) {
+    try {
+      await submitContactForm(data);
+      setIsSuccess(true);
+      form.reset();
+    } catch (error) {
+      form.setError("root", {
+        message: "Submission failed. Please try again.",
+      });
+    }
+  }
+
+  // ── Success state ──────────────────────────────────────────
+  if (isSuccess) {
+    return (
+      <div className="rounded-lg bg-green-50 p-4 text-green-800">
+        <h3 className="font-semibold">Thank you!</h3>
+        <p>We'll get back to you soon.</p>
+        <Button variant="outline" onClick={() => setIsSuccess(false)}>
+          Send another message
+        </Button>
+      </div>
+    );
+  }
+
+  // ── Form with error banner ─────────────────────────────────
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Root-level (non-field) error banner */}
+        {form.formState.errors.root && (
+          <div className="rounded-lg bg-red-50 p-4 text-red-800">
+            {form.formState.errors.root.message}
+          </div>
+        )}
+
+        {/* ...form fields... */}
+
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? "Sending..." : "Send Message"}
+        </Button>
+      </form>
+    </Form>
+  );
+}
+```
+
+**Key techniques:**
+
+| Scenario              | Approach                                     |
+| --------------------- | -------------------------------------------- |
+| **Loading**           | Disable the button, show spinner text         |
+| **Field error**       | `FormMessage` renders per-field Zod errors    |
+| **Server/root error** | `form.setError("root", { message })` + banner |
+| **Success**           | Swap the form for a confirmation message      |
+
+---
+
+## Part 4 — Advanced Patterns
+
+### Dynamic Form Fields with `useFieldArray`
+
+Use `useFieldArray` when users can add or remove repeating groups of fields —
+for example, line items in an order form.
+
+```tsx
+import { useFieldArray } from "react-hook-form";
+
+const orderSchema = z.object({
+  items: z
+    .array(
+      z.object({
+        name: z.string().min(1, "Item name is required"),
+        quantity: z.number().min(1, "Quantity must be at least 1"),
+      })
+    )
+    .min(1, "At least one item required"),
+});
+
+function OrderForm() {
+  const form = useForm({
+    resolver: zodResolver(orderSchema),
+    defaultValues: { items: [{ name: "", quantity: 1 }] },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "items",
+  });
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {fields.map((field, index) => (
+          <div key={field.id} className="flex items-end gap-4">
+            <FormField
+              control={form.control}
+              name={`items.${index}.name`}
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Item name</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Item name" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={`items.${index}.quantity`}
+              render={({ field }) => (
+                <FormItem className="w-24">
+                  <FormLabel>Qty</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              onClick={() => remove(index)}
+              disabled={fields.length === 1}
+            >
+              Remove
+            </Button>
+          </div>
+        ))}
+
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => append({ name: "", quantity: 1 })}
+        >
+          + Add Item
+        </Button>
+
+        <Button type="submit" className="w-full">
+          Place Order
+        </Button>
+      </form>
+    </Form>
+  );
+}
+```
+
+### Async Validation
+
+Use Zod's `.refine` with an async callback to validate against server data — for
+example, checking whether a username is already taken.
+
+```tsx
+const signupSchema = z.object({
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .refine(
+      async (username) => {
+        const response = await fetch(
+          `/api/check-username?u=${encodeURIComponent(username)}`
+        );
+        const { available } = await response.json();
+        return available;
+      },
+      { message: "Username is already taken" }
+    ),
+  email: z.string().email(),
+});
+```
+
+<Callout type="warn">
+  Async refinements fire on every validation pass. Pair them with
+  `mode: "onBlur"` in your `useForm` config so the check only runs when the
+  user leaves the field:
+
+```tsx
+useForm({ resolver: zodResolver(signupSchema), mode: "onBlur" });
+```
+
+</Callout>
+
+### Multi-Step Forms
+
+For long forms (onboarding, checkout), split the UI into steps while keeping a
+single `useForm` instance so all data lives in one place.
+
+```tsx
+type Step = "details" | "address" | "payment" | "confirm";
+
+const fieldsByStep: Record<Step, (keyof FullFormValues)[]> = {
+  details: ["firstName", "lastName", "email"],
+  address: ["street", "city", "zip"],
+  payment: ["cardNumber", "expiry", "cvc"],
+  confirm: [],
+};
+
+function MultiStepForm() {
+  const [step, setStep] = useState<Step>("details");
+  const form = useForm<FullFormValues>({
+    resolver: zodResolver(fullSchema),
+    mode: "onChange",
+  });
+
+  const steps: Record<Step, React.ReactNode> = {
+    details: <DetailsStep />,
+    address: <AddressStep />,
+    payment: <PaymentStep />,
+    confirm: <ConfirmStep data={form.getValues()} />,
+  };
+
+  async function handleNext() {
+    // Only validate the fields visible on the current step
+    const isValid = await form.trigger(fieldsByStep[step]);
+    if (isValid) setStep(getNextStep(step));
+  }
+
+  function handleBack() {
+    setStep(getPreviousStep(step));
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Progress indicator */}
+        <StepIndicator currentStep={step} />
+
+        {/* Current step content */}
+        {steps[step]}
+
+        {/* Navigation */}
+        <div className="flex justify-between">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleBack}
+            disabled={step === "details"}
+          >
+            Back
+          </Button>
+          {step === "confirm" ? (
+            <Button type="submit">Submit</Button>
+          ) : (
+            <Button type="button" onClick={handleNext}>
+              Next
+            </Button>
+          )}
+        </div>
+      </form>
+    </Form>
+  );
+}
+```
+
+**Tips for multi-step forms:**
+
+- Use `form.trigger(fields)` to validate only the current step's fields before
+  advancing.
+- Store which step the user is on in local state — React Hook Form handles all
+  data.
+- Consider persisting `form.getValues()` to `sessionStorage` so progress
+  survives a page refresh.
+
+---
+
+## Part 5 — Form Accessibility
+
+<Callout type="warn">
+  Forms are one of the most common accessibility failures on the web. Follow
+  these practices on every form you build.
+</Callout>
+
+### Required Practices
+
+1. **Label every input** — Every input must have an associated `<label>` (or use
+   `aria-label`).
+2. **Announce errors** — Use `aria-describedby` to link inputs to their error
+   messages so screen readers read them.
+3. **Manage focus** — Move focus to the first invalid field on submit failure.
+4. **Keyboard navigation** — All form controls must be operable with the
+   keyboard alone.
+5. **Mark required fields** — Use `aria-required="true"` and a visual indicator.
+
+### Accessible Field Example
+
+```tsx
+<FormField
+  control={form.control}
+  name="email"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Email <span className="text-red-500">*</span>
+      </FormLabel>
+      <FormControl>
+        <Input
+          {...field}
+          type="email"
+          aria-required="true"
+          aria-invalid={!!form.formState.errors.email}
+          aria-describedby={
+            form.formState.errors.email
+              ? "email-error"
+              : "email-description"
+          }
+        />
+      </FormControl>
+      <FormDescription id="email-description">
+        We'll never share your email.
+      </FormDescription>
+      <FormMessage id="email-error" />
+    </FormItem>
+  )}
+/>
+```
+
+### Focus-on-Error Helper
+
+```tsx
+import { useEffect } from "react";
+import type { FieldErrors } from "react-hook-form";
+
+function useFocusOnError(errors: FieldErrors) {
+  useEffect(() => {
+    const firstErrorKey = Object.keys(errors)[0];
+    if (firstErrorKey) {
+      const el = document.querySelector<HTMLElement>(
+        `[name="${firstErrorKey}"]`
+      );
+      el?.focus();
+    }
+  }, [errors]);
+}
+```
+
+Use it in your form component:
+
+```tsx
+const form = useForm<ContactFormValues>({ ... });
+useFocusOnError(form.formState.errors);
+```
+
+---
+
+## Part 6 — Common Zod Validation Patterns
+
+Keep a shared `lib/validations.ts` file so these rules are reused across forms.
+
+```tsx
+import { z } from "zod";
+
+// ── Phone (Egyptian format) ──────────────────────────────────
+export const phoneSchema = z
+  .string()
+  .regex(/^(\+20|0)?1[0125]\d{8}$/, "Invalid Egyptian phone number");
+
+// ── Strong password ──────────────────────────────────────────
+export const passwordSchema = z
+  .string()
+  .min(8, "At least 8 characters")
+  .regex(/[A-Z]/, "At least one uppercase letter")
+  .regex(/[a-z]/, "At least one lowercase letter")
+  .regex(/[0-9]/, "At least one number")
+  .regex(/[^A-Za-z0-9]/, "At least one special character");
+
+// ── URL ──────────────────────────────────────────────────────
+export const urlSchema = z.string().url("Please enter a valid URL");
+
+// ── Date in the past ─────────────────────────────────────────
+export const pastDateSchema = z
+  .date()
+  .max(new Date(), "Date must be in the past");
+
+// ── Confirm password (use inside z.object().refine()) ────────
+export function withConfirmPassword<T extends z.ZodTypeAny>(schema: T) {
+  return schema.refine(
+    (data: { password: string; confirmPassword: string }) =>
+      data.password === data.confirmPassword,
+    {
+      message: "Passwords don't match",
+      path: ["confirmPassword"],
+    }
+  );
+}
+
+// Usage:
+// const signupSchema = withConfirmPassword(
+//   z.object({
+//     email: z.string().email(),
+//     password: passwordSchema,
+//     confirmPassword: z.string(),
+//   })
+// );
+```
+
+<Callout type="tip">
+  Centralising validation rules means a bug fix in one place fixes every form
+  that uses the schema.
+</Callout>
+
+---
+
+## Part 7 — Testing Forms
+
+Use **React Testing Library** to test forms the way a user interacts with them —
+by labels, roles, and visible text.
+
+```tsx
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { ContactForm } from "./contact-form";
+
+describe("ContactForm", () => {
+  it("shows validation errors when submitted empty", async () => {
+    render(<ContactForm />);
+
+    await userEvent.click(screen.getByRole("button", { name: /send/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/name must be at least 2 characters/i)
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/please enter a valid email/i)
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("submits valid data and resets the form", async () => {
+    const mockSubmit = vi.fn().mockResolvedValue(undefined);
+    render(<ContactForm onSubmit={mockSubmit} />);
+
+    await userEvent.type(screen.getByLabelText(/name/i), "Jane Doe");
+    await userEvent.type(screen.getByLabelText(/email/i), "jane@example.com");
+    await userEvent.type(
+      screen.getByLabelText(/message/i),
+      "Hello, this is a test message!"
+    );
+    await userEvent.click(screen.getByRole("button", { name: /send/i }));
+
+    await waitFor(() => {
+      expect(mockSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: "Jane Doe",
+          email: "jane@example.com",
+          message: "Hello, this is a test message!",
+        })
+      );
+    });
+  });
+
+  it("disables the submit button while submitting", async () => {
+    const slowSubmit = vi.fn(
+      () => new Promise((r) => setTimeout(r, 1000))
+    );
+    render(<ContactForm onSubmit={slowSubmit} />);
+
+    // Fill valid data
+    await userEvent.type(screen.getByLabelText(/name/i), "Jane Doe");
+    await userEvent.type(screen.getByLabelText(/email/i), "jane@example.com");
+    await userEvent.type(
+      screen.getByLabelText(/message/i),
+      "Hello, this is a test message!"
+    );
+
+    const button = screen.getByRole("button", { name: /send/i });
+    await userEvent.click(button);
+
+    expect(button).toBeDisabled();
+    expect(button).toHaveTextContent(/sending/i);
+  });
+
+  it("displays a server error when submission fails", async () => {
+    const failingSubmit = vi.fn().mockRejectedValue(new Error("Server error"));
+    render(<ContactForm onSubmit={failingSubmit} />);
+
+    await userEvent.type(screen.getByLabelText(/name/i), "Jane Doe");
+    await userEvent.type(screen.getByLabelText(/email/i), "jane@example.com");
+    await userEvent.type(
+      screen.getByLabelText(/message/i),
+      "Hello, this is a test message!"
+    );
+    await userEvent.click(screen.getByRole("button", { name: /send/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/failed|try again/i)).toBeInTheDocument();
+    });
+  });
+});
+```
+
+<Callout type="tip">
+  For a deep dive into testing strategies, see the
+  [Testing guide](/docs/guides/testing).
+</Callout>
+
+---
+
+## Next Steps
+
+<Cards>
+  <Card title="Data Fetching" href="/docs/guides/data-fetching">
+    Submit forms to APIs and use Server Actions
+  </Card>
+  <Card title="Authentication" href="/docs/guides/authentication">
+    Build login and registration forms
+  </Card>
+  <Card title="Testing" href="/docs/guides/testing">
+    Write comprehensive tests for your components
+  </Card>
+  <Card title="ADR-005: Zod Validation" href="/docs/architecture/decisions/adr-005-zod-validation">
+    Understand why we chose Zod for validation
+  </Card>
+</Cards>
