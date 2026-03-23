@@ -1,0 +1,139 @@
+---
+title: Create a Modal Dialog
+description: Accessible modal dialog pattern using shadcn/ui Dialog component
+keywords: ["modal", "dialog", "shadcn", "accessible", "radix"]
+difficulty: beginner
+estimatedTime: 10 min
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+## Problem
+
+You need an accessible modal dialog for confirmations, forms, or detail views that traps focus, handles Escape, and works with screen readers.
+
+## Solution
+
+<Tabs items={["Basic Dialog", "Confirmation Dialog"]}>
+<Tab value="Basic Dialog">
+```tsx title="components/create-project-dialog.tsx"
+"use client";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+
+export function CreateProjectDialog() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button className="rounded bg-blue-600 px-4 py-2 text-white">
+          New Project
+        </button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Create Project</DialogTitle>
+          <DialogDescription>
+            Add a new project to your workspace.
+          </DialogDescription>
+        </DialogHeader>
+        <form className="flex flex-col gap-4">
+          <input
+            placeholder="Project name"
+            className="rounded border px-3 py-2"
+          />
+          <DialogFooter>
+            <DialogClose asChild>
+              <button type="button" className="rounded border px-4 py-2">
+                Cancel
+              </button>
+            </DialogClose>
+            <button type="submit"
+              className="rounded bg-blue-600 px-4 py-2 text-white">
+              Create
+            </button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+```
+</Tab>
+<Tab value="Confirmation Dialog">
+```tsx title="components/confirm-dialog.tsx"
+"use client";
+
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
+interface ConfirmDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  description: string;
+  onConfirm: () => void | Promise<void>;
+}
+
+export function ConfirmDialog({
+  open, onOpenChange, title, description, onConfirm,
+}: ConfirmDialogProps) {
+  const [loading, setLoading] = useState(false);
+
+  async function handleConfirm() {
+    setLoading(true);
+    await onConfirm();
+    setLoading(false);
+    onOpenChange(false);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <button onClick={() => onOpenChange(false)}
+            className="rounded border px-4 py-2">
+            Cancel
+          </button>
+          <button onClick={handleConfirm} disabled={loading}
+            className="rounded bg-red-600 px-4 py-2 text-white disabled:opacity-50">
+            {loading ? "Deleting..." : "Delete"}
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+```
+</Tab>
+</Tabs>
+
+## Tips
+
+<Callout type="warn">
+Always include `DialogTitle` and `DialogDescription` for accessibility. Screen readers announce these when the dialog opens. If you truly need to hide the title visually, use the `VisuallyHidden` utility from Radix.
+</Callout>
+
+- Use `asChild` on `DialogTrigger` and `DialogClose` to render your own button instead of an extra wrapper element.
+- Control open state externally with `open` and `onOpenChange` when you need to open the dialog programmatically.
+- The shadcn/ui Dialog is built on Radix UI -- it handles focus trapping, scroll locking, and Escape key out of the box.

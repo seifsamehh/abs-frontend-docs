@@ -3,10 +3,9 @@
   "pages": [
     "index",
     "getting-started",
-    "architecture",
     "guides",
+    "architecture",
     "reference",
-    "resources",
     "help"
   ]
 }

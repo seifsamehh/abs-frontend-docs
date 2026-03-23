@@ -6,7 +6,6 @@
     "styling-components",
     "data-fetching",
     "building-a-form",
-    "---Data & State---",
     "state-management",
     "server-components",
     "---Features---",
@@ -16,6 +15,15 @@
     "testing",
     "performance-optimization",
     "deployment",
+    "---Patterns---",
+    "api-endpoint",
+    "reusable-hook",
+    "protected-page",
+    "form-with-validation",
+    "optimistic-update",
+    "error-boundary",
+    "data-table",
+    "modal-dialog",
     "---Practice---",
     "interactive-examples"
   ]

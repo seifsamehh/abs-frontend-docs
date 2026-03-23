@@ -36,7 +36,7 @@ export const baseOptions: BaseLayoutProps = {
   githubUrl: "https://github.com/ABS-Courier",
   links: [
     {
-      text: "Documentation",
+      text: "Docs",
       url: "/docs",
       active: "nested-url",
     },

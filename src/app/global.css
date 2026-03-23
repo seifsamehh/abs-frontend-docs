@@ -110,6 +110,23 @@
 }
 
 /* ===================================================================
+   LAYOUT — Wider content area
+   =================================================================== */
+
+:root {
+  --fd-layout-width: 1400px;
+}
+
+/* ===================================================================
+   SIDEBAR — Better spacing between groups
+   =================================================================== */
+
+#nd-docs-layout aside [role="separator"] {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ===================================================================
    GLOBAL RESETS & TYPOGRAPHY
    =================================================================== */
 
@@ -491,178 +508,11 @@ hr {
     0 0 0 1px hsl(var(--border) / 0.5) !important;
 }
 
-/* ===================================================================
-   BRAND GRADIENT TEXT (homepage)
-   =================================================================== */
-
-.gradient-text {
-  background-image: linear-gradient(
-    135deg,
-    #ea8303 0%,
-    #fbbf24 25%,
-    #f59e0b 50%,
-    #fbbf24 75%,
-    #ea8303 100%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  background-size: 300% auto;
-}
-
-.dark .gradient-text {
-  background-image: linear-gradient(
-    135deg,
-    #fbbf24 0%,
-    #f59e0b 25%,
-    #ea8303 50%,
-    #f59e0b 75%,
-    #fbbf24 100%
-  );
-}
 
 /* ===================================================================
-   HERO GRADIENT (homepage)
+   ANIMATIONS — Minimal set
    =================================================================== */
 
-.hero-gradient {
-  background: radial-gradient(
-      ellipse 80% 60% at 50% -20%,
-      hsl(var(--primary) / 0.12),
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 60% 50% at 80% 20%,
-      hsl(33 100% 60% / 0.08),
-      transparent 50%
-    );
-}
-
-.dark .hero-gradient {
-  background: radial-gradient(
-      ellipse 80% 60% at 50% -20%,
-      hsl(var(--primary) / 0.15),
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 60% 50% at 80% 20%,
-      hsl(33 100% 50% / 0.1),
-      transparent 50%
-    );
-}
-
-/* ===================================================================
-   ANIMATIONS
-   =================================================================== */
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes float-slow {
-  0%,
-  100% {
-    transform: translateY(0px) translateX(0px);
-  }
-  33% {
-    transform: translateY(-15px) translateX(10px);
-  }
-  66% {
-    transform: translateY(-25px) translateX(-5px);
-  }
-}
-
-@keyframes float-slower {
-  0%,
-  100% {
-    transform: translateY(0px) translateX(0px) scale(1);
-  }
-  50% {
-    transform: translateY(-30px) translateX(-15px) scale(1.05);
-  }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes gradient-shift {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-.animate-float-slow {
-  animation: float-slow 8s ease-in-out infinite;
-}
-.animate-float-slower {
-  animation: float-slower 10s ease-in-out infinite;
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.7s ease-out forwards;
-  opacity: 0;
-}
-
-.animate-gradient {
-  animation: gradient-shift 8s ease-in-out infinite;
-}
-
-.animate-shimmer {
-  animation: shimmer 2s ease-in-out infinite;
-  background-size: 200% 100%;
-}
-
-.animation-delay-100 {
-  animation-delay: 100ms;
-}
-.animation-delay-200 {
-  animation-delay: 200ms;
-}
-.animation-delay-300 {
-  animation-delay: 300ms;
-}
-.animation-delay-400 {
-  animation-delay: 400ms;
-}
-
-/* GPU acceleration for floating elements only */
-.animate-float,
-.animate-float-slow,
-.animate-float-slower {
-  will-change: transform;
-}
-
-/* Subtle entrance animations for Fumadocs-UI components */
 @keyframes fade-in {
   from {
     opacity: 0;

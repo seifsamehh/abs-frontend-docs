@@ -35,21 +35,30 @@ export default async function Page(props: {
   if (!page) notFound();
 
   const MDXContent = page.data.body;
-  const filePath = page.file.path;
+  const filePath = page.path;
 
   // Estimate reading time from raw content
   const readingTime = page.data.body
     ? getReadingTime(String(page.data.body))
     : null;
 
-  // Last updated date
-  const lastUpdated = page.data.lastUpdated
-    ? new Date(page.data.lastUpdated).toLocaleDateString("en-US", {
+  // Last updated date and staleness check
+  const lastUpdatedDate = page.data.lastUpdated
+    ? new Date(page.data.lastUpdated)
+    : null;
+  const lastUpdated = lastUpdatedDate
+    ? lastUpdatedDate.toLocaleDateString("en-US", {
         year: "numeric",
         month: "short",
         day: "numeric",
       })
     : null;
+  const daysSinceUpdate = lastUpdatedDate
+    ? Math.floor(
+        (Date.now() - lastUpdatedDate.getTime()) / (1000 * 60 * 60 * 24)
+      )
+    : null;
+  const isStale = daysSinceUpdate !== null && daysSinceUpdate > 90;
 
   return (
     <>
@@ -75,77 +84,28 @@ export default async function Page(props: {
         <DocsTitle>{page.data.title}</DocsTitle>
         <DocsDescription>{page.data.description}</DocsDescription>
 
-        {/* Page metadata badges */}
-        <div className="flex flex-wrap items-center gap-2 mb-6 not-prose">
-          {page.data.difficulty && (
-            <span
-              className={`badge ${
-                page.data.difficulty === "beginner"
-                  ? "badge-success"
-                  : page.data.difficulty === "intermediate"
-                    ? "badge-warning"
-                    : "badge-danger"
-              }`}
-            >
-              {page.data.difficulty.charAt(0).toUpperCase() +
-                page.data.difficulty.slice(1)}
-            </span>
-          )}
-          {page.data.estimatedTime && (
-            <span className="badge badge-secondary">
-              <svg
-                className="w-3 h-3 mr-1 opacity-60"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              {page.data.estimatedTime}
-            </span>
-          )}
-          {readingTime && (
-            <span className="badge badge-secondary">
-              <svg
-                className="w-3 h-3 mr-1 opacity-60"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                />
-              </svg>
-              {readingTime}
-            </span>
-          )}
-          {lastUpdated && (
-            <span className="badge badge-secondary">
-              <svg
-                className="w-3 h-3 mr-1 opacity-60"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              Updated {lastUpdated}
-            </span>
-          )}
-        </div>
+        {/* Page metadata */}
+        {(page.data.difficulty || page.data.estimatedTime || readingTime || lastUpdated) && (
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-6 not-prose text-xs text-fd-muted-foreground">
+            {page.data.difficulty && (
+              <span className="capitalize">{page.data.difficulty}</span>
+            )}
+            {page.data.estimatedTime && (
+              <span>{page.data.estimatedTime}</span>
+            )}
+            {readingTime && (
+              <span>{readingTime}</span>
+            )}
+            {lastUpdated && !isStale && (
+              <span>Updated {lastUpdated}</span>
+            )}
+            {isStale && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-red-500/10 text-red-500 font-medium">
+                Needs review ({lastUpdated})
+              </span>
+            )}
+          </div>
+        )}
 
         <DocsBody>
           <MDXContent

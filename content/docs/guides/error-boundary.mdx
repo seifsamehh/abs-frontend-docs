@@ -1,0 +1,103 @@
+---
+title: Add Error Boundaries
+description: Error boundary with fallback UI pattern using Next.js App Router conventions
+keywords: ["error boundary", "error handling", "fallback", "error.tsx", "recovery"]
+difficulty: beginner
+estimatedTime: 10 min
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+## Problem
+
+You need to catch runtime errors in a section of your app and show a user-friendly fallback instead of a blank screen.
+
+## Solution
+
+<Tabs items={["Route Error Boundary", "Custom Error Boundary"]}>
+<Tab value="Route Error Boundary">
+Next.js App Router has built-in error boundaries via `error.tsx` files.
+
+```tsx title="app/dashboard/error.tsx"
+"use client";
+
+export default function DashboardError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-4 py-20">
+      <h2 className="text-xl font-semibold">Something went wrong</h2>
+      <p className="text-muted-foreground">{error.message}</p>
+      <button
+        onClick={reset}
+        className="rounded bg-blue-600 px-4 py-2 text-white"
+      >
+        Try again
+      </button>
+    </div>
+  );
+}
+```
+</Tab>
+<Tab value="Custom Error Boundary">
+For more granular control inside a page, use React's `ErrorBoundary`.
+
+```tsx title="components/error-boundary.tsx"
+"use client";
+
+import { Component, type ReactNode } from "react";
+
+interface Props {
+  children: ReactNode;
+  fallback?: ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+  error: Error | null;
+}
+
+export class ErrorBoundary extends Component<Props, State> {
+  state: State = { hasError: false, error: null };
+
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback ?? (
+        <div className="rounded border border-red-200 bg-red-50 p-4">
+          <p className="font-medium text-red-800">Something went wrong.</p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+```
+
+Usage:
+
+```tsx
+<ErrorBoundary fallback={<p>Failed to load chart.</p>}>
+  <RevenueChart />
+</ErrorBoundary>
+```
+</Tab>
+</Tabs>
+
+## Tips
+
+<Callout type="info">
+Place `error.tsx` at each route segment that should catch errors independently. Errors bubble up to the nearest boundary, so a missing boundary means the whole app crashes.
+</Callout>
+
+- `error.tsx` must be a Client Component (add `"use client"`).
+- The `reset` function re-renders the route segment, letting users retry without a full page reload.
+- Use the `digest` property for logging -- it is a server-safe hash of the error.

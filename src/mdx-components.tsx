@@ -1,11 +1,13 @@
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { MDXComponents } from "mdx/types";
+import type { ComponentPropsWithoutRef, ReactElement } from "react";
 import * as TabsComponents from "fumadocs-ui/components/tabs";
 import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
 import { Step, Steps } from "fumadocs-ui/components/steps";
 import { File, Files, Folder } from "fumadocs-ui/components/files";
 import { TypeTable } from "fumadocs-ui/components/type-table";
 import { ImageZoom } from "fumadocs-ui/components/image-zoom";
+import { Mermaid } from "@/components/docs/mermaid";
 import {
   Playground,
   AdvancedPlayground,
@@ -74,6 +76,25 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     AdvancedReducerContextPlayground,
     AdvancedDebouncedSearchPlayground,
     AdvancedOptimisticUpdatePlayground,
+
+    // Mermaid diagrams — auto-render ```mermaid code blocks
+    Mermaid,
+    pre: (props: ComponentPropsWithoutRef<"pre">) => {
+      const child = props.children as ReactElement<{
+        className?: string;
+        children?: string;
+      }>;
+      if (
+        child?.props?.className === "language-mermaid" &&
+        typeof child.props.children === "string"
+      ) {
+        return <Mermaid chart={child.props.children} />;
+      }
+      // Fall through to Fumadocs default pre
+      const DefaultPre = defaultMdxComponents.pre;
+      if (DefaultPre) return <DefaultPre {...props} />;
+      return <pre {...props} />;
+    },
 
     // Caller overrides (e.g. relative link resolver)
     ...components,

@@ -1,9 +1,5 @@
 {
   "title": "Help",
-  "icon": "CircleHelp",
-  "pages": [
-    "faq",
-    "troubleshooting",
-    "getting-help"
-  ]
+  "icon": "CircleQuestionMark",
+  "pages": ["faq", "troubleshooting", "getting-help"]
 }

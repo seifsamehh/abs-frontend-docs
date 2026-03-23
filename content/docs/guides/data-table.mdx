@@ -1,0 +1,140 @@
+---
+title: Build a Data Table
+description: Sortable, filterable table with TanStack Table and Tailwind CSS
+keywords: ["data table", "tanstack table", "sorting", "filtering", "columns"]
+difficulty: advanced
+estimatedTime: 20 min
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+
+## Problem
+
+You need a data table with sorting and filtering that is type-safe, performant, and consistent with your design system.
+
+## Solution
+
+<Steps>
+<Step>
+### Define columns
+
+```tsx title="components/users-table/columns.tsx"
+"use client";
+
+import { createColumnHelper } from "@tanstack/react-table";
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: "admin" | "member" | "viewer";
+}
+
+const columnHelper = createColumnHelper<User>();
+
+export const columns = [
+  columnHelper.accessor("name", {
+    header: "Name",
+    cell: (info) => <span className="font-medium">{info.getValue()}</span>,
+  }),
+  columnHelper.accessor("email", { header: "Email" }),
+  columnHelper.accessor("role", {
+    header: "Role",
+    cell: (info) => (
+      <span className="rounded bg-gray-100 px-2 py-0.5 text-xs capitalize">
+        {info.getValue()}
+      </span>
+    ),
+  }),
+];
+```
+</Step>
+
+<Step>
+### Create the table component
+
+```tsx title="components/users-table/data-table.tsx"
+"use client";
+
+import { useState } from "react";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
+  flexRender,
+  type SortingState,
+} from "@tanstack/react-table";
+import { columns } from "./columns";
+
+export function DataTable({ data }: { data: User[] }) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: { sorting, globalFilter },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
+
+  return (
+    <div className="space-y-4">
+      <input
+        value={globalFilter}
+        onChange={(e) => setGlobalFilter(e.target.value)}
+        placeholder="Search..."
+        className="w-full max-w-sm rounded border px-3 py-2"
+      />
+      <table className="w-full border-collapse text-left text-sm">
+        <thead>
+          {table.getHeaderGroups().map((hg) => (
+            <tr key={hg.id} className="border-b">
+              {hg.headers.map((header) => (
+                <th
+                  key={header.id}
+                  onClick={header.column.getToggleSortingHandler()}
+                  className="cursor-pointer px-4 py-2 font-semibold"
+                >
+                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {{ asc: " ↑", desc: " ↓" }[
+                    header.column.getIsSorted() as string
+                  ] ?? ""}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id} className="border-b hover:bg-gray-50">
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="px-4 py-2">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+```
+</Step>
+</Steps>
+
+## Tips
+
+<Callout type="info">
+Keep column definitions in a separate file. This makes them easy to test and reuse across different views of the same data.
+</Callout>
+
+- Use `createColumnHelper<T>()` for full type inference -- avoid manually typing column defs.
+- For server-side sorting/filtering, set `manualSorting: true` and `manualFiltering: true`, then pass state to your API hook.
+- Add pagination with `getPaginationRowModel()` when datasets exceed 50 rows.

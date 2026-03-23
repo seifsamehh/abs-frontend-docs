@@ -1,0 +1,87 @@
+---
+title: Add a Protected Page
+description: Middleware-based route protection pattern for authenticated pages
+keywords: ["auth", "middleware", "protected route", "redirect", "session"]
+difficulty: intermediate
+estimatedTime: 10 min
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+
+## Problem
+
+You need to restrict access to certain pages so only authenticated users can view them, redirecting others to the login page.
+
+## Solution
+
+<Steps>
+<Step>
+### Create the middleware
+
+```ts title="middleware.ts"
+import { NextRequest, NextResponse } from "next/server";
+
+const protectedPaths = ["/dashboard", "/settings", "/projects"];
+
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const isProtected = protectedPaths.some((p) => pathname.startsWith(p));
+
+  if (!isProtected) return NextResponse.next();
+
+  const token = request.cookies.get("session-token")?.value;
+
+  if (!token) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/dashboard/:path*", "/settings/:path*", "/projects/:path*"],
+};
+```
+</Step>
+
+<Step>
+### Redirect after login
+
+```ts title="app/login/actions.ts"
+"use server";
+
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+
+export async function login(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  // Replace with your auth logic
+  const session = await authenticate(email, password);
+
+  (await cookies()).set("session-token", session.token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+  });
+
+  const callbackUrl = formData.get("callbackUrl") as string;
+  redirect(callbackUrl || "/dashboard");
+}
+```
+</Step>
+</Steps>
+
+## Tips
+
+<Callout type="warn">
+Middleware runs on the Edge runtime. Do not import Node.js-only modules (like `fs` or database drivers) here. Keep it lightweight -- check tokens, then do full validation in your API routes or Server Components.
+</Callout>
+
+- Use the `matcher` config to limit middleware to relevant paths -- it avoids running on static assets.
+- Always pass `callbackUrl` so users return to the page they originally requested.
+- For role-based access, decode the token in middleware and check claims before allowing access.

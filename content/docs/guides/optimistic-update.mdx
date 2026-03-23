@@ -1,0 +1,111 @@
+---
+title: Implement Optimistic Updates
+description: TanStack Query optimistic mutation pattern for instant UI feedback
+keywords: ["optimistic update", "tanstack query", "mutation", "cache", "ux"]
+difficulty: advanced
+estimatedTime: 15 min
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+
+## Problem
+
+You want the UI to update instantly when a user performs an action (like toggling a favorite) without waiting for the server response.
+
+## Solution
+
+<Steps>
+<Step>
+### Define the mutation with optimistic update
+
+```ts title="hooks/use-toggle-favorite.ts"
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+interface Project {
+  id: string;
+  name: string;
+  isFavorite: boolean;
+}
+
+export function useToggleFavorite(teamId: string) {
+  const queryClient = useQueryClient();
+  const queryKey = ["projects", teamId];
+
+  return useMutation({
+    mutationFn: async (projectId: string) => {
+      const res = await fetch(`/api/projects/${projectId}/favorite`, {
+        method: "PATCH",
+      });
+      if (!res.ok) throw new Error("Failed to toggle favorite");
+      return res.json();
+    },
+
+    onMutate: async (projectId) => {
+      // Cancel in-flight queries to avoid overwriting our optimistic update
+      await queryClient.cancelQueries({ queryKey });
+
+      // Snapshot the current cache
+      const previous = queryClient.getQueryData<Project[]>(queryKey);
+
+      // Optimistically update the cache
+      queryClient.setQueryData<Project[]>(queryKey, (old) =>
+        old?.map((p) =>
+          p.id === projectId ? { ...p, isFavorite: !p.isFavorite } : p
+        )
+      );
+
+      return { previous };
+    },
+
+    onError: (_err, _projectId, context) => {
+      // Roll back to the snapshot on failure
+      if (context?.previous) {
+        queryClient.setQueryData(queryKey, context.previous);
+      }
+    },
+
+    onSettled: () => {
+      // Refetch to ensure server and client are in sync
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+}
+```
+</Step>
+
+<Step>
+### Use it in a component
+
+```tsx title="components/favorite-button.tsx"
+import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
+
+export function FavoriteButton({ teamId, project }: {
+  teamId: string;
+  project: { id: string; isFavorite: boolean };
+}) {
+  const { mutate, isPending } = useToggleFavorite(teamId);
+
+  return (
+    <button
+      onClick={() => mutate(project.id)}
+      disabled={isPending}
+      className="text-xl"
+    >
+      {project.isFavorite ? "★" : "☆"}
+    </button>
+  );
+}
+```
+</Step>
+</Steps>
+
+## Tips
+
+<Callout type="warn">
+Always implement `onError` rollback. Without it, a failed mutation leaves stale data in the cache and the UI becomes inconsistent.
+</Callout>
+
+- `onMutate` returns context that is passed to `onError` and `onSettled` -- use it for rollback snapshots.
+- Call `cancelQueries` in `onMutate` to prevent in-flight fetches from overwriting your optimistic data.
+- `onSettled` fires on both success and error -- always invalidate there to keep the cache honest.

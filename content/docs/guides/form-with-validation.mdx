@@ -1,0 +1,118 @@
+---
+title: Build a Validated Form
+description: React Hook Form + Zod + Server Action pattern for type-safe form handling
+keywords: ["form", "react hook form", "zod", "validation", "server action"]
+difficulty: intermediate
+estimatedTime: 15 min
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+## Problem
+
+You need a form with client-side validation, server-side validation, and good UX -- showing inline errors without full page reloads.
+
+## Solution
+
+<Tabs items={["Schema", "Server Action", "Form Component"]}>
+<Tab value="Schema">
+```ts title="lib/schemas/contact.ts"
+import { z } from "zod";
+
+export const contactSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
+export type ContactInput = z.infer<typeof contactSchema>;
+```
+</Tab>
+<Tab value="Server Action">
+```ts title="app/contact/actions.ts"
+"use server";
+
+import { contactSchema } from "@/lib/schemas/contact";
+
+export async function submitContact(data: unknown) {
+  const result = contactSchema.safeParse(data);
+
+  if (!result.success) {
+    return { success: false as const, errors: result.error.flatten().fieldErrors };
+  }
+
+  // Replace with your DB/email logic
+  await saveContact(result.data);
+
+  return { success: true as const };
+}
+```
+</Tab>
+<Tab value="Form Component">
+```tsx title="app/contact/contact-form.tsx"
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { contactSchema, type ContactInput } from "@/lib/schemas/contact";
+import { submitContact } from "./actions";
+import { toast } from "sonner";
+
+export function ContactForm() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactInput>({
+    resolver: zodResolver(contactSchema),
+  });
+
+  async function onSubmit(data: ContactInput) {
+    const result = await submitContact(data);
+    if (result.success) {
+      toast.success("Message sent!");
+      reset();
+    } else {
+      toast.error("Please fix the errors and try again.");
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <div>
+        <input {...register("name")} placeholder="Name"
+          className="w-full rounded border px-3 py-2" />
+        {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+      </div>
+      <div>
+        <input {...register("email")} placeholder="Email"
+          className="w-full rounded border px-3 py-2" />
+        {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+      </div>
+      <div>
+        <textarea {...register("message")} placeholder="Message" rows={4}
+          className="w-full rounded border px-3 py-2" />
+        {errors.message && <p className="text-sm text-red-500">{errors.message.message}</p>}
+      </div>
+      <button type="submit" disabled={isSubmitting}
+        className="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50">
+        {isSubmitting ? "Sending..." : "Send"}
+      </button>
+    </form>
+  );
+}
+```
+</Tab>
+</Tabs>
+
+## Tips
+
+<Callout type="info">
+Share the same Zod schema between client and server. This guarantees validation rules stay in sync and you get full type safety on both sides.
+</Callout>
+
+- Use `zodResolver` from `@hookform/resolvers/zod` to connect Zod to React Hook Form.
+- Always validate again on the server -- client validation can be bypassed.
+- Use `toast` from Sonner (provided by GeistdocsProvider) for success/error feedback.

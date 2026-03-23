@@ -5,6 +5,29 @@ import {
   metaSchema,
 } from "fumadocs-mdx/config";
 import { z } from "zod";
+import { visit } from "unist-util-visit";
+
+// Remark plugin: converts ```mermaid code blocks into <Mermaid chart="..."/> JSX
+// elements before shiki/rehype-pretty-code can process them.
+function remarkMermaid() {
+  return (tree: any) => {
+    visit(tree, "code", (node: any, index: any, parent: any) => {
+      if (node.lang !== "mermaid" || !parent) return;
+      parent.children.splice(index, 1, {
+        type: "mdxJsxFlowElement",
+        name: "Mermaid",
+        attributes: [
+          {
+            type: "mdxJsxAttribute",
+            name: "chart",
+            value: node.value,
+          },
+        ],
+        children: [],
+      });
+    });
+  };
+}
 
 // Extended frontmatter schema with additional metadata
 const extendedFrontmatterSchema = frontmatterSchema.extend({
@@ -40,7 +63,7 @@ export const docs = defineDocs({
 export default defineConfig({
   mdxOptions: {
     // MDX options
-    remarkPlugins: [],
+    remarkPlugins: [remarkMermaid],
     rehypePlugins: [],
   },
 });

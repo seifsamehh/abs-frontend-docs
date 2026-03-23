@@ -1,0 +1,76 @@
+---
+title: Add a New API Route
+description: Create a Next.js API route handler with Zod validation and structured error handling
+keywords: ["api route", "route handler", "zod", "validation", "error handling"]
+difficulty: beginner
+estimatedTime: 10 min
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+
+## Problem
+
+You need a type-safe API endpoint that validates incoming data and returns consistent error responses.
+
+## Solution
+
+<Steps>
+<Step>
+### Define the request schema
+
+```ts title="app/api/projects/schema.ts"
+import { z } from "zod";
+
+export const createProjectSchema = z.object({
+  name: z.string().min(1).max(100),
+  description: z.string().optional(),
+  teamId: z.string().uuid(),
+});
+
+export type CreateProjectInput = z.infer<typeof createProjectSchema>;
+```
+</Step>
+
+<Step>
+### Create the route handler
+
+```ts title="app/api/projects/route.ts"
+import { NextRequest, NextResponse } from "next/server";
+import { createProjectSchema } from "./schema";
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const data = createProjectSchema.parse(body);
+
+    // Replace with your actual DB/service call
+    const project = await createProject(data);
+
+    return NextResponse.json(project, { status: 201 });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: "Validation failed", issues: error.issues },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+```
+</Step>
+</Steps>
+
+## Tips
+
+<Callout type="warn">
+Never trust client input. Always validate with Zod on the server side, even if you validate on the client too.
+</Callout>
+
+- Export only the HTTP methods you need (`GET`, `POST`, etc.) -- Next.js returns 405 for unlisted methods automatically.
+- Use `NextResponse.json()` instead of `new Response()` for automatic content-type headers.
+- Keep schemas in a separate file so they can be shared between client and server.
